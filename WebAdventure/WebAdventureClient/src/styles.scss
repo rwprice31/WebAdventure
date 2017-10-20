@@ -1,1 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
+@import './stylePartials/_fonts.scss';
+@import './stylePartials/_backgrounds.scss';
+
+body {
+    font-family: Roboto,Helvetica Neue,sans-serif;
+    font-size: 14px;
+}
