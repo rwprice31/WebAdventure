@@ -9,3 +9,14 @@ C:\Users\blake\WebAdventure\API\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcor
 C:\Users\blake\WebAdventure\API\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.AssemblyInfo.cs
 C:\Users\blake\WebAdventure\API\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.dll
 C:\Users\blake\WebAdventure\API\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.pdb
+C:\Users\blake\WebAdventure\WebAdventureAPI\WebAdventureAPI\bin\Debug\netcoreapp2.0\WebAdventureAPI.deps.json
+C:\Users\blake\WebAdventure\WebAdventureAPI\WebAdventureAPI\bin\Debug\netcoreapp2.0\WebAdventureAPI.runtimeconfig.json
+C:\Users\blake\WebAdventure\WebAdventureAPI\WebAdventureAPI\bin\Debug\netcoreapp2.0\WebAdventureAPI.runtimeconfig.dev.json
+C:\Users\blake\WebAdventure\WebAdventureAPI\WebAdventureAPI\bin\Debug\netcoreapp2.0\WebAdventureAPI.dll
+C:\Users\blake\WebAdventure\WebAdventureAPI\WebAdventureAPI\bin\Debug\netcoreapp2.0\WebAdventureAPI.pdb
+C:\Users\blake\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.csprojResolveAssemblyReference.cache
+C:\Users\blake\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.csproj.CoreCompileInputs.cache
+C:\Users\blake\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.AssemblyInfoInputs.cache
+C:\Users\blake\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.AssemblyInfo.cs
+C:\Users\blake\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.dll
+C:\Users\blake\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.pdb
