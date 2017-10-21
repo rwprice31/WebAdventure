@@ -9,8 +9,7 @@ import { CreateInfoComponent } from "./info/create-info.component";
 
 @NgModule({
   declarations: [
-    CreateComponent,
-    CreateInfoComponent
+      CreateRoutingModule.components
   ],
   imports: [
     CreateRoutingModule

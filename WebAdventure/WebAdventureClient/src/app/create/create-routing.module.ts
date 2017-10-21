@@ -24,5 +24,5 @@ const routes: Routes = [
     exports: [ RouterModule ]
 })
 export class CreateRoutingModule {
-    static components = [ CreateInfoComponent ];
+    static components = [ CreateComponent, CreateInfoComponent ];
  }
