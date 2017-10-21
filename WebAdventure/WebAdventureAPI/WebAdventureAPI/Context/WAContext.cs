@@ -13,8 +13,7 @@ namespace WebAdventureAPI
     {
         public WAContext(DbContextOptions<WAContext> options) : base(options)
         {
-        }
 
-        public DbSet<User> Users { get; set; }
+        }
     }
 }

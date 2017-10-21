@@ -1,4 +1,4 @@
-{
+﻿{
   "ConnectionString": {
     "WAConnectionString": "Server=tcp:webadventures.database.windows.net,1433;Initial Catalog=webadventures;Persist Security Info=False;User ID=supersecret808;Password=St40ngP4$$w04D;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   }

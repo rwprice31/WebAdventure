@@ -21,6 +21,17 @@ namespace WebAdventureAPI
         private IHostingEnvironment env;
         private IConfigurationRoot config;
 
+        public Startup(IHostingEnvironment env)
+        {
+            this.env = env;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("config.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+            this.config = builder.Build();
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
