@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Rewrite;
 using System.Collections.Generic;
 using WebAdventureAPI.Repositories;
 using WebAdventureAPI.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace WebAdventureAPI
 {
@@ -85,13 +86,20 @@ namespace WebAdventureAPI
             }
 
             waContext.Database.Migrate();
-            
+
             var options = new RewriteOptions()
                 .AddRedirectToHttps();
 
             app.UseRewriter(options);
 
-            app.UseMvc();
+            app.UseMvc(config =>
+            {
+                config.MapRoute(
+                    name: "Default",
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" }
+                    );
+            });
         }
     }
 }
