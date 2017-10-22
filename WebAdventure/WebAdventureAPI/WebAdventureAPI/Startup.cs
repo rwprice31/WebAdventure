@@ -29,7 +29,7 @@ namespace WebAdventureAPI
                 .AddJsonFile("config.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
-            this.config = builder.Build();
+            config = builder.Build();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -39,9 +39,7 @@ namespace WebAdventureAPI
             var connectionString = config["ConnectionString:WAConnectionString"];
 
             services.AddDbContext<WAContext>(options =>
-            {
-                options.UseSqlServer(connectionString);
-            });
+                options.UseSqlServer(connectionString));
 
             services.AddIdentity<WAUser, IdentityRole>(config =>
             {
@@ -70,7 +68,8 @@ namespace WebAdventureAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+            WAContext waContext)
         {
             loggerFactory.AddConsole();
 
@@ -84,6 +83,8 @@ namespace WebAdventureAPI
                 loggerFactory.AddDebug(LogLevel.Error);
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            waContext.Database.Migrate();
             
             var options = new RewriteOptions()
                 .AddRedirectToHttps();
