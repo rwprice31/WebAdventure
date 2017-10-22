@@ -1,3 +1,4 @@
+import { MonsterComponent } from './monster/monster.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -11,6 +12,12 @@ const routes: Routes = [
         children: [
             {
                 path: 'info', component: CreateInfoComponent
+            },
+            {
+                path: 'monster', component: MonsterComponent
+            },
+            {
+                path: '', component: CreateInfoComponent
             }
         ]
     }
@@ -24,5 +31,5 @@ const routes: Routes = [
     exports: [ RouterModule ]
 })
 export class CreateRoutingModule {
-    static components = [ CreateComponent, CreateInfoComponent ];
+    static components = [ CreateComponent, CreateInfoComponent, MonsterComponent ];
  }

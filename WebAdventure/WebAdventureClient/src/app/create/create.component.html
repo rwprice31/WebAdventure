@@ -1,7 +1,13 @@
-<div>
-    Hello from create game
-
-    <a routerLinkActive="active" [routerLink]="['/create', 'info']" class="nav-link">Home</a>
+<div class="row">
+    <div id="createSideNav">
+        <a routerLinkActive="active" [routerLink]="['/create', 'info']" class="nav-link">Game Information</a>
+        <a routerLinkActive="active" [routerLink]="['/create', 'monster']" class="nav-link">Monster Information</a>
+    </div>    
+    <div id="createContent">
+        <router-outlet></router-outlet>
+    </div>
 </div>
 
-<router-outlet></router-outlet>
+
+
+
