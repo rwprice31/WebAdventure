@@ -17,7 +17,7 @@
         <label for="staticEmail" class="col-sm-2 col-form-label">Genre</label>
         <div class="col-sm-10">
             <select class="form-control form-control">
-                <option>Default select</option>
+                <option *ngFor="let genre of genres">{{genre.name}}</option>
             </select>
         </div>
     </div>

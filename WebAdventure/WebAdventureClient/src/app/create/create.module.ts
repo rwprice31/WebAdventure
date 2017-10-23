@@ -6,12 +6,14 @@ import { CoreModule } from '../core/core.module';
 
 import { CreateComponent } from "./create.component";
 import { CreateInfoComponent } from "./info/create-info.component";
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
       CreateRoutingModule.components
   ],
   imports: [
+    CommonModule,
     CreateRoutingModule
   ],
   providers: []

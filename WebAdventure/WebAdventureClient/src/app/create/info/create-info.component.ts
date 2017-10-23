@@ -1,5 +1,7 @@
+import { GenreService } from './../../core/genre.service';
 import { Component, OnInit } from '@angular/core';
-import { Game } from '../../interfaces/game.interface';
+import { IGame } from '../../shared/interfaces/game.interface';
+import { IGenre } from './../../shared/interfaces/genre.interface';
 
 @Component({
   selector: 'info',
@@ -8,8 +10,18 @@ import { Game } from '../../interfaces/game.interface';
 })
 export class CreateInfoComponent implements OnInit {
 
-  ngOnInit(): void {
-    throw new Error("Method not implemented.");
+  genres: IGenre[];
+
+  constructor(private genreService: GenreService) {
+    
+  }
+
+  ngOnInit() {
+    this.getGenres();
+  }
+
+  getGenres() {
+    this.genreService.getGenres().subscribe((genres: IGenre[]) => this.genres = genres);
   }
 
 }
