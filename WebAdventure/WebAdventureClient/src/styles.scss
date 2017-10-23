@@ -5,4 +5,33 @@
 body {
     font-family: Roboto,Helvetica Neue,sans-serif;
     font-size: 14px;
+    color: $text-dark;
+    // by default all text content is center aligned, to modify this... set text-align to something else further down the sheet
+    text-align: center;
+}
+
+button {
+    background: $background-dark;
+    color: $text-light;
+}
+
+button:hover {
+    background: $background-light;
+    color: $text-dark;
+    font-weight: bold;
+}
+
+form {
+    text-align: left;
+    button {
+        float: right;
+    }
+}
+
+
+
+// Page headings
+h1 {
+    font-size: 2.5em;
+    padding-bottom: 45px;
 }
