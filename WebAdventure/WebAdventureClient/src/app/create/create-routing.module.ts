@@ -5,19 +5,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { CreateInfoComponent } from './info/create-info.component';
 import { CreateComponent } from "./create.component";
 
+// path's after /create/
 const routes: Routes = [
     { 
         path: '', 
         component: CreateComponent,
         children: [
             {
-                path: 'info', component: CreateInfoComponent
-            },
-            {
                 path: 'monster', component: MonsterComponent
             },
             {
-                path: '', component: CreateInfoComponent
+                path: '**', component: CreateInfoComponent // redirect all other paths to create info
             }
         ]
     }

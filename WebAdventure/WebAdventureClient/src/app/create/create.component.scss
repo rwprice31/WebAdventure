@@ -10,6 +10,8 @@
     max-width: 384px;
     word-wrap: break-word;
     a {
+        display: block;
+        padding: .5rem 1rem;
         width: 85%;
         text-align: center;
         font-size: 1.2em;
@@ -23,11 +25,24 @@
         background: $background-dark;
     }
     a:nth-child(odd):hover {
+        text-decoration: none;
         color: $background-dark;
         font-weight: bold;
     }
     a:nth-child(even):hover {
+        text-decoration: none;
         color: white;
+        font-weight: bold;
+    }
+    .active-link {
+        font-weight: bold;
+    }
+    a:nth-child(even).active-link {
+        color: white;
+        font-weight: bold;
+    }
+    a:nth-child(odd).active-link {
+        color: $background-dark;
         font-weight: bold;
     }
 }
