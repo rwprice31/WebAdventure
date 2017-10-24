@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
+import { FormsModule } from '@angular/forms';
+import { HttpModule, Response } from '@angular/http';
 
 import { AppComponent } from './app.component';
 
@@ -15,9 +17,11 @@ import { AppComponent } from './app.component';
     BrowserModule,
     AppRoutingModule,
     CoreModule, // Singleton objects
-    SharedModule // Shared (multi-instance) objects
+    SharedModule, // Shared (multi-instance) objects
+    FormsModule,
+    HttpModule
   ],
-  providers: [],
+  providers: [AppComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

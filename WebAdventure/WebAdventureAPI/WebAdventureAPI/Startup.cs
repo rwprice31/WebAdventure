@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Rewrite;
 using System.Collections.Generic;
 using WebAdventureAPI.Repositories;
 using WebAdventureAPI.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace WebAdventureAPI
 {
@@ -44,7 +43,7 @@ namespace WebAdventureAPI
 
             services.AddIdentity<WAUser, IdentityRole>(config =>
             {
-                config.SignIn.RequireConfirmedEmail = true;
+                config.SignIn.RequireConfirmedEmail = false;
             })
             .AddEntityFrameworkStores<WAContext>()
             .AddDefaultTokenProviders();
@@ -64,6 +63,15 @@ namespace WebAdventureAPI
             });
 
             services.AddScoped<IWARepository, WARepository>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
 
             services.AddMvc();
         }
@@ -91,6 +99,8 @@ namespace WebAdventureAPI
                 .AddRedirectToHttps();
 
             app.UseRewriter(options);
+
+            app.UseCors("CorsPolicy");
 
             app.UseMvc(config =>
             {
