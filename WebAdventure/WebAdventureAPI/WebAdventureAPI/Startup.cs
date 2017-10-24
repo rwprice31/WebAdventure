@@ -43,7 +43,7 @@ namespace WebAdventureAPI
 
             services.AddIdentity<WAUser, IdentityRole>(config =>
             {
-                config.SignIn.RequireConfirmedEmail = true;
+                config.SignIn.RequireConfirmedEmail = false;
             })
             .AddEntityFrameworkStores<WAContext>()
             .AddDefaultTokenProviders();
@@ -63,6 +63,15 @@ namespace WebAdventureAPI
             });
 
             services.AddScoped<IWARepository, WARepository>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
 
             services.AddMvc();
         }
@@ -85,13 +94,22 @@ namespace WebAdventureAPI
             }
 
             waContext.Database.Migrate();
-            
+
             var options = new RewriteOptions()
                 .AddRedirectToHttps();
 
             app.UseRewriter(options);
 
-            app.UseMvc();
+            app.UseCors("CorsPolicy");
+
+            app.UseMvc(config =>
+            {
+                config.MapRoute(
+                    name: "Default",
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" }
+                    );
+            });
         }
     }
 }
