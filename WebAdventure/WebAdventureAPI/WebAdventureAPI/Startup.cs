@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Rewrite;
 using System.Collections.Generic;
 using WebAdventureAPI.Repositories;
 using WebAdventureAPI.Models;
+using WebAdventureAPI.Services;
 
 namespace WebAdventureAPI
 {
@@ -50,7 +51,7 @@ namespace WebAdventureAPI
 
             services.Configure<IdentityOptions>(options =>
             {
-                options.Password.RequireDigit = true;
+                options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
@@ -64,16 +65,23 @@ namespace WebAdventureAPI
 
             services.AddScoped<IWARepository, WARepository>();
 
-            services.AddCors(options =>
+            if (env.IsDevelopment())
             {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
-            });
+                services.AddCors(options =>
+                {
+                    options.AddPolicy("CorsPolicy",
+                        builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+                });
+            }
 
             services.AddMvc();
+
+            services.AddTransient<IEmailSender, AuthMessageSender>();
+
+            services.Configure<AuthMessageSenderOptions>(config);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -100,7 +108,10 @@ namespace WebAdventureAPI
 
             app.UseRewriter(options);
 
-            app.UseCors("CorsPolicy");
+            if (env.IsDevelopment())
+            {
+                app.UseCors("CorsPolicy");
+            }
 
             app.UseMvc(config =>
             {
