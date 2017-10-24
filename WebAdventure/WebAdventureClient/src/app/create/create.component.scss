@@ -1,0 +1,55 @@
+@import './../../stylePartials/_variables.scss';
+
+#createSideNav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+    margin-left: 1vw;
+    width: 20vw;
+    max-width: 384px;
+    word-wrap: break-word;
+    a {
+        display: block;
+        padding: .5rem 1rem;
+        width: 85%;
+        text-align: center;
+        font-size: 1.2em;
+    }
+    a:nth-child(odd) {
+        color: rgba(0, 0, 0, .5);
+        background: $background-light;
+    }
+    a:nth-child(even) {
+        color: rgba(255, 255, 255, .5);
+        background: $background-dark;
+    }
+    a:nth-child(odd):hover {
+        text-decoration: none;
+        color: $background-dark;
+        font-weight: bold;
+    }
+    a:nth-child(even):hover {
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+    }
+    .active-link {
+        font-weight: bold;
+    }
+    a:nth-child(even).active-link {
+        color: white;
+        font-weight: bold;
+    }
+    a:nth-child(odd).active-link {
+        color: $background-dark;
+        font-weight: bold;
+    }
+}
+
+#createContent {
+    display: flex;
+    justify-content: center;
+    width: 79vw;
+    padding: 5% 10% 0% 10%;
+}
