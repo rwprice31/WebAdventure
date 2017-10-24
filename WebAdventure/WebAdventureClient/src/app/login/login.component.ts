@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Http, Response } from '@angular/http';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Dir } from '@angular/cdk/bidi';
 import 'rxjs/add/operator/map';
 
 import { loginModel } from './loginModel';
@@ -9,30 +12,62 @@ import { loginModel } from './loginModel';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
+
 export class LoginComponent implements OnInit {
+
   model = new loginModel('','');
+  error : string = "Please enter valid credentials";
+  public myForm = new FormGroup({
+      email: new FormControl('', [<any>Validators.required]),
+      password: new FormControl('', [<any>Validators.required, <any>Validators.minLength(8)])
+    });
+  public submitted: boolean;
+  public events: any[] = [];
+  private apiUrl = 'https://localhost:44337/api/users/login'
+  data: any ={};
+
+  constructor(private http: Http, private router: Router) {
+  }
+
   ngOnInit(){
   }
 
-  private apiUrl = 'https://localhost:44337/api/users'
-  data: any ={};
-
-  constructor(private http: Http) {
-    console.log('Hello');
-    this.getData();
-    this.getUserCount();
+  login(model, isValid: boolean) {
+    this.submitted = true;
+    if (isValid) {
+      this.loginUser(model.email, model.password);
+    }
   }
 
-  getData() {
-    return this.http.get(this.apiUrl).map((res: Response) => res.json)
-  }
+  loginUser(email, password) {
 
-  getUserCount() {
-    this.getData().subscribe(data => {
-      console.log(data);
-      this.data = data
-    })
-  }
+    var obj = {
+      "email" : email,
+      "password" : password
+    };
 
-  get currentLogin() { return JSON.stringify(this.model); }
- }
+    return this.http.post(this.apiUrl, obj).map((res: Response) =>
+    {
+      if (res.status == 200) {
+        this.router.navigate(['']);
+      }
+    }).subscribe(
+      suc => {
+      },
+      err => {
+        if (err.status == 401) {
+          this.myForm.reset();
+          this.error = "Invalid Email";
+        }
+        else if (err.status == 400) {
+          this.myForm.reset();
+          this.error = "Invalid Email/Password";
+        }
+        else {
+          this.myForm.reset();
+          this.error = "There was an error";
+        }
+      }
+    );
+  }
+}

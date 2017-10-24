@@ -1,5 +1,9 @@
 {
-  "ConnectionString": {
-    "WAConnectionString": "Server=tcp:webadventures.database.windows.net,1433;Initial Catalog=webadventures;Persist Security Info=False;User ID=supersecret808;Password=St40ngP4$$w04D;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-  }
+    "ConnectionString": {
+        "WAConnectionString": "Server=tcp:webadventures.database.windows.net,1433;Initial Catalog=webadventures;Persist Security Info=False;User ID=supersecret808;Password=St40ngP4$$w04D;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    },
+    "SendGrid": {
+        "User": "rbryan21@gmail.com",
+        "Key": "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"
+    }
 }

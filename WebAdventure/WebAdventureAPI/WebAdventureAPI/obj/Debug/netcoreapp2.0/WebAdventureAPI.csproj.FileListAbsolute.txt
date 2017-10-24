@@ -31,3 +31,14 @@ E:\MyStuff\MyDownloads\WebAdventure-master\WebAdventure-master\WebAdventure\WebA
 E:\MyStuff\MyDownloads\WebAdventure-master\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.AssemblyInfo.cs
 E:\MyStuff\MyDownloads\WebAdventure-master\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.dll
 E:\MyStuff\MyDownloads\WebAdventure-master\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.pdb
+E:\MyStuff\MyDownloads\WebAdventure\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\bin\Debug\netcoreapp2.0\WebAdventureAPI.deps.json
+E:\MyStuff\MyDownloads\WebAdventure\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\bin\Debug\netcoreapp2.0\WebAdventureAPI.runtimeconfig.json
+E:\MyStuff\MyDownloads\WebAdventure\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\bin\Debug\netcoreapp2.0\WebAdventureAPI.runtimeconfig.dev.json
+E:\MyStuff\MyDownloads\WebAdventure\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\bin\Debug\netcoreapp2.0\WebAdventureAPI.dll
+E:\MyStuff\MyDownloads\WebAdventure\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\bin\Debug\netcoreapp2.0\WebAdventureAPI.pdb
+E:\MyStuff\MyDownloads\WebAdventure\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.csprojResolveAssemblyReference.cache
+E:\MyStuff\MyDownloads\WebAdventure\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.csproj.CoreCompileInputs.cache
+E:\MyStuff\MyDownloads\WebAdventure\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.AssemblyInfoInputs.cache
+E:\MyStuff\MyDownloads\WebAdventure\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.AssemblyInfo.cs
+E:\MyStuff\MyDownloads\WebAdventure\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.dll
+E:\MyStuff\MyDownloads\WebAdventure\WebAdventure-master\WebAdventure\WebAdventureAPI\WebAdventureAPI\obj\Debug\netcoreapp2.0\WebAdventureAPI.pdb

@@ -1,3 +1,57 @@
-<div>
-    Hello from signup
+<h1>Register</h1>
+
+<div class="col-sm-8 offset-sm-5">
+    <form [formGroup]="myForm" novalidate (ngSubmit)="register(myForm.value, myForm.valid)">
+        
+        <div class="form-group row">
+            <label class="col-sm-1 col-form-label">Username</label>
+            <div class="col-sm-10">
+                <input type="text" id="username" [(ngModel)]="model.username" name="username" [formControlName]="'username'">
+                <small [hidden]="myForm.controls.username.valid || (myForm.controls.username.pristine && !submitted)">
+                    Valid username is required (minimum 5 characters).
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-1 col-form-label">Email</label>
+            <div class="col-sm-10">
+                <input type="text" id="email" [(ngModel)]="model.email" name="email" [formControlName]="'email'" email>
+                <small [hidden]="myForm.controls.email.valid || (myForm.controls.email.pristine && !submitted)">
+                    Valid Email is required.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-1 col-form-label">Password</label>
+            <div class="col-sm-10">
+                <input type="password" id="password" [(ngModel)]="model.password" name="password" [formControlName]="'password'">
+                <small [hidden]="myForm.controls.password.valid || (myForm.controls.password.pristine && !submitted)">
+                    Password is required (minimum 8 characters).
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-1 col-form-label">Confirm Password</label>
+            <div class="col-sm-10">
+                <input type="password" id="confirmPassword" [(ngModel)]="model.confirmPassword" name="confirmPassword" [formControlName]="'confirmPassword'">
+                <small [hidden]="myForm.controls.confirmPassword.valid || 
+                    (myForm.controls.confirmPassword.pristine && !submitted)">
+                    Confirm Password is required (minimum 8 characters).
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group row offset-sm-1">
+            <button type="submit" class="btn btn-success">Register</button>
+        </div>
+
+        <div class="form-group row offset-sm-1">
+            <small [hidden]="!submitted" class="alert alert-danger">
+                {{ error }}
+            </small>
+        </div>
+    </form>
 </div>
