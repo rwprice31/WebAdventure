@@ -32,9 +32,9 @@ export class CreateInfoComponent implements OnInit {
 
   buildForm() {
     this.createInfoForm = this.formBuilder.group({
-      name: '',
-      description: '',
-      genre: ''
+      name: ['', Validators.required],
+      description: [''],
+      genre: ['', Validators.required]
     });
   }
 
