@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Dir } from '@angular/cdk/bidi';
 import 'rxjs/add/operator/map';
 
 import { loginModel } from './loginModel';

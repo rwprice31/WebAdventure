@@ -3,7 +3,6 @@ import { Http, Response } from '@angular/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
-import { MatSnackBar } from '@angular/material';
 
 import { signupModel } from './signupModel';
 
@@ -13,7 +12,6 @@ import { signupModel } from './signupModel';
 })
 export class SignupComponent implements OnInit {
 
-  private snackBar: MatSnackBar;
   model = new signupModel('','','','');
   error : string = "Please eneter valid credentials";
   public submitted: boolean;
