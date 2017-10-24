@@ -66,11 +66,11 @@ namespace WebAdventureAPI.Controllers
             if (result.Succeeded)
             {
                 user = userManager.Users.FirstOrDefault(x => x.UserName == newUser.Username);
-                var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = Url.Action("Confirm Email", "Account",
-                    new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                await emailSender.SendEmailAsync(user.Email, "Confirm your account",
-                $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
+                //var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                //var callbackUrl = Url.Action("Confirm Email", "Account",
+                //    new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                //await emailSender.SendEmailAsync(user.Email, "Confirm your account",
+                //$"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
                 return Ok(user.Id);
             }
             else
