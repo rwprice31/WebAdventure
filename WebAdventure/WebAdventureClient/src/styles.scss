@@ -19,12 +19,30 @@ button:hover {
     background: $background-light;
     color: $text-dark;
     font-weight: bold;
+    &.invalid-button {
+        background: $background-dark;
+        color: $text-light;
+        font-weight: normal;
+    }
 }
+
 
 form {
     text-align: left;
     button {
         float: right;
+    }
+    .has-error {
+        border: 1px solid;
+        border-color: red;
+    }
+    .error-block {
+        padding-top: 2px;
+        padding-left: 5px;
+        .error-block-text {
+            font-size: 1em;
+            color: red;
+        }
     }
 }
 
