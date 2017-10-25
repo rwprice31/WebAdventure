@@ -1,12 +1,14 @@
 import { PageNotFoundComponent } from './../../page-not-found.component';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { IGame } from './../../shared/interfaces/game.interface';
 import { IGenre } from './../../shared/interfaces/genre.interface';
+import { IToastr } from './../../shared/interfaces/toastr.interface';
 
-import { GameInfoService } from './../../core/game-info.service';
-import { GenreService } from './../../core/genre.service';
+import { GameInfoService } from './../../core/services/game-info.service';
+import { GenreService } from './../../core/services/genre.service';
+import { TOASTR_TOKEN } from './../../core/services/external-libraries/toastr.service';
 
 @Component({
   selector: 'info',
@@ -22,7 +24,8 @@ export class CreateInfoComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private genreService: GenreService,
-    private gameInfoService: GameInfoService) {
+    private gameInfoService: GameInfoService,
+    @Inject(TOASTR_TOKEN) private toastr: IToastr) {
   }
 
   ngOnInit() {
@@ -50,7 +53,7 @@ export class CreateInfoComponent implements OnInit {
       genre: this.createInfoForm.controls['genre'].value
     };
     this.gameInfoService.insertGame(this.game).subscribe((game: IGame) => {
-      console.log("Game saved!");
+      this.toastr.success("Game saved!");
     });
   }
 
