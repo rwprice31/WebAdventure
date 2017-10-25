@@ -1,11 +1,11 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 
-import { GenreService } from './genre.service';
-import { GameInfoService } from './game-info.service';
-import { TOASTR_TOKEN } from './external-libraries/toastr.service';
+import { GenreService } from './services/genre.service';
+import { GameInfoService } from './services/game-info.service';
+import { TOASTR_TOKEN } from './services/external-libraries/toastr.service';
 import { IToastr } from '../shared/interfaces/toastr.interface';
-import { JQ_TOKEN } from './external-libraries/jQuery.service';
+import { JQ_TOKEN } from './services/external-libraries/jQuery.service';
 
 import { EnsureModuleLoadedOnceGuard } from '../shared/ensureModuleLoadedOnceGuard';
 

@@ -6,9 +6,9 @@ import { IGame } from './../../shared/interfaces/game.interface';
 import { IGenre } from './../../shared/interfaces/genre.interface';
 import { IToastr } from './../../shared/interfaces/toastr.interface';
 
-import { GameInfoService } from './../../core/game-info.service';
-import { GenreService } from './../../core/genre.service';
-import { TOASTR_TOKEN } from './../../core/external-libraries/toastr.service';
+import { GameInfoService } from './../../core/services/game-info.service';
+import { GenreService } from './../../core/services/genre.service';
+import { TOASTR_TOKEN } from './../../core/services/external-libraries/toastr.service';
 
 @Component({
   selector: 'info',

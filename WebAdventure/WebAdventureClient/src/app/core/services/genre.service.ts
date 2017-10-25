@@ -7,7 +7,7 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map'; 
 import 'rxjs/add/operator/catch';
 
-import { IGenre } from '../shared/interfaces/genre.interface';
+import { IGenre } from '../../shared/interfaces/genre.interface';
 
 let genre1: IGenre = {
     name: 'Action',
