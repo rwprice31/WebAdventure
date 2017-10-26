@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebAdventureAPI.Models;
@@ -41,21 +42,17 @@ namespace WebAdventureAPI.Controllers
             return Json(list);
         }
 
+        [Authorize]
         [HttpPost]
         public JsonResult CreateGame([FromHeader] string gameId, [FromBody] GameDto gameDto)
         {
-            //if (user == null)
-            //{
-            //    return null;
-            //}
-
             if (string.IsNullOrEmpty(gameId))
             {
                 var newGame = new Game
                 {
                     Name = gameDto.Name,
                     Descr = gameDto.Descr,
-                    //AuthorId = user.Id,
+                    AuthorId = gameDto.Author,
                     GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
                 };
 
