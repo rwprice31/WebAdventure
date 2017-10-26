@@ -1,10 +1,16 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 
-import { GenreService } from './genre.service';
-import { GameInfoService } from './game-info.service';
+import { GenreService } from './services/genre.service';
+import { GameInfoService } from './services/game-info.service';
+import { TOASTR_TOKEN } from './services/external-libraries/toastr.service';
+import { IToastr } from '../shared/interfaces/toastr.interface';
+import { JQ_TOKEN } from './services/external-libraries/jQuery.service';
 
 import { EnsureModuleLoadedOnceGuard } from '../shared/ensureModuleLoadedOnceGuard';
+
+export declare let toastr : IToastr;
+export declare let jQuery : any;
 
 @NgModule({
     imports: [
@@ -19,7 +25,10 @@ import { EnsureModuleLoadedOnceGuard } from '../shared/ensureModuleLoadedOnceGua
         //Default XSRF provider setup (change cookie or header name if needed): 
         //Can use this with Angular 2+ but if using HttpClientModule use options as shown above
         //{ provide: XSRFStrategy, useValue: new CookieXSRFStrategy('XSRF-TOKEN', 'X-XSRF-TOKEN') },
-        GameInfoService, GenreService
+        GameInfoService, 
+        GenreService,
+        { provide: TOASTR_TOKEN, useValue: toastr },
+        { provide: JQ_TOKEN, useValue: jQuery }
     ]
 })
 export class CoreModule extends EnsureModuleLoadedOnceGuard {
