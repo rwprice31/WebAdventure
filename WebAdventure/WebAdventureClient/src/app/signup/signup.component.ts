@@ -27,15 +27,6 @@ export class SignupComponent implements OnInit {
   private password = 'password';
   private passwordConfirmation = 'password';
 
-  public myForm = new FormGroup({
-    email: new FormControl('', [<any>Validators.required, <any>Validators.maxLength(60), <any>Validators.minLength(5)]),
-    username: new FormControl('', [<any>Validators.required, <any>Validators.minLength(5), <any>Validators.maxLength(40)]),
-    password: new FormControl('', [<any>Validators.required, <any>Validators.minLength(8), 
-              <any>Validators.maxLength(30)]),
-    confirmPassword: new FormControl('', [<any>Validators.required, <any>Validators.minLength(8), 
-              <any>Validators.maxLength(30)])
-  });
-
   constructor(private http: Http,
     private router: Router,
     private formBuilder: FormBuilder
@@ -84,13 +75,13 @@ export class SignupComponent implements OnInit {
       },
       err => {
         if (err.status === 400) {
-          this.myForm.reset();
+          this.signupForm.reset();
           this.error = 'Username already exists. Please try again';
         } else if (err.status === 401) {
-          this.myForm.reset();
+          this.signupForm.reset();
           this.error = 'Email is already in use. Please try again';
         } else if (err.status === 404) {
-          this.myForm.reset();
+          this.signupForm.reset();
           this.error = 'There was an error';
         }
       }
