@@ -1,42 +1,44 @@
-<title>Login</title>
+<div class="solo-content">
 
-<h1>Login</h1>
+    <div class="page-header">
+        <h1>Login</h1>
+        <h2>Please login with your credentials</h2>
+    </div>
 
-<div class="col-sm-8 offset-sm-5">
-    <form [formGroup]="myForm" novalidate (ngSubmit)="login(myForm.value, myForm.valid)">
+    <form [formGroup]="loginForm" (ngSubmit)="login(loginForm)" novalidate autocomplete="off">
         <div class="form-group row">
-            <label class="col-sm-1 col-form-label">Email</label>
+            <label for="email" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-10">
-                <input type="text" id="email" [(ngModel)]="model.email" name="email" [formControlName]="'email'" email>
-                <small [hidden]="myForm.controls.email.valid || (myForm.controls.email.pristine && !submitted)">
-                    Valid Email is required.
-                </small>
+                <input type="text" class="form-control" name="email" formControlName="email"
+                    [ngClass]="{'has-error': (loginForm.get('email').touched || 
+                    loginForm.get('email').dirty) && !loginForm.get('email').valid }">
+                <div class="error-block" *ngIf="loginForm.get('email').errors">
+                    <span class="error-block-text" *ngIf="(loginForm.get('email').touched || 
+                        loginForm.get('email').dirty) &&
+                        loginForm.get('email').errors.required"> 
+                            An email is required to log in.
+                    </span>
+                </div>
             </div>
         </div>
-
         <div class="form-group row">
-            <label class="col-sm-1 col-form-label">Password</label>
+            <label for="password" class="col-sm-2 col-form-label">Password</label>
             <div class="col-sm-10">
-                <input type="password" id="password" [(ngModel)]="model.password" name="password" [formControlName]="'password'">
-                <small [hidden]="myForm.controls.password.valid || (myForm.controls.password.pristine && !submitted)">
-                    Password is required (minimum 8 characters).
-                </small>
+                <input type="text" class="form-control" name="password" formControlName="password"
+                    [ngClass]="{'has-error': (loginForm.get('password').touched || 
+                    loginForm.get('password').dirty) && !loginForm.get('password').valid }">
+                <div class="error-block" *ngIf="loginForm.get('password').errors">
+                    <span class="error-block-text" *ngIf="(loginForm.get('password').touched || 
+                        loginForm.get('password').dirty) &&
+                        loginForm.get('password').errors.required"> 
+                        A password is required to log in.
+                    </span>
+                </div>
             </div>
-        </div>
-
-        <div class="form-group row offset-sm-1">
-            <button type="submit" class="btn btn-success">Submit</button>
-        </div>
-
-        <div class="form-group row offset-sm-1">
-            <small [hidden]="!submitted" class="alert alert-danger">
-                {{ error }}
-            </small>
-        </div>
+        </div>           
+        <button type="submit" class="btn" [disabled]="!loginForm.valid"
+            [ngClass]="{'invalid-button': !loginForm.valid }">Login</button>
+        <button type="link" class="btn" routerLinkActive="active" [routerLink]="['/signup']">Sign up</button> 
     </form>
 </div>
 
-<div>
-    <p>New to Web Adventers?</p>
-    <button class="btn" routerLinkActive="active" [routerLink]="['/signup']">Register</button>
-</div>
