@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.Dtos;
 using WebAdventureAPI.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace WebAdventureAPI.Controllers
 {
@@ -42,11 +43,11 @@ namespace WebAdventureAPI.Controllers
             return Json(list);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public JsonResult CreateGame([FromHeader] string gameId, [FromBody] GameDto gameDto)
         {
-            if (string.IsNullOrEmpty(gameId))
+            if (int.Parse(gameId) == 0)
             {
                 var newGame = new Game
                 {
@@ -67,7 +68,7 @@ namespace WebAdventureAPI.Controllers
                     Id = int.Parse(gameId),
                     Name = gameDto.Name,
                     Descr = gameDto.Descr,
-                    //AuthorId = user.Id,
+                    AuthorId = gameDto.Author,
                     GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
                 };
 
@@ -80,26 +81,22 @@ namespace WebAdventureAPI.Controllers
             });
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         [Route("author")]
-        public JsonResult GetGameByAuthor()
+        public JsonResult GetGameByAuthor([FromBody] AuthorDto authorDto)
         {
-            //if (user == null)
-            //{
-            //    return null;
-            //}
-
             var list = new List<GameDto>();
-            //foreach (var x in repo.GetGamesByAuthor(user.Id))
-            //{
-            //    list.Add(new GameDto
-            //    {
-            //        Author = userManager.Users.FirstOrDefault(a => a.Id == x.AuthorId).UserName,
-            //        Genre = repo.GetGenreById(x.GenreId).Descr,
-            //        Name = x.Name,
-            //        Descr = x.Descr
-            //    });
-            //}
+            foreach (var x in repo.GetGamesByAuthor(authorDto.Author))
+            {
+                list.Add(new GameDto
+                {
+                    Author = userManager.Users.FirstOrDefault(a => a.Id == x.AuthorId).UserName,
+                    Genre = repo.GetGenreById(x.GenreId).Descr,
+                    Name = x.Name,
+                    Descr = x.Descr
+                });
+            }
 
             return Json(list);
         }

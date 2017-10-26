@@ -74,6 +74,7 @@ namespace WebAdventureAPI
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -89,7 +90,8 @@ namespace WebAdventureAPI
                         ValidateLifetime = false,
                         ClockSkew = TimeSpan.Zero
                     };
-                });
+                })
+                .AddCookie(cfg => cfg.SlidingExpiration = true);
 
             services.AddIdentity<WAUser, IdentityRole>(config =>
             {
