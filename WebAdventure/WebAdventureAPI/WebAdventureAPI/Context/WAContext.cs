@@ -22,6 +22,10 @@ namespace WebAdventureAPI
             this.config = config;
         }
 
+        public DbSet<Game> Game { get; set; }
+
+        public DbSet<Genre> Genre { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connectionString = config["ConnectionString:WAConnectionString"];

@@ -20,7 +20,7 @@ namespace WebAdventureAPI.Controllers
         private IEmailSender emailSender;
 
         public UserController(
-            UserManager<WAUser> userManager, 
+            UserManager<WAUser> userManager,
             SignInManager<WAUser> signInManager,
             IEmailSender emailSender)
         {
