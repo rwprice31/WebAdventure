@@ -21,7 +21,6 @@ export class CreateInfoComponent implements OnInit {
   createInfoForm: FormGroup;
   genres: IGenre[];
 
-
   constructor(private formBuilder: FormBuilder,
     private genreService: GenreService,
     private gameInfoService: GameInfoService,
