@@ -14,6 +14,7 @@ using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.Dtos;
 using WebAdventureAPI.Models.Security;
 using WebAdventureAPI.Services;
+using WebAdventureAPI.Models.Responses;
 
 namespace WebAdventureAPI.Controllers
 {
@@ -59,17 +60,25 @@ namespace WebAdventureAPI.Controllers
             var user = userManager.Users.FirstOrDefault(x => x.UserName == newUser.Username);
             if (user != null)
             {
-                var request = BadRequest("");
-                request.StatusCode = 400;
-                return request;
+                Response response = new Response
+                {
+                    StatusCode = 400,
+                    Status = false,
+                    StatusText = "A user with that username already exists."
+                };
+                return StatusCode(400, response);
             }
 
             user = userManager.Users.FirstOrDefault(x => x.Email == newUser.Email);
             if (user != null)
             {
-                var request = BadRequest("");
-                request.StatusCode = 401;
-                return request;
+                Response response = new Response
+                {
+                    StatusCode = 400,
+                    Status = false,
+                    StatusText = "A user with that email already exists."
+                };
+                return StatusCode(400, response);
             }
 
             var result = await userManager.CreateAsync(new WAUser
@@ -82,18 +91,36 @@ namespace WebAdventureAPI.Controllers
             if (result.Succeeded)
             {
                 user = userManager.Users.FirstOrDefault(x => x.UserName == newUser.Username);
+
+                NewUserResponse response = new NewUserResponse
+                {
+                    StatusText = "New user successfully created!",
+                    StatusCode = 201,
+                    Status = true,
+                    User = new UserDto
+                    {
+                        Email = user.Email,
+                        Id = user.Id,
+                        Username = user.UserName
+                    }
+                };
+
                 //var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                 //var callbackUrl = Url.Action("Confirm Email", "Account",
                 //    new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                 //await emailSender.SendEmailAsync(user.Email, "Confirm your account",
                 //$"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
-                return Ok(user.Id);
+                return StatusCode(201, response);
             }
             else
             {
-                var request = BadRequest("");
-                request.StatusCode = 404;
-                return request;
+                Response response = new Response
+                {
+                    StatusCode = 500,
+                    Status = false,
+                    StatusText = "A server error has occured."
+                };
+                return StatusCode(500, response);
             }
         }
 
