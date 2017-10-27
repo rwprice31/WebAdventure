@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 
@@ -16,57 +16,66 @@ export class LoginComponent implements OnInit {
 
   model = new loginModel('','');
   error : string = "Please enter valid credentials";
-  public myForm = new FormGroup({
-      email: new FormControl('', [<any>Validators.required]),
-      password: new FormControl('', [<any>Validators.required, <any>Validators.minLength(8)])
-    });
+  loginForm: FormGroup;
   public submitted: boolean;
   public events: any[] = [];
   private apiUrl = 'https://localhost:44337/api/users/login'
   data: any ={};
 
-  constructor(private http: Http, private router: Router) {
+  constructor(private http: Http, 
+    private router: Router,
+    private formBuilder: FormBuilder) {
   }
 
-  ngOnInit(){
+  ngOnInit() {
+    this.buildForm();
+  }
+
+  buildForm() {
+    this.loginForm = this.formBuilder.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required]
+    });
   }
 
   login(model, isValid: boolean) {
     this.submitted = true;
     if (isValid) {
-      this.loginUser(model.email, model.password);
+      this.loginUser();
     }
   }
 
-  loginUser(email, password) {
+  loginUser() {
 
     var obj = {
-      "email" : email,
-      "password" : password
+      "email" : this.loginForm.controls['email'].value,
+      "password" : this.loginForm.controls['password'].value
     };
 
-    return this.http.post(this.apiUrl, obj).map((res: Response) =>
-    {
-      if (res.status == 200) {
-        this.router.navigate(['']);
-      }
-    }).subscribe(
-      suc => {
-      },
-      err => {
-        if (err.status == 401) {
-          this.myForm.reset();
-          this.error = "Invalid Email";
-        }
-        else if (err.status == 400) {
-          this.myForm.reset();
-          this.error = "Invalid Email/Password";
-        }
-        else {
-          this.myForm.reset();
-          this.error = "There was an error";
-        }
-      }
-    );
+    console.log(obj);
+
+    // return this.http.post(this.apiUrl, obj).map((res: Response) =>
+    // {
+    //   if (res.status == 200) {
+    //     this.router.navigate(['']);
+    //   }
+    // }).subscribe(
+    //   suc => {
+    //   },
+    //   err => {
+    //     if (err.status == 401) {
+    //       this.loginForm.reset();
+    //       this.error = "Invalid Email";
+    //     }
+    //     else if (err.status == 400) {
+    //       this.loginForm.reset();
+    //       this.error = "Invalid Email/Password";
+    //     }
+    //     else {
+    //       this.loginForm.reset();
+    //       this.error = "There was an error";
+    //     }
+    //   }
+    //);
   }
 }
