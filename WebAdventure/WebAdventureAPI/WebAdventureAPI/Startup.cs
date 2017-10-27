@@ -1,19 +1,25 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Rewrite;
-using System.Collections.Generic;
-using WebAdventureAPI.Repositories;
+using FluentValidation.AspNetCore;
+using AutoMapper;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using WebAdventureAPI.Models.Security;
 using WebAdventureAPI.Models;
+using Microsoft.AspNetCore.Identity;
+using WebAdventureAPI.Repositories;
 using WebAdventureAPI.Services;
+using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace WebAdventureAPI
 {
@@ -21,6 +27,8 @@ namespace WebAdventureAPI
     {
         private IHostingEnvironment env;
         private IConfigurationRoot config;
+        private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
+        private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
 
         public Startup(IHostingEnvironment env)
         {
@@ -41,6 +49,49 @@ namespace WebAdventureAPI
 
             services.AddDbContext<WAContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            services.AddSingleton<IJwtFactory, JwtFactory>();
+
+            var jwtAppSettingOptions = config.GetSection(nameof(JwtIssuerOptions));
+
+            // Configure JwtIssuerOptions
+            services.Configure<JwtIssuerOptions>(options =>
+            {
+                options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
+                options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
+                options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ApiUser", policy => policy.RequireClaim(Helpers.Constants.Strings.JwtClaims.ApiAccess));
+            });
+
+            services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = config["JwtIssuerOptions:Issuer"],
+
+                        ValidateAudience = true,
+                        ValidAudience = config["JwtIssuerOptions:Audience"],
+
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = _signingKey,
+
+                        RequireExpirationTime = false,
+                        ValidateLifetime = false,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                })
+                .AddCookie(cfg => cfg.SlidingExpiration = true);
 
             services.AddIdentity<WAUser, IdentityRole>(config =>
             {
@@ -79,6 +130,8 @@ namespace WebAdventureAPI
 
             services.AddMvc();
 
+            services.AddAutoMapper();
+
             services.AddTransient<IEmailSender, AuthMessageSender>();
 
             services.Configure<AuthMessageSenderOptions>(config);
@@ -112,6 +165,8 @@ namespace WebAdventureAPI
             {
                 app.UseCors("CorsPolicy");
             }
+
+            app.UseAuthentication();
 
             app.UseMvc(config =>
             {

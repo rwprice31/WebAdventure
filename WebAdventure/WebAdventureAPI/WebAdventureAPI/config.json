@@ -5,5 +5,9 @@
     "SendGrid": {
         "User": "rbryan21@gmail.com",
         "Key": "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"
+    },
+    "JwtIssuerOptions": {
+        "Issuer": "WebAdventures",
+        "Audience": "http://localhost:44337"
     }
 }
