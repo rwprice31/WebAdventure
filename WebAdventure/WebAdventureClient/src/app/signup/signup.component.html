@@ -4,15 +4,8 @@
             <h1>Sign up</h1>
             <h2>Enter your credentials below</h2>
         </div>
-
-        <!--
-            Email
-            Username
-            Password
-            Password Confirmation
-        -->
     
-        <form [formGroup]="signupForm" (ngSubmit)="signup(signupForm)" novalidate autocomplete="off">
+        <form [formGroup]="signupForm" (ngSubmit)="signup()" novalidate autocomplete="off">
             <div class="form-group row">
                 <label for="email" class="col-sm-3 col-form-label">Email</label>
                 <div class="col-sm-9">
@@ -71,6 +64,11 @@
                             signupForm.get('password').errors.required"> 
                             You must enter a password.
                         </div>
+                        <div class="error-block-text" *ngIf="(signupForm.get('password').touched || 
+                            signupForm.get('password').dirty) &&
+                            (!signupForm.get('password').errors.required && signupForm.get('password').errors.minlength)"> 
+                            Your password must be at least 8 characters.
+                        </div>                        
                     </div>
                 </div>
             </div>

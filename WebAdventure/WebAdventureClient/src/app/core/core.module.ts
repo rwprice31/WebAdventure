@@ -4,6 +4,7 @@ import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { GenreService } from './services/genre.service';
 import { GameInfoService } from './services/game-info.service';
 import { UserService } from './services/user.service';
+import { ConfigService } from './services/utils/config.service';
 
 import { TOASTR_TOKEN } from './services/external-libraries/toastr.service';
 import { JQ_TOKEN } from './services/external-libraries/jQuery.service';
@@ -28,6 +29,7 @@ export declare let jQuery: any;
         // Default XSRF provider setup (change cookie or header name if needed): 
         // Can use this with Angular 2+ but if using HttpClientModule use options as shown above
         // { provide: XSRFStrategy, useValue: new CookieXSRFStrategy('XSRF-TOKEN', 'X-XSRF-TOKEN') },
+        ConfigService,
         UserService,
         GameInfoService, 
         GenreService,
