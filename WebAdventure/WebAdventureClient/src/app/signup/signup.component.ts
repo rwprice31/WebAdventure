@@ -65,7 +65,7 @@ export class SignupComponent implements OnInit {
       'username' : model.username,
       'password' : model.password
     };
-
+    
     return this.http.post(this.apiUrl, obj).map((res: Response) => {
       if (res.status === 200) {
         this.router.navigate(['']);

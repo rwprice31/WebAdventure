@@ -2,6 +2,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { EqualValidator } from './directives/equal-validator.directive';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -11,7 +13,8 @@ import { NgModule } from '@angular/core';
   exports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    EqualValidator
   ]
 })
 export class SharedModule { }
