@@ -38,7 +38,7 @@ export class UserService extends BaseService {
         let body = JSON.stringify(user);
         this.http.post(this.registrationRoute, body, { headers: this.headers })
             .map( (res: Response) => {
-                if (res.status === 201) {
+                if (res.status === 201 || res.status === 200) {
                     return true;
                 } else {
                     return false;
@@ -52,7 +52,7 @@ export class UserService extends BaseService {
         this.currentUser.username = user.username;
         this.http.put(this.updateUserRoute, user, { headers: this.headers })
         .map( (res: Response) => {
-            if (res.status === 200) {
+            if (res.status === 200 || res.status === 204) {
                 return true;
             } else {
                 return false;
@@ -65,9 +65,13 @@ export class UserService extends BaseService {
         let body = JSON.stringify(user);
         this.http.post(this.registrationRoute, body, { headers: this.headers })
         .map( (res: Response) => {
-            this.currentUser = res.json();
-            if (this.currentUser) {
-                return this.currentUser;
+            if (res.status === 200) {
+                this.currentUser = res.json();
+                if (this.currentUser) {
+                    return this.currentUser;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
