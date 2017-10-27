@@ -60,19 +60,17 @@ export class SignupComponent implements OnInit {
     suc => {
     },
     err => {
-      if (err.status == 400) {
+      if (err.status === 400) {
         this.myForm.reset();
-        this.error = "Username already exists. Please try again";
-      }
-      else if (err.status == 401) {
+        this.error = 'Username already exists. Please try again';
+      } else if (err.status === 401) {
         this.myForm.reset();
-        this.error = "Email is already in use. Please try again";
-      }
-      else if (err.status = 404) {
+        this.error = 'Email is already in use. Please try again';
+      } else if (err.status = 404) {
         this.myForm.reset();
-        this.error = "There was an error";
+        this.error = 'There was an error';
       }
     }
-  )
+  );
   }
  }
