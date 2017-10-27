@@ -8,10 +8,12 @@ import { ConfigService } from './utils/config.service';
 import { Observable } from 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/Rx';
 
-import { IUserRegistration } from './../../shared/interfaces/user-registration.interface';
-import { IUser } from './../../shared/interfaces/user.interface';
-import { IUserUpdate } from './../../shared/interfaces/user-update.interface';
-import { IUserLogin } from './../../shared/interfaces/user-login.interface';
+import { IUserRegistration } from './../../shared/interfaces/view-models/user-registration.interface';
+import { IUser } from './../../shared/interfaces/models/user.interface';
+import { IUserUpdate } from './../../shared/interfaces/view-models/user-update.interface';
+import { IUserLogin } from './../../shared/interfaces/view-models/user-login.interface';
+
+import { IUserRegistrationResponse } from './../../shared/interfaces/responses/user-registration-response.interface';
 
 @Injectable()
 export class UserService extends BaseService {
@@ -35,14 +37,16 @@ export class UserService extends BaseService {
         this.headers = configService.getHeaders();   
     }
 
-    register(user: IUserRegistration) {
+    register(user: IUserRegistration): Observable<IUserRegistrationResponse> {
         console.log('Body entering register = ' + JSON.stringify(user));
         console.log('Sending POST to ' + this.baseUrl + 'users/new');
         let body = JSON.stringify(user);
-        return this.http.post('https://localhost:44337/api/users/new', body, { headers: this.headers})
-            .subscribe( (res: Response) => {
-                console.log('Response from register = ' + res.json());
-            });
+        return this.http.post<IUserRegistrationResponse>('https://localhost:44337/api/users/new', body, { headers: this.headers})
+            .map( (res: IUserRegistrationResponse ) => {
+                console.log('IUserRegistrationResponse = ', res.json());
+                return res;
+            })
+            .catch(this.handleError);
     }
 
     updateCurrentUser(user: IUserUpdate) {

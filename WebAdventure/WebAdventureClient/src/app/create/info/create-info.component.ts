@@ -2,9 +2,9 @@ import { PageNotFoundComponent } from './../../page-not-found.component';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { IGame } from './../../shared/interfaces/game.interface';
-import { IGenre } from './../../shared/interfaces/genre.interface';
-import { IToastr } from './../../shared/interfaces/toastr.interface';
+import { IGame } from './../../shared/interfaces/models/game.interface';
+import { IGenre } from './../../shared/interfaces/models/genre.interface';
+import { IToastr } from './../../shared/interfaces/external-libraries/toastr.interface';
 
 import { GameInfoService } from './../../core/services/game-info.service';
 import { GenreService } from './../../core/services/genre.service';

@@ -9,7 +9,7 @@ import { ConfigService } from './services/utils/config.service';
 import { TOASTR_TOKEN } from './services/external-libraries/toastr.service';
 import { JQ_TOKEN } from './services/external-libraries/jQuery.service';
 
-import { IToastr } from '../shared/interfaces/toastr.interface';
+import { IToastr } from '../shared/interfaces/external-libraries/toastr.interface';
 
 import { EnsureModuleLoadedOnceGuard } from '../shared/ensureModuleLoadedOnceGuard';
 

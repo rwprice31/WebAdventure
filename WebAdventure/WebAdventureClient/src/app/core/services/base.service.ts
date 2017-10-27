@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs/Rx';
+import { IResponse } from '../../shared/interfaces/responses/response.interface';
 
 
 export abstract class BaseService {
@@ -7,26 +8,12 @@ export abstract class BaseService {
 
     protected handleError(error: any) {
 
-        let applicationError = error.headers.get('Application-Error');
+        let errorResponse: IResponse = error.error;
 
-        // either applicationError in header or model error in body
-        if (applicationError) {
-            return Observable.throw(applicationError);
-        }
+        console.log('Error = ', errorResponse);
 
-        let modelStateErrors:  '';
-        let serverError = error.json();
-
-        if (!serverError.type) {
-            for (let key in serverError) {
-                if (serverError[key]) {
-                    modelStateErrors += serverError[key] + '\n';
-                }
-            }
-        }
-
-        modelStateErrors = modelStateErrors = '' ? null : modelStateErrors;
-        return Observable.throw(modelStateErrors || 'Server error');
+        return Observable.throw(errorResponse || 'Server error');
+        
     }
 }
 

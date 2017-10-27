@@ -1,5 +1,5 @@
 
-import { IUserRegistration } from './../shared/interfaces/user-registration.interface';
+import { IUserRegistration } from './../shared/interfaces/view-models/user-registration.interface';
 import { Component, OnInit } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
@@ -45,7 +45,7 @@ export class SignupComponent implements OnInit {
       username: this.signupForm.controls['username'].value,
       password: this.signupForm.controls['password'].value
     };
-    this.userService.register(user);
+    this.userService.register(user).subscribe();
   }
 
  }
