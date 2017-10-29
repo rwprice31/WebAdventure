@@ -19,7 +19,6 @@ using WebAdventureAPI.Models.Responses;
 namespace WebAdventureAPI.Controllers
 {
     [Route("api/users")]
-    [EnableCors("CorsPolicy")]
     public class UserController : Controller
     {
         private UserManager<WAUser> userManager;
