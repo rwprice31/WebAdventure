@@ -19,6 +19,7 @@ using WebAdventureAPI.Models.Responses;
 namespace WebAdventureAPI.Controllers
 {
     [Route("api/users")]
+    [EnableCors("CorsPolicy")]
     public class UserController : Controller
     {
         private UserManager<WAUser> userManager;
@@ -60,25 +61,25 @@ namespace WebAdventureAPI.Controllers
             var user = userManager.Users.FirstOrDefault(x => x.UserName == newUser.Username);
             if (user != null)
             {
-                Response response = new Response
+                Response errorResponse = new Response
                 {
                     StatusCode = 400,
                     Status = false,
                     StatusText = "A user with that username already exists."
                 };
-                return StatusCode(400, response);
+                return StatusCode(400, errorResponse);
             }
 
             user = userManager.Users.FirstOrDefault(x => x.Email == newUser.Email);
             if (user != null)
             {
-                Response response = new Response
+                Response errorResponse = new Response
                 {
                     StatusCode = 400,
                     Status = false,
                     StatusText = "A user with that email already exists."
                 };
-                return StatusCode(400, response);
+                return StatusCode(400, errorResponse);
             }
 
             var result = await userManager.CreateAsync(new WAUser
@@ -114,13 +115,13 @@ namespace WebAdventureAPI.Controllers
             }
             else
             {
-                Response response = new Response
+                Response errorResponse = new Response
                 {
                     StatusCode = 500,
                     Status = false,
                     StatusText = "A server error has occured."
                 };
-                return StatusCode(500, response);
+                return StatusCode(500, errorResponse);
             }
         }
 
@@ -152,25 +153,40 @@ namespace WebAdventureAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            var identity = await GetClaimsIdentity(loginDto);
-            if (identity == null)
+            (ClaimsIdentity identity, WAUser user) = await GetClaimsIdentity(loginDto);
+            if (identity == null || user == null)
             {
-                return BadRequest("Invalid username or password.");
+                Response errorResponse = new Response
+                {
+                    StatusCode = 400,
+                    Status = false,
+                    StatusText = "Incorrect login."
+                };
+                return StatusCode(400, errorResponse);
             }
 
-            var response = new
+            UserLoginResponse userLoginResponse = new UserLoginResponse
             {
-                id = identity.Claims.Single(c => c.Type == "id").Value,
-                auth_token = await jwtFactory.GenerateEncodedToken(loginDto.Email, identity),
-                expires_in = (int)jwtOptions.ValidFor.TotalSeconds
+                StatusCode = 200,
+                Status = true,
+                StatusText = "User logged in successfully!",
+                User = new UserDto
+                {
+                    Auth_Token = await jwtFactory.GenerateEncodedToken(loginDto.Email, identity),
+                    Email = user.Email,
+                    Username = user.UserName,
+                    Id = user.Id
+                }
             };
-
-            var json = JsonConvert.SerializeObject(response);
-            return new OkObjectResult(json);
+            return StatusCode(200, userLoginResponse);
         }
 
-        private async Task<ClaimsIdentity> GetClaimsIdentity(LoginDto loginDto)
+        private async Task<(ClaimsIdentity, WAUser)> GetClaimsIdentity(LoginDto loginDto)
         {
+
+            ClaimsIdentity identity = null;
+            WAUser user = null;
+
             if (!string.IsNullOrEmpty(loginDto.Email) && !string.IsNullOrEmpty(loginDto.Password))
             {
                 // get the user to verifty
@@ -181,13 +197,13 @@ namespace WebAdventureAPI.Controllers
                     // check the credentials  
                     if (await userManager.CheckPasswordAsync(userToVerify, loginDto.Password))
                     {
-                        return await Task.FromResult(jwtFactory.GenerateClaimsIdentity(loginDto.Email, userToVerify.Id));
+                        identity =  await Task.FromResult(jwtFactory.GenerateClaimsIdentity(loginDto.Email, userToVerify.Id));
+                        user = userToVerify;
                     }
                 }
             }
-
-            // Credentials are invalid, or account doesn't exist
-            return await Task.FromResult<ClaimsIdentity>(null);
+            // return claims identity and user
+            return (identity, user);
         }
     }
 }

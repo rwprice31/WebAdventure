@@ -8,6 +8,8 @@ namespace WebAdventureAPI.Models.Dtos
 {
     public class UserDto
     {
+        public string Auth_Token { get; set; }
+
         public string Email { get; set; }
 
         public string Username { get; set; }

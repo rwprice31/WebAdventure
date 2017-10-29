@@ -1,5 +1,6 @@
+import { IUserRegistrationResponse } from './../shared/interfaces/responses/user-registration-response.interface';
 
-import { IUserRegistration } from './../shared/interfaces/view-models/user-registration.interface';
+import { IUserRegistrationViewModel } from './../shared/interfaces/view-models/user-registration-view-model.interface';
 import { Component, OnInit } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
@@ -40,12 +41,20 @@ export class SignupComponent implements OnInit {
   }
 
   signup() {
-    let user: IUserRegistration = {
+    let user: IUserRegistrationViewModel = {
       email: this.signupForm.controls['email'].value,
       username: this.signupForm.controls['username'].value,
       password: this.signupForm.controls['password'].value
     };
-    this.userService.register(user).subscribe();
+    this.userService.register(user).subscribe( (res: IUserRegistrationResponse) => {
+      // successful register
+      if (res.status) {
+        console.log('Status = true, res = ' + res);
+      // something went wrong
+      } else {
+        console.log('Status = false, res = ' + res);
+      }
+    });
   }
 
  }
