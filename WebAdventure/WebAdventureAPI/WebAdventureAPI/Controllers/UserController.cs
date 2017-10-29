@@ -1,13 +1,18 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.HttpSys;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.Dtos;
+using WebAdventureAPI.Models.Security;
 using WebAdventureAPI.Services;
 
 namespace WebAdventureAPI.Controllers
@@ -18,15 +23,26 @@ namespace WebAdventureAPI.Controllers
         private UserManager<WAUser> userManager;
         private SignInManager<WAUser> signInManager;
         private IEmailSender emailSender;
+        private readonly IJwtFactory jwtFactory;
+        private readonly JsonSerializerSettings serializerSettings;
+        private readonly JwtIssuerOptions jwtOptions;
 
         public UserController(
             UserManager<WAUser> userManager,
             SignInManager<WAUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IJwtFactory jwtFactory,
+            IOptions<JwtIssuerOptions> jwtOptions)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.emailSender = emailSender;
+            this.jwtFactory = jwtFactory;
+            this.jwtOptions = jwtOptions.Value;
+            serializerSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented
+            };
         }
 
         [HttpGet]
@@ -109,26 +125,42 @@ namespace WebAdventureAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            var user = userManager.Users.FirstOrDefault(x => x.Email == loginDto.Email);
-            if (user == null)
+            var identity = await GetClaimsIdentity(loginDto);
+            if (identity == null)
             {
-                var result = BadRequest("");
-                result.StatusCode = 401;
-                return result;
+                return BadRequest("Invalid username or password.");
             }
-            else
+
+            var response = new
             {
-                var username = user.UserName;
-                var result = await signInManager.PasswordSignInAsync(username, loginDto.Password, true, false);
-                if (result.Succeeded)
+                id = identity.Claims.Single(c => c.Type == "id").Value,
+                auth_token = await jwtFactory.GenerateEncodedToken(loginDto.Email, identity),
+                expires_in = (int)jwtOptions.ValidFor.TotalSeconds
+            };
+
+            var json = JsonConvert.SerializeObject(response);
+            return new OkObjectResult(json);
+        }
+
+        private async Task<ClaimsIdentity> GetClaimsIdentity(LoginDto loginDto)
+        {
+            if (!string.IsNullOrEmpty(loginDto.Email) && !string.IsNullOrEmpty(loginDto.Password))
+            {
+                // get the user to verifty
+                var userToVerify = await userManager.FindByEmailAsync(loginDto.Email);
+
+                if (userToVerify != null)
                 {
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest();
+                    // check the credentials  
+                    if (await userManager.CheckPasswordAsync(userToVerify, loginDto.Password))
+                    {
+                        return await Task.FromResult(jwtFactory.GenerateClaimsIdentity(loginDto.Email, userToVerify.Id));
+                    }
                 }
             }
+
+            // Credentials are invalid, or account doesn't exist
+            return await Task.FromResult<ClaimsIdentity>(null);
         }
     }
 }

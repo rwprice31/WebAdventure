@@ -1,10 +1,14 @@
+
+import { IUserRegistration } from './../shared/interfaces/user-registration.interface';
 import { Component, OnInit } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 
-import { signupModel } from './signupModel';
+import { matchOtherValidator } from './../shared/functions/match-other-validator';
+
+import { UserService } from './../core/services/user.service';
 
 @Component({
   templateUrl: './signup.component.html',
@@ -12,67 +16,37 @@ import { signupModel } from './signupModel';
 })
 export class SignupComponent implements OnInit {
 
-  model = new signupModel('','','','');
-  error : string = "Please eneter valid credentials";
-  public submitted: boolean;
-  private apiUrl = 'https://localhost:44337/api/users/new';
-  data: any ={};
-  passwordError: string = "Password must contain a number";
-  confirmPasswordError: string = "Password must contain a number";
-  
-  public myForm = new FormGroup({
-    email: new FormControl('', [<any>Validators.required, <any>Validators.maxLength(60), <any>Validators.minLength(5)]),
-    username: new FormControl('', [<any>Validators.required, <any>Validators.minLength(5), <any>Validators.maxLength(40)]),
-    password: new FormControl('', [<any>Validators.required, <any>Validators.minLength(8), 
-              <any>Validators.maxLength(30)]),
-    confirmPassword: new FormControl('', [<any>Validators.required, <any>Validators.minLength(8), 
-              <any>Validators.maxLength(30)])
-  });
+  signupForm: FormGroup;
 
-  constructor(private http: Http, private router: Router){}
+  constructor(private http: Http,
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private userService: UserService
+  ) {
 
-  ngOnInit(){}
-
-  register(model, isValid: boolean) {
-    this.submitted = true;
-    if (model.password != model.confirmPassword) {
-      isValid = false;
-      this.error = "Passwords must match";
-    }
-    if (isValid) {
-      this.registerUser(model);
-    }
   }
 
-  registerUser(model) {
-    var obj = { 
-      "email" : model.email,
-      "username" : model.username,
-      "password" : model.password
+  ngOnInit() {
+    this.buildForm();
+  }
+
+  buildForm() {
+    this.signupForm = this.formBuilder.group({
+      email: ['', [Validators.email, Validators.required, Validators.maxLength(60)]],
+      username: ['', [Validators.required, Validators.maxLength(40)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      passwordConfirmation: ['', [Validators.required, matchOtherValidator('password')]]
+    });
+  }
+
+  signup() {
+    let user: IUserRegistration = {
+      email: this.signupForm.controls['email'].value,
+      username: this.signupForm.controls['username'].value,
+      password: this.signupForm.controls['password'].value
     };
-
-    return this.http.post(this.apiUrl, obj).map((res: Response) =>
-  {
-    if (res.status == 200) {
-      this.router.navigate(['']);
-    }
-  }).subscribe(
-    suc => {
-    },
-    err => {
-      if (err.status == 400) {
-        this.myForm.reset();
-        this.error = "Username already exists. Please try again";
-      }
-      else if (err.status == 401) {
-        this.myForm.reset();
-        this.error = "Email is already in use. Please try again";
-      }
-      else if (err.status = 404) {
-        this.myForm.reset();
-        this.error = "There was an error";
-      }
-    }
-  )
+    this.userService.register(user);
   }
+
  }
+

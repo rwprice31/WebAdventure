@@ -31,6 +31,10 @@ form {
     text-align: left;
     button {
         float: right;
+        margin-right: 5%;
+    }
+    button:first-of-type {
+        margin-right: 0%;
     }
     .has-error {
         border: 1px solid;
@@ -47,7 +51,25 @@ form {
 }
 
 // Page headings
-h1 {
-    font-size: 2.5em;
-    padding-bottom: 45px;
+.page-header {
+    padding-bottom: 5%;
+    h1 {
+        font-size: 2.5em;
+    }
+    h2 {
+        font-size: 1.25em;
+    }
+}
+
+// For page's with solo content (no side nav, etc.)
+.solo-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 2.5%;
+    padding-left: 20%;
+    padding-right: 20%;
+    .center-text {
+        align-self: center;
+    }
 }
