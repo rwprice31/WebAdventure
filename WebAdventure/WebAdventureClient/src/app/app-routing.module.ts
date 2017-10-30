@@ -6,6 +6,8 @@ import { PageNotFoundComponent } from './page-not-found.component';
 import { GamesComponent } from './games/games.component';
 import { SignupComponent } from './signup/signup.component';
 import { LoginComponent } from './login/login.component';
+import { ResetPasswordComponent } from './resetpassword/resetpassword.component';
+
 
 // Create
 import { CreateComponent } from './create/create.component';
@@ -16,6 +18,7 @@ const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'games', component: GamesComponent },
+    { path: 'resetpassword', component: ResetPasswordComponent},
     { 
         path: 'create',
         loadChildren: 'app/create/create.module#CreateModule'
@@ -32,6 +35,6 @@ const routes: Routes = [
     exports: [ RouterModule ]
 })
 export class AppRoutingModule {
-    static components = [ HomeComponent, LoginComponent, SignupComponent, 
+    static components = [ HomeComponent, LoginComponent, SignupComponent, ResetPasswordComponent,
         GamesComponent, PageNotFoundComponent ];
  }
