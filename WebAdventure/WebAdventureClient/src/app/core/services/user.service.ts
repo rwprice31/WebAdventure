@@ -1,3 +1,4 @@
+import { IUserLoginResponse } from './../../shared/interfaces/responses/user-login.response';
 import { Response } from '@angular/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -8,46 +9,92 @@ import { ConfigService } from './utils/config.service';
 import { Observable } from 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/Rx';
 
-import { IUserRegistration } from './../../shared/interfaces/user-registration.interface';
-import { IUser } from './../../shared/interfaces/user.interface';
-import { IUserUpdate } from './../../shared/interfaces/user-update.interface';
-import { IUserLogin } from './../../shared/interfaces/user-login.interface';
+
+import { IResponse } from '../../shared/interfaces/responses/response.interface';
+import { IUserRegistrationViewModel } from './../../shared/interfaces/view-models/user-registration-view-model.interface';
+import { IUser } from './../../shared/interfaces/models/user.interface';
+import { IUserUpdateViewModel } from './../../shared/interfaces/view-models/user-update-view-model.interface';
+import { IUserLoginViewModel } from './../../shared/interfaces/view-models/user-login-view-model.interface';
+
+import { IUserRegistrationResponse } from './../../shared/interfaces/responses/user-registration-response.interface';
 import { IUserResetPassword } from "../../shared/interfaces/user-resetPassword.interface";
+import { IUserResetPasswordViewModel } from "../../shared/interfaces/view-models/IUser-resetpassword-view-model";
+import { IUserResetPasswordResponse } from "../../shared/interfaces/responses/reset-password-response";
 
 
 @Injectable()
 export class UserService extends BaseService {
 
-    public currentUser: IUser;
+    private currentUser: IUser;
 
-    baseUrl = '';
-    headers: HttpHeaders;
+    private baseUrl = '';
+    private headers: HttpHeaders;
+    private redirectUrl: string;
 
-    registrationRoute = this.baseUrl + 'users/new';
-    loginRoute = this.baseUrl + 'users/login';
-    logoutRoute = this.baseUrl + 'users/logout';
-    resetPasswordRoute = this.baseUrl + 'users/reset';
-    updateUserRoute = this.baseUrl + 'users/update';
+    private registrationRoute: string;
+    private loginRoute: string;
+    private logoutRoute: string;
+    private resetPasswordRoute: string;
+    private updateUserRoute: string;
     
     constructor(private http: HttpClient,
         private configService: ConfigService) {
         super();
         this.baseUrl = configService.getApiURI(); 
-        console.log(this.baseUrl);    
+        this.registrationRoute = this.baseUrl + 'users/new';
+        this.loginRoute = this.baseUrl + 'users/login';
+        this.logoutRoute = this.baseUrl + 'users/logout';
+        this.resetPasswordRoute = this.baseUrl + 'users/reset';
+        this.updateUserRoute = this.baseUrl + 'users/update';
         this.headers = configService.getHeaders();   
+        this.currentUser = this.getCurrentUser();
     }
 
-    register(user: IUserRegistration) {
+    setCurrentUserToLocalStorage(user: IUser) {
+        console.log('Setting user to local storage = ', JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(user));
+    }
+
+    getCurrentUser(): IUser {
+        let user: IUser = JSON.parse(localStorage.getItem('user'));
+        return user;
+    }
+
+    logout() {
+        console.log('Logged out!');
+        localStorage.removeItem('user');
+        this.currentUser = null;
+    }
+
+    register(user: IUserRegistrationViewModel): Observable<IResponse> {
         console.log('Body entering register = ' + JSON.stringify(user));
-        console.log('Sending POST to ' + this.baseUrl + 'users/new');
+        console.log('Sending POST to ' + this.registrationRoute);
         let body = JSON.stringify(user);
-        return this.http.post('https://localhost:44337/api/users/new', body, { headers: this.headers})
-            .subscribe( (res: Response) => {
-                console.log('Response from register = ' + res.json());
-            });
+        return this.http.post<IUserRegistrationResponse>(this.registrationRoute, body, { headers: this.headers})
+            .map( (res: IUserRegistrationResponse ) => {
+                console.log('IUserRegistrationResponse = ', res);
+                return res;
+            })
+            .catch(this.handleError);
     }
 
-    updateCurrentUser(user: IUserUpdate) {
+    loginUser(user: IUserLoginViewModel): Observable<IResponse> {
+        console.log('Body entering loginUser = ' + JSON.stringify(user));
+        console.log('Sending POST to ' + this.loginRoute);
+        let body = JSON.stringify(user);
+        return this.http.post<IUserLoginResponse>(this.loginRoute, body, { headers: this.headers })
+        .map( (res: IUserLoginResponse) => {
+            console.log('IUserLoginResponse = ', res);
+            if (res.status) {
+                console.log('Setting current user equal to ', res.user);
+                this.setCurrentUserToLocalStorage(res.user);
+            }
+            return res;
+        })
+        .catch(this.handleError);
+    }
+
+    updateCurrentUser(user: IUserUpdateViewModel) {
         this.currentUser.email = user.email;
         this.currentUser.username = user.username;
         this.http.put(this.updateUserRoute, user, { headers: this.headers })
@@ -61,47 +108,29 @@ export class UserService extends BaseService {
         .catch(this.handleError);
     }
 
-    resetPassword(user: IUserResetPassword) {
-      //this.currentUser.password = user.password;
-      //this.http.put(this.resetPasswordRoute, user, { headers: this.headers })
-      //  .map((res: Response) => {
-      //    if (res.status === 200 || res.status === 204) {
-      //      return true;
-      //    } else {
-      //      return false;
-      //    }
-      //  })
-      //  .catch(this.handleError);
 
+    resetPassword(user: IUserResetPasswordViewModel): Observable<IResponse>{
+  
       console.log('Reset password = ' + JSON.stringify(user));
       console.log('Sending POST to ' + this.baseUrl + 'users/reset');
       let body = JSON.stringify(user);
-      return this.http.post('https://localhost:44337/api/users/reset', body, { headers: this.headers })
-        .subscribe((res: Response) => {
-          console.log('Response from reset password = ' + res.json());
-        });
-    }
-
-    loginUser(user: IUserLogin) {
-        let body = JSON.stringify(user);
-        this.http.post(this.loginRoute, body, { headers: this.headers })
-        .map( (res: Response) => {
-            if (res.status === 200) {
-                this.currentUser = res.json();
-                if (this.currentUser) {
-                    return this.currentUser;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
+      return this.http.post<IUserResetPasswordResponse>(this.resetPasswordRoute, body, { headers: this.headers })
+        .map((res: IUserResetPasswordResponse) => {
+          console.log('IUserResetPasswordResponse = ', res);
+          return res;
         })
         .catch(this.handleError);
     }
 
-    logout() {
-      this.currentUser = undefined;
+ 
+    setRedirectUrl(url: string) {
+        this.redirectUrl = url;
+    }
+
+    getRedirectUrl(): string {
+        let url = this.redirectUrl;
+        return url;
+
     }
 
 }

@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Rx';
-
+import { IResponse } from '../../shared/interfaces/responses/response.interface';
 
 export abstract class BaseService {
 
@@ -7,26 +7,23 @@ export abstract class BaseService {
 
     protected handleError(error: any) {
 
-        let applicationError = error.headers.get('Application-Error');
+        // grab that error from the HttpClientError object
+        let errorResponse: IResponse = error.error;
 
-        // either applicationError in header or model error in body
-        if (applicationError) {
-            return Observable.throw(applicationError);
+        // if no error response found, just create a generic server error response
+        if (!errorResponse) {
+            errorResponse = {
+                statusCode: 500,
+                status: false,
+                statusText: 'Server Error' 
+            };
         }
 
-        let modelStateErrors:  '';
-        let serverError = error.json();
+        // log error to console
+        console.log('Error = ', errorResponse);
 
-        if (!serverError.type) {
-            for (let key in serverError) {
-                if (serverError[key]) {
-                    modelStateErrors += serverError[key] + '\n';
-                }
-            }
-        }
-
-        modelStateErrors = modelStateErrors = '' ? null : modelStateErrors;
-        return Observable.throw(modelStateErrors || 'Server error');
+        // return observable for caller to handle
+        return Observable.of(errorResponse);
     }
 }
 

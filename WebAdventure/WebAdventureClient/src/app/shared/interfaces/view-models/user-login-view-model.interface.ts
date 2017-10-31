@@ -1,4 +1,4 @@
-export interface IUserLogin {
+export interface IUserLoginViewModel {
     email: string;
     password: string;
 }

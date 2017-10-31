@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+// Guards 
+import { AuthGuard } from './core/services/guards/auth-guard.service';
+import { NotAlreadyLoggedInGuard } from './core/services/guards/not-already-logged-in-guard.service';
+
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { GamesComponent } from './games/games.component';
@@ -11,16 +15,17 @@ import { ResetPasswordComponent } from './resetpassword/resetpassword.component'
 
 // Create
 import { CreateComponent } from './create/create.component';
-    import { CreateInfoComponent } from "./create/info/create-info.component";
+import { CreateInfoComponent } from './create/info/create-info.component';
 
 const routes: Routes = [
     { path: 'home', component: HomeComponent },
-    { path: 'login', component: LoginComponent },
+    { path: 'login', canActivate: [NotAlreadyLoggedInGuard], component: LoginComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'games', component: GamesComponent },
     { path: 'resetpassword', component: ResetPasswordComponent},
     { 
         path: 'create',
+        canActivate: [AuthGuard],
         loadChildren: 'app/create/create.module#CreateModule'
     },
     { path: '',  pathMatch: 'full', redirectTo: 'home' },
