@@ -8,6 +8,8 @@ import { UserService } from './../core/services/user.service';
 import { resetpasswordModel } from './resetpasswordModel';
 import { matchOtherValidator } from "../shared/functions/match-other-validator";
 import { IUserResetPassword } from "../shared/interfaces/user-resetPassword.interface";
+import { IUserResetPasswordViewModel } from "../shared/interfaces/view-models/IUser-resetpassword-view-model";
+import { IUserResetPasswordResponse } from "../shared/interfaces/responses/reset-password-response";
 
 @Component({
     templateUrl: './resetpassword.component.html',
@@ -40,10 +42,16 @@ export class ResetPasswordComponent implements OnInit{
       }
 
       reset() {
-        let userInfo: IUserResetPassword = {
+        let user: IUserResetPasswordViewModel = {
           email: this.resetForm.controls['email'].value,
           password: this.resetForm.controls['password'].value
         };
-        this.userService.resetPassword(userInfo);
+        this.userService.resetPassword(user).subscribe((res: IUserResetPasswordResponse) => {
+          if (res.status) {
+            console.log('Status = true, res = ' + res);
+          } else {
+            console.log('Status = false, res = ' + res);
+          }
+        });
       }
 }
