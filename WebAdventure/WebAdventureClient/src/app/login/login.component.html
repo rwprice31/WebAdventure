@@ -38,7 +38,8 @@
         </div>           
         <button type="submit" class="btn" [disabled]="!loginForm.valid"
             [ngClass]="{'invalid-button': !loginForm.valid }">Login</button>
-        <button type="link" class="btn" routerLinkActive="active" [routerLink]="['/signup']">Sign up</button> 
+        <button type="link" class="btn" routerLinkActive="active" [routerLink]="['/signup']">Sign up</button>
+      <button type="link" class="btn" routerLinkActive="active" [routerLink]="['/resetpassword']">Reset Password</button> 
     </form>
 </div>
 

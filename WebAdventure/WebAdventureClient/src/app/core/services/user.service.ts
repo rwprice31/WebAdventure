@@ -12,6 +12,8 @@ import { IUserRegistration } from './../../shared/interfaces/user-registration.i
 import { IUser } from './../../shared/interfaces/user.interface';
 import { IUserUpdate } from './../../shared/interfaces/user-update.interface';
 import { IUserLogin } from './../../shared/interfaces/user-login.interface';
+import { IUserResetPassword } from "../../shared/interfaces/user-resetPassword.interface";
+
 
 @Injectable()
 export class UserService extends BaseService {
@@ -59,9 +61,30 @@ export class UserService extends BaseService {
         .catch(this.handleError);
     }
 
+    resetPassword(user: IUserResetPassword) {
+      //this.currentUser.password = user.password;
+      //this.http.put(this.resetPasswordRoute, user, { headers: this.headers })
+      //  .map((res: Response) => {
+      //    if (res.status === 200 || res.status === 204) {
+      //      return true;
+      //    } else {
+      //      return false;
+      //    }
+      //  })
+      //  .catch(this.handleError);
+
+      console.log('Reset password = ' + JSON.stringify(user));
+      console.log('Sending POST to ' + this.baseUrl + 'users/reset');
+      let body = JSON.stringify(user);
+      return this.http.post('https://localhost:44337/api/users/reset', body, { headers: this.headers })
+        .subscribe((res: Response) => {
+          console.log('Response from reset password = ' + res.json());
+        });
+    }
+
     loginUser(user: IUserLogin) {
         let body = JSON.stringify(user);
-        this.http.post(this.registrationRoute, body, { headers: this.headers })
+        this.http.post(this.loginRoute, body, { headers: this.headers })
         .map( (res: Response) => {
             if (res.status === 200) {
                 this.currentUser = res.json();
@@ -78,7 +101,7 @@ export class UserService extends BaseService {
     }
 
     logout() {
-        this.currentUser = undefined;
+      this.currentUser = undefined;
     }
 
 }
