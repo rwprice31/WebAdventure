@@ -56,6 +56,7 @@ export class LoginComponent implements OnInit {
           }
         } else {
           console.log('Login failed = ', res);
+          this.loginForm.controls['password'].reset();
           this.toastr.error(res.statusText);
         }
       }
