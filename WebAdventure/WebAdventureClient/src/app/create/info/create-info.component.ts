@@ -11,7 +11,6 @@ import { GenreService } from './../../core/services/genre.service';
 import { TOASTR_TOKEN } from './../../core/services/external-libraries/toastr.service';
 
 @Component({
-  selector: 'info',
   templateUrl: './create-info.component.html',
   styleUrls: ['./create-info.component.scss']
 })

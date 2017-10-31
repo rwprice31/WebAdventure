@@ -20,16 +20,17 @@ import { IUserRegistrationResponse } from './../../shared/interfaces/responses/u
 @Injectable()
 export class UserService extends BaseService {
 
-    public currentUser: IUser;
+    private currentUser: IUser;
 
-    baseUrl = '';
-    headers: HttpHeaders;
+    private baseUrl = '';
+    private headers: HttpHeaders;
+    private redirectUrl: string;
 
-    registrationRoute: string;
-    loginRoute: string;
-    logoutRoute: string;
-    resetPasswordRoute: string;
-    updateUserRoute: string;
+    private registrationRoute: string;
+    private loginRoute: string;
+    private logoutRoute: string;
+    private resetPasswordRoute: string;
+    private updateUserRoute: string;
     
     constructor(private http: HttpClient,
         private configService: ConfigService) {
@@ -41,6 +42,23 @@ export class UserService extends BaseService {
         this.resetPasswordRoute = this.baseUrl + 'users/reset';
         this.updateUserRoute = this.baseUrl + 'users/update';
         this.headers = configService.getHeaders();   
+        this.currentUser = this.getCurrentUser();
+    }
+
+    setCurrentUserToLocalStorage(user: IUser) {
+        console.log('Setting user to local storage = ', JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(user));
+    }
+
+    getCurrentUser(): IUser {
+        let user: IUser = JSON.parse(localStorage.getItem('user'));
+        return user;
+    }
+
+    logout() {
+        console.log('Logged out!');
+        localStorage.removeItem('user');
+        this.currentUser = null;
     }
 
     register(user: IUserRegistrationViewModel): Observable<IResponse> {
@@ -62,6 +80,10 @@ export class UserService extends BaseService {
         return this.http.post<IUserLoginResponse>(this.loginRoute, body, { headers: this.headers })
         .map( (res: IUserLoginResponse) => {
             console.log('IUserLoginResponse = ', res);
+            if (res.status) {
+                console.log('Setting current user equal to ', res.user);
+                this.setCurrentUserToLocalStorage(res.user);
+            }
             return res;
         })
         .catch(this.handleError);
@@ -81,8 +103,12 @@ export class UserService extends BaseService {
         .catch(this.handleError);
     }
 
-    logout() {
-        this.currentUser = undefined;
+    setRedirectUrl(url: string) {
+        this.redirectUrl = url;
     }
 
+    getRedirectUrl(): string {
+        let url = this.redirectUrl;
+        return url;
+    }
 }

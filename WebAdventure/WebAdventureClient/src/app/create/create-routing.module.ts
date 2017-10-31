@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { CreateInfoComponent } from './info/create-info.component';
-import { CreateComponent } from "./create.component";
+import { CreateComponent } from './create.component';
 
 // path's after /create/
 const routes: Routes = [

@@ -5,6 +5,8 @@ import { GenreService } from './services/genre.service';
 import { GameInfoService } from './services/game-info.service';
 import { UserService } from './services/user.service';
 import { ConfigService } from './services/utils/config.service';
+import { AuthGuard } from './services/guards/auth-guard.service';
+import { NotAlreadyLoggedInGuard } from './services/guards/not-already-logged-in-guard.service';
 
 import { TOASTR_TOKEN } from './services/external-libraries/toastr.service';
 import { JQ_TOKEN } from './services/external-libraries/jQuery.service';
@@ -33,6 +35,8 @@ export declare let jQuery: any;
         UserService,
         GameInfoService, 
         GenreService,
+        AuthGuard,
+        NotAlreadyLoggedInGuard,
         { provide: TOASTR_TOKEN, useValue: toastr },
         { provide: JQ_TOKEN, useValue: jQuery }
     ]
