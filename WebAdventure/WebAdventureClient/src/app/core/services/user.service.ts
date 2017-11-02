@@ -1,4 +1,3 @@
-import { IUserLoginResponse } from './../../shared/interfaces/responses/user-login.response';
 import { Response } from '@angular/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -7,7 +6,6 @@ import { BaseService } from './base.service';
 import { ConfigService } from './utils/config.service';
 
 import { Observable } from 'rxjs/Rx';
-import { BehaviorSubject } from 'rxjs/Rx';
 
 import { IResponse } from '../../shared/interfaces/responses/response.interface';
 import { IUserRegistrationViewModel } from './../../shared/interfaces/view-models/user-registration-view-model.interface';
@@ -16,6 +14,7 @@ import { IUserUpdateViewModel } from './../../shared/interfaces/view-models/user
 import { IUserLoginViewModel } from './../../shared/interfaces/view-models/user-login-view-model.interface';
 
 import { IUserRegistrationResponse } from './../../shared/interfaces/responses/user-registration-response.interface';
+import { IUserLoginResponse } from './../../shared/interfaces/responses/user-login.response';
 
 @Injectable()
 export class UserService extends BaseService {
