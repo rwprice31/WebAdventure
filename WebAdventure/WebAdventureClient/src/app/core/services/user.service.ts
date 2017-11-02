@@ -9,6 +9,7 @@ import { ConfigService } from './utils/config.service';
 import { Observable } from 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/Rx';
 
+
 import { IResponse } from '../../shared/interfaces/responses/response.interface';
 import { IUserRegistrationViewModel } from './../../shared/interfaces/view-models/user-registration-view-model.interface';
 import { IUser } from './../../shared/interfaces/models/user.interface';
@@ -16,6 +17,10 @@ import { IUserUpdateViewModel } from './../../shared/interfaces/view-models/user
 import { IUserLoginViewModel } from './../../shared/interfaces/view-models/user-login-view-model.interface';
 
 import { IUserRegistrationResponse } from './../../shared/interfaces/responses/user-registration-response.interface';
+import { IUserResetPassword } from "../../shared/interfaces/user-resetPassword.interface";
+import { IUserResetPasswordViewModel } from "../../shared/interfaces/view-models/IUser-resetpassword-view-model";
+import { IUserResetPasswordResponse } from "../../shared/interfaces/responses/reset-password-response";
+
 
 @Injectable()
 export class UserService extends BaseService {
@@ -103,6 +108,21 @@ export class UserService extends BaseService {
         .catch(this.handleError);
     }
 
+
+    resetPassword(user: IUserResetPasswordViewModel): Observable<IResponse>{
+  
+      console.log('Reset password = ' + JSON.stringify(user));
+      console.log('Sending POST to ' + this.baseUrl + 'users/reset');
+      let body = JSON.stringify(user);
+      return this.http.post<IUserResetPasswordResponse>(this.resetPasswordRoute, body, { headers: this.headers })
+        .map((res: IUserResetPasswordResponse) => {
+          console.log('IUserResetPasswordResponse = ', res);
+          return res;
+        })
+        .catch(this.handleError);
+    }
+
+ 
     setRedirectUrl(url: string) {
         this.redirectUrl = url;
     }
@@ -110,5 +130,7 @@ export class UserService extends BaseService {
     getRedirectUrl(): string {
         let url = this.redirectUrl;
         return url;
+
     }
+
 }
