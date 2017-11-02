@@ -10,6 +10,8 @@ using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.Dtos;
 using WebAdventureAPI.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using WebAdventureAPI.Models.Responses.Games;
+using WebAdventureAPI.Models.Responses;
 
 namespace WebAdventureAPI.Controllers
 {
@@ -45,40 +47,75 @@ namespace WebAdventureAPI.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
-        public JsonResult CreateGame([FromHeader] string gameId, [FromBody] GameDto gameDto)
+        public IActionResult CreateGame([FromBody] GameDto gameDto)
         {
-            if (int.Parse(gameId) == 0)
+            try
             {
-                var newGame = new Game
+                if (gameDto.Id == 0)
                 {
-                    Name = gameDto.Name,
-                    Descr = gameDto.Descr,
-                    AuthorId = gameDto.Author,
-                    GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
-                };
-
-                repo.AddGameToDb(newGame);
-
-                gameId = repo.GetGameId(newGame).ToString();
-            }
-            else
-            {
-                var game = new Game
+                    var newGame = new Game
+                    {
+                        Name = gameDto.Name,
+                        Descr = gameDto.Descr,
+                        AuthorId = gameDto.Author,
+                        GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
+                    };
+                    repo.AddGameToDb(newGame);
+                    int newGameId = repo.GetGameId(newGame);
+                    GameCreationResponse successResponse = new GameCreationResponse
+                    {
+                        StatusText = "New game successfully created!",
+                        StatusCode = 201,
+                        Status = true,
+                        Game = new GameDto
+                        {
+                            Id = newGameId,
+                            Author = gameDto.Author,
+                            Descr = gameDto.Descr,
+                            Genre = gameDto.Genre,
+                            Name = gameDto.Name
+                        }
+                    };
+                    return StatusCode(201, successResponse);
+                }
+                else
                 {
-                    Id = int.Parse(gameId),
-                    Name = gameDto.Name,
-                    Descr = gameDto.Descr,
-                    AuthorId = gameDto.Author,
-                    GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
-                };
-
-                repo.UpdateGame(game);
+                    var game = new Game
+                    {
+                        Id = gameDto.Id,
+                        Name = gameDto.Name,
+                        Descr = gameDto.Descr,
+                        AuthorId = gameDto.Author,
+                        GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
+                    };
+                    repo.UpdateGame(game);
+                    GameUpdationResponse successResponse = new GameUpdationResponse
+                    {
+                        StatusText = "Game successfully updated!",
+                        StatusCode = 204,
+                        Status = true,
+                        Game = new GameDto
+                        {
+                            Id = gameDto.Id,
+                            Author = gameDto.Author,
+                            Descr = gameDto.Descr,
+                            Genre = gameDto.Genre,
+                            Name = gameDto.Name
+                        }
+                    };
+                    return StatusCode(204, successResponse);
+                }
             }
-
-            return Json(new GameIdDto
+            catch (Exception e)
             {
-                Id = int.Parse(gameId)
-            });
+                Response errorResponse = new Response
+                {
+                    StatusCode = 500,
+                    Status = false,
+                    StatusText = "A server error has occured."
+                };
+                return StatusCode(500, errorResponse);
+            }
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

@@ -1,7 +1,7 @@
 export interface IGameUpdationViewModel {
-    id: string;
+    id: number;
     author: string;
     genre: string;
     name: string;
-    description: string;
+    descr: string;
 }

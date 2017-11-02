@@ -23,14 +23,7 @@ import { AppComponent } from './app.component';
     FormsModule,
     HttpModule
   ],
-  providers: [
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: AuthInterceptor,
-    //   multi: true
-    // },
-    AppComponent
-  ],
-  bootstrap: [AppComponent]
+  providers: [ AppComponent ],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }
