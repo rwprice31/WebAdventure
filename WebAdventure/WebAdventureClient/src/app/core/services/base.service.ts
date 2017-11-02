@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import { IResponse } from '../../shared/interfaces/responses/response.interface';
 
