@@ -1,4 +1,3 @@
-import { IUserLoginResponse } from './../../shared/interfaces/responses/user-login.response';
 import { Response } from '@angular/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -7,7 +6,6 @@ import { BaseService } from './base.service';
 import { ConfigService } from './utils/config.service';
 
 import { Observable } from 'rxjs/Rx';
-import { BehaviorSubject } from 'rxjs/Rx';
 
 
 import { IResponse } from '../../shared/interfaces/responses/response.interface';
@@ -17,10 +15,11 @@ import { IUserUpdateViewModel } from './../../shared/interfaces/view-models/user
 import { IUserLoginViewModel } from './../../shared/interfaces/view-models/user-login-view-model.interface';
 
 import { IUserRegistrationResponse } from './../../shared/interfaces/responses/user-registration-response.interface';
+import { IUserLoginResponse } from './../../shared/interfaces/responses/user-login.response';
+
 import { IUserResetPassword } from "../../shared/interfaces/user-resetPassword.interface";
 import { IUserResetPasswordViewModel } from "../../shared/interfaces/view-models/IUser-resetpassword-view-model";
 import { IUserResetPasswordResponse } from "../../shared/interfaces/responses/reset-password-response";
-
 
 @Injectable()
 export class UserService extends BaseService {

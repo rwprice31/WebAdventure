@@ -1,10 +1,14 @@
+import { AuthInterceptor } from './services/auth-interceptor.service';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
-import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
+import { GameService } from './services/game.service';
 import { GenreService } from './services/genre.service';
-import { GameInfoService } from './services/game-info.service';
 import { UserService } from './services/user.service';
 import { ConfigService } from './services/utils/config.service';
+import { DialogService } from './services/dialog.service';
+import { CanDeactivateGuard } from './services/guards/can-deactivate-guard.service';
+
 import { AuthGuard } from './services/guards/auth-guard.service';
 import { NotAlreadyLoggedInGuard } from './services/guards/not-already-logged-in-guard.service';
 
@@ -33,12 +37,19 @@ export declare let jQuery: any;
         // { provide: XSRFStrategy, useValue: new CookieXSRFStrategy('XSRF-TOKEN', 'X-XSRF-TOKEN') },
         ConfigService,
         UserService,
-        GameInfoService, 
+        GameService, 
         GenreService,
         AuthGuard,
         NotAlreadyLoggedInGuard,
+        CanDeactivateGuard,
+        DialogService,
         { provide: TOASTR_TOKEN, useValue: toastr },
-        { provide: JQ_TOKEN, useValue: jQuery }
+        { provide: JQ_TOKEN, useValue: jQuery },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        },
     ]
 })
 export class CoreModule extends EnsureModuleLoadedOnceGuard {

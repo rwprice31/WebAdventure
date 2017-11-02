@@ -10,17 +10,24 @@ export abstract class BaseService {
         // grab that error from the HttpClientError object
         let errorResponse: IResponse = error.error;
 
-        // if no error response found, just create a generic server error response
-        if (!errorResponse) {
-            errorResponse = {
-                statusCode: 500,
-                status: false,
-                statusText: 'Server Error' 
-            };
-        }
+        console.log('Error response = ' + JSON.stringify(error));
 
-        // log error to console
-        console.log('Error = ', errorResponse);
+        if (!errorResponse && error.status === 401) {
+            errorResponse = {
+                statusCode: 401,
+                status: false,
+                statusText: 'Not Authorized' 
+            };
+        } else {
+            // if no error response found, just create a generic server error response
+            if (!errorResponse || !errorResponse.status) {
+                errorResponse = {
+                    statusCode: 500,
+                    status: false,
+                    statusText: 'Server Error' 
+                };
+            }
+        }
 
         // return observable for caller to handle
         return Observable.of(errorResponse);

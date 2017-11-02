@@ -5,6 +5,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { CreateInfoComponent } from './info/create-info.component';
 import { CreateComponent } from './create.component';
 
+import { CanDeactivateGuard } from './../core/services/guards/can-deactivate-guard.service';
+
 // path's after /create/
 const routes: Routes = [
     { 
@@ -15,7 +17,9 @@ const routes: Routes = [
                 path: 'monster', component: MonsterComponent
             },
             {
-                path: '**', component: CreateInfoComponent // redirect all other paths to create info
+                path: '**', 
+                component: CreateInfoComponent, // redirect all other paths to create info
+                canDeactivate: [CanDeactivateGuard]
             }
         ]
     }

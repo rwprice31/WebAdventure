@@ -1,3 +1,4 @@
+import { IGamesResponse } from './../../shared/interfaces/responses/games/games-response.interface';
 import { PageNotFoundComponent } from './../../page-not-found.component';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -6,23 +7,29 @@ import { IGame } from './../../shared/interfaces/models/game.interface';
 import { IGenre } from './../../shared/interfaces/models/genre.interface';
 import { IToastr } from './../../shared/interfaces/external-libraries/toastr.interface';
 
-import { GameInfoService } from './../../core/services/game-info.service';
+import { GameService } from './../../core/services/game.service';
 import { GenreService } from './../../core/services/genre.service';
 import { TOASTR_TOKEN } from './../../core/services/external-libraries/toastr.service';
+import { DialogService } from './../../core/services/dialog.service';
+
+import { Observable } from 'rxjs/Rx';
+import { CanComponentDeactivate } from './../../core/services/guards/can-deactivate-guard.service';
 
 @Component({
   templateUrl: './create-info.component.html',
   styleUrls: ['./create-info.component.scss']
 })
-export class CreateInfoComponent implements OnInit {
+export class CreateInfoComponent implements OnInit, CanComponentDeactivate  {
 
   game: IGame;
   createInfoForm: FormGroup;
   genres: IGenre[];
+  confirmNavigation: boolean;
 
   constructor(private formBuilder: FormBuilder,
     private genreService: GenreService,
-    private gameInfoService: GameInfoService,
+    private gameService: GameService,
+    private dialogService: DialogService,
     @Inject(TOASTR_TOKEN) private toastr: IToastr) {
   }
 
@@ -44,15 +51,28 @@ export class CreateInfoComponent implements OnInit {
   }
 
   save() {
-    this.game = {
-      id: 0,
-      name: this.createInfoForm.controls['name'].value,
-      description: this.createInfoForm.controls['description'].value,
-      genre: this.createInfoForm.controls['genre'].value
-    };
-    this.gameInfoService.insertGame(this.game).subscribe((game: IGame) => {
-      this.toastr.success("Game saved!");
-    });
+
+    this.gameService.getGames().subscribe(
+      (res: IGamesResponse) => {
+        console.log('Response received in createInfo = ', JSON.stringify(res));
+      }
+    );
+
+    // this.game = {
+    //   id: 0,
+    //   name: this.createInfoForm.controls['name'].value,
+    //   description: this.createInfoForm.controls['description'].value,
+    //   genre: this.createInfoForm.controls['genre'].value
+    // };
+    // this.gameInfoService.insertGame(this.game).subscribe((game: IGame) => {
+    //   this.toastr.success('Game saved!');
+    // });
   }
+
+  canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {
+    // probably will want to check to see if anything's been updated first
+    return this.dialogService.confirm('Leave and lose unsaved changes?');
+  }
+
 
 }
