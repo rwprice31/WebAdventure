@@ -15,28 +15,28 @@ a {
 }
 
 button {
-    background: $background-dark;
-    color: $text-light;
-}
 
-button:hover {
-    background: $background-light;
-    color: $text-dark;
-    font-weight: bold;
-    &.invalid-button {
-        background: $background-dark;
-        color: $text-light;
-        font-weight: normal;
-    }
 }
-
 
 form {
     text-align: left;
     button {
+        background: $background-dark;
+        color: $text-light;
         float: right;
         margin-right: 5%;
+        &:hover {
+            background: $background-light;
+            color: $text-dark;
+            font-weight: bold;
+            &.invalid-button {
+                background: $background-dark;
+                color: $text-light;
+                font-weight: normal;
+            }
+        }
     }
+
     button:first-of-type {
         margin-right: 0%;
     }
@@ -75,5 +75,11 @@ form {
     padding-right: 20%;
     .center-text {
         align-self: center;
+    }
+}
+
+.navbar-toggler {
+    .navbar-toggler-icon {
+
     }
 }

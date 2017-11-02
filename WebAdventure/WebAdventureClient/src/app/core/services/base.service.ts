@@ -11,7 +11,7 @@ export abstract class BaseService {
         let errorResponse: IResponse = error.error;
 
         // if no error response found, just create a generic server error response
-        if (!errorResponse) {
+        if (!errorResponse.status) {
             errorResponse = {
                 statusCode: 500,
                 status: false,
