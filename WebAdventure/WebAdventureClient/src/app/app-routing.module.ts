@@ -7,11 +7,10 @@ import { NotAlreadyLoggedInGuard } from './core/services/guards/not-already-logg
 
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found.component';
-import { GamesComponent } from './games/games.component';
+import { BrowseGamesComponent } from './browse-games/browse-games.component';
 import { SignupComponent } from './signup/signup.component';
 import { LoginComponent } from './login/login.component';
 import { ResetPasswordComponent } from './resetpassword/resetpassword.component';
-
 
 // Create
 import { CreateComponent } from './create/create.component';
@@ -21,7 +20,7 @@ const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'login', canActivate: [NotAlreadyLoggedInGuard], component: LoginComponent },
     { path: 'signup', component: SignupComponent },
-    { path: 'games', component: GamesComponent },
+    { path: 'games', component: BrowseGamesComponent },
     { path: 'resetpassword', component: ResetPasswordComponent},
     { 
         path: 'create',
