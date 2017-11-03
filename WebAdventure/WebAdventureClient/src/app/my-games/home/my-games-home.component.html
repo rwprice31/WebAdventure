@@ -1,3 +1,19 @@
-<p>
-    Hello from games home
-</p>
+<div class="solo-content">
+    
+        <div class="page-header">
+            <h1>Your games</h1>
+            <h2>View your saved games or created games below</h2>
+        </div>
+
+        <!-- Saved games -->
+        <div class="page-section">
+            <game-card *ngFor="let game of games" [game]="game">
+            </game-card>
+        </div>
+
+        <!-- Created Games -->
+        <div class="page-section">
+            <h1>Created games</h1>
+        </div>
+
+</div>

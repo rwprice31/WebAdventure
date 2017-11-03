@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { BaseService } from './base.service';
 import { ConfigService } from './utils/config.service';
 
-import { IGame } from '../../shared/interfaces/models/game.interface';
+import { IGame } from './../../shared/interfaces/models/game.interface';
 
 import { IGameCreationViewModel } from './../../shared/interfaces/view-models/games/game-creation-view-model.interface';
 import { IGameUpdationViewModel } from './../../shared/interfaces/view-models/games/game-updation-view-model.interface';
@@ -28,6 +28,29 @@ export class GameService extends BaseService {
         super();
         this.baseUrl = configService.getApiURI();
         this.gameRoute = this.baseUrl + 'games';
+    }
+
+    getUsersGames() {
+        let games: IGame[] = [];
+
+        let game1: IGame = {
+            id: 0,
+            name: 'Game 1',
+            description: 'Game 1 description',
+            genre: 'Action'
+        };
+
+        let game2: IGame = {
+            id: 1,
+            name: 'Game 2',
+            description: 'Game 2 description',
+            genre: 'Horror'
+        };
+
+        games.push(game1);
+        games.push(game2);
+
+        return Observable.of(games);
     }
 
     getGames(): Observable<IResponse> {
