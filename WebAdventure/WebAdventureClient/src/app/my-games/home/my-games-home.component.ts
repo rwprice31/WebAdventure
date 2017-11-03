@@ -24,4 +24,12 @@ export class MyGamesHomeComponent implements OnInit {
     
   }
 
+  playClicked($event) {
+    console.log('Save event received in game home' + JSON.stringify($event));
+  }
+
+  editClicked($event) {
+    console.log('Edit event received in game home' + JSON.stringify($event));
+  }
+
 }

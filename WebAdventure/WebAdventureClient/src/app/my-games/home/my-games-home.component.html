@@ -7,8 +7,7 @@
 
         <!-- Saved games -->
         <div class="page-section">
-            <game-card *ngFor="let game of games" [game]="game">
-            </game-card>
+            <game-card-grid [games]="games" [columnWidth]=12 (play)="playClicked($event)" (edit)="editClicked($event)"></game-card-grid>
         </div>
 
         <!-- Created Games -->

@@ -1,0 +1,8 @@
+
+    <div class="row">
+        <game-card class="col-{{columnWidth}}" *ngFor="let game of games" [game]="game" 
+                (save)="saveClicked($event)" (play)="playClicked($event)" (edit)="editClicked($event)">
+        </game-card>
+    </div>
+
+

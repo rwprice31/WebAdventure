@@ -5,12 +5,14 @@ import { NgModule } from '@angular/core';
 import { SimpleModalComponent } from './components/simple-modal/simple-modal.component';
 import { ModalTriggerDirective } from './directives/modal-trigger.directive';
 import { GameCardComponent } from './components/game-card/game-card.component';
+import { GameCardGridComponent } from './components/game-card-grid/game-card-grid.component';
 
 @NgModule({
   declarations: [
     SimpleModalComponent,
     ModalTriggerDirective,
-    GameCardComponent
+    GameCardComponent,
+    GameCardGridComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +25,8 @@ import { GameCardComponent } from './components/game-card/game-card.component';
     ReactiveFormsModule,
     SimpleModalComponent,
     ModalTriggerDirective,
-    GameCardComponent
+    GameCardComponent,
+    GameCardGridComponent
   ]
 })
 export class SharedModule { }

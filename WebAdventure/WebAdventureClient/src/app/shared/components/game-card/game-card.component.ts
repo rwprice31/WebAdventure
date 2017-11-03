@@ -9,7 +9,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class GameCardComponent {
 
     // how many bootstrap columns it will take up
-    @Input() columns: number;
+    @Input() percentWidth: number;
     @Input() game: IGame;
 
     // whether to display play, save, edit buttons on the card, default to false

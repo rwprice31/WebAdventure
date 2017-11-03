@@ -47,8 +47,16 @@ export class GameService extends BaseService {
             genre: 'Horror'
         };
 
+        let game3: IGame = {
+            id: 1,
+            name: 'Game 3',
+            description: 'Game 3 description',
+            genre: 'Mystery'
+        };
+
         games.push(game1);
         games.push(game2);
+        games.push(game3);
 
         return Observable.of(games);
     }
