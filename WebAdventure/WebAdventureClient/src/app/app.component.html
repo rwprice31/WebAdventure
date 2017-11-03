@@ -12,7 +12,7 @@
         <a class="nav-link" routerLinkActive="active" [routerLink]="['/games']">Browse Games</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/create']">Create a Game</a>
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/my-games']">Create a Game</a>
       </li>
       <li *ngIf="!this.userService.getCurrentUser()" class="nav-item">
         <a class="nav-link" routerLinkActive="active" [routerLink]="['/login']">Log in</a>

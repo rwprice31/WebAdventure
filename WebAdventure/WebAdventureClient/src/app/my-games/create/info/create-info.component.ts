@@ -1,19 +1,19 @@
-import { IGamesResponse } from './../../shared/interfaces/responses/games/games-response.interface';
-import { PageNotFoundComponent } from './../../page-not-found.component';
+import { IGamesResponse } from './../../../shared/interfaces/responses/games/games-response.interface';
+import { PageNotFoundComponent } from './../../../page-not-found.component';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { IGame } from './../../shared/interfaces/models/game.interface';
-import { IGenre } from './../../shared/interfaces/models/genre.interface';
-import { IToastr } from './../../shared/interfaces/external-libraries/toastr.interface';
+import { IGame } from './../../../shared/interfaces/models/game.interface';
+import { IGenre } from './../../../shared/interfaces/models/genre.interface';
+import { IToastr } from './../../../shared/interfaces/external-libraries/toastr.interface';
 
-import { GameService } from './../../core/services/game.service';
-import { GenreService } from './../../core/services/genre.service';
-import { TOASTR_TOKEN } from './../../core/services/external-libraries/toastr.service';
-import { DialogService } from './../../core/services/dialog.service';
+import { GameService } from './../../../core/services/game.service';
+import { GenreService } from './../../../core/services/genre.service';
+import { TOASTR_TOKEN } from './../../../core/services/external-libraries/toastr.service';
+import { DialogService } from './../../../core/services/dialog.service';
 
 import { Observable } from 'rxjs/Rx';
-import { CanComponentDeactivate } from './../../core/services/guards/can-deactivate-guard.service';
+import { CanComponentDeactivate } from './../../../core/services/guards/can-deactivate-guard.service';
 
 @Component({
   templateUrl: './create-info.component.html',
