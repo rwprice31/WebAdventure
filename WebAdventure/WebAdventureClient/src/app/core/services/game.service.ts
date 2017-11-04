@@ -1,3 +1,5 @@
+import { IUsersGameResponse } from './../../shared/interfaces/responses/games/users-games-response.interface';
+import { IUsersGamesViewModel } from './../../shared/interfaces/view-models/games/users-games-view-model.interface';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
@@ -32,45 +34,15 @@ export class GameService extends BaseService {
         this.gameRoute = this.baseUrl + 'games';
     }
 
-    getUsersGames() {
-        let games: IGame[] = [];
-
-        let user1: IUser = {
-            auth_Token: '',
-            id: '0',
-            email: 'rbryan21@gmail.com',
-            username: 'rbryan21'
-        };
-
-        let game1: IGame = {
-            id: 0,
-            name: 'Game 1',
-            description: 'Game 1 description',
-            genre: 'Action',
-            author: user1
-        };
-
-        let game2: IGame = {
-            id: 1,
-            name: 'Game 2',
-            description: 'Game 2 description',
-            genre: 'Horror',
-            author: user1
-        };
-
-        let game3: IGame = {
-            id: 1,
-            name: 'Game 3',
-            description: 'Game 3 description',
-            genre: 'Mystery',
-            author: user1
-        };
-
-        games.push(game1);
-        games.push(game2);
-        games.push(game3);
-
-        return Observable.of(games);
+    getUsersGames(game: IUsersGamesViewModel): Observable<IResponse> {
+        let route: string = this.gameRoute + '/' + game.userId;
+        console.log('Sending GET to ' + route);
+        return this.http.get<IUsersGameResponse>(route, { headers: this.headers})
+        .map( (res: IUsersGameResponse ) => {
+            console.log('IUsersGameResponse = ', res);
+            return res;
+        })
+        .catch(this.handleError);        
     }
 
     getGames(): Observable<IResponse> {

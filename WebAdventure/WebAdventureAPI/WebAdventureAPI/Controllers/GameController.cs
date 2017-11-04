@@ -160,28 +160,47 @@ namespace WebAdventureAPI.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
-        [Route("author")]
-        public JsonResult GetGameByAuthor([FromBody] AuthorDto authorDto)
+        [Route("{authorId}")]
+        public IActionResult GetGameByAuthor([FromRoute] string authorId)
         {
-            var list = new List<GameDto>();
-            foreach (var x in repo.GetGamesByAuthor(authorDto.Author))
+            try
             {
-                var user = userManager.Users.FirstOrDefault(u => u.Id == x.AuthorId);
-                list.Add(new GameDto
+                var usersGames = new List<GameDto>();
+                foreach (var x in repo.GetGamesByAuthor(authorId))
                 {
-                    Author = new UserDto
+                    var user = userManager.Users.FirstOrDefault(u => u.Id == x.AuthorId);
+                    usersGames.Add(new GameDto
                     {
-                        Id = user.Id,
-                        Email = user.Email,
-                        Username = user.UserName
-                    },
-                    Genre = repo.GetGenreById(x.GenreId).Descr,
-                    Name = x.Name,
-                    Descr = x.Descr
-                });
+                        Author = new UserDto
+                        {
+                            Id = user.Id,
+                            Email = user.Email,
+                            Username = user.UserName
+                        },
+                        Genre = repo.GetGenreById(x.GenreId).Descr,
+                        Name = x.Name,
+                        Descr = x.Descr
+                    });
+                }
+                UsersGamesResponse successResponse = new UsersGamesResponse
+                {
+                    StatusText = "User's games successfully found!",
+                    StatusCode = 200,
+                    Status = true,
+                    Games = usersGames
+                };
+                return StatusCode(200, successResponse);
             }
-
-            return Json(list);
+            catch (Exception e)
+            {
+                Response errorResponse = new Response
+                {
+                    StatusCode = 500,
+                    Status = false,
+                    StatusText = "A server error has occured."
+                };
+                return StatusCode(500, errorResponse);
+            }
         }
 
         private WAUser VerifyUserCredentials(string email, string passwordHash)
