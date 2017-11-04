@@ -1,15 +1,15 @@
-import { CreateRoutingModule } from './create-routing.module';
+import { EditRoutingModule } from './edit-routing.module';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   declarations: [
-      CreateRoutingModule.components
+    EditRoutingModule.components
   ],
   imports: [
     SharedModule,
-    CreateRoutingModule
+    EditRoutingModule
   ],
   providers: []
 })
-export class CreateModule { }
+export class EditModule { }

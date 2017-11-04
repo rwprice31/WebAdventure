@@ -28,6 +28,7 @@ export class GameService extends BaseService {
         private configService: ConfigService) {
         super();
         this.baseUrl = configService.getApiURI();
+        this.headers = configService.getHeaders();   
         this.gameRoute = this.baseUrl + 'games';
     }
 
@@ -82,8 +83,19 @@ export class GameService extends BaseService {
             .catch(this.handleError);
     }
 
-    saveGame(game: IGameCreationViewModel) {
-        
+    saveGame(game: IGameCreationViewModel): Observable<IResponse> {
+        console.log('Body entering saveGame = ' + JSON.stringify(game));
+        console.log('Sending POST to ' + this.gameRoute);
+        let body = JSON.stringify(game);
+        return this.http.post<IGameCreationResponse>(this.gameRoute, body, { headers: this.headers })
+        .map( (res: IGameCreationResponse) => {
+            console.log('IGameCreationResponse = ', res);
+            if (res.status) {
+                console.log('Successfully created game! ' + res);
+            }
+            return res;
+        })
+        .catch(this.handleError);
     }
 
 }

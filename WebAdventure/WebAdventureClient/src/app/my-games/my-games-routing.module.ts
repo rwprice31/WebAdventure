@@ -16,8 +16,8 @@ const routes: Routes = [
                 component: MyGamesNewComponent
             },
             { 
-                path: 'create',
-                loadChildren: 'app/my-games/create/create.module#CreateModule'
+                path: 'edit/:id',
+                loadChildren: 'app/my-games/edit/edit.module#EditModule'
             },
             {
                 path: '**',
