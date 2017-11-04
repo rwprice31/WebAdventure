@@ -13,6 +13,7 @@ export class GameCardGridComponent {
 
     // whether to display play, save, edit buttons on the card, default to false
     @Input() displayPlay: boolean = false;
+    @Input() displayDelete: boolean = false;
     @Input() displaySave: boolean = false;
     @Input() displayEdit: boolean = false;
 

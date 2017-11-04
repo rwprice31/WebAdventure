@@ -14,6 +14,7 @@ import { IResponse } from '../../shared/interfaces/responses/response.interface'
 import { IGamesResponse } from './../../shared/interfaces/responses/games/games-response.interface';
 import { IGameCreationResponse } from './../../shared/interfaces/responses/games/game-creation-response.interface';
 import { IGameUpdationResponse } from './../../shared/interfaces/responses/games/game-updation-response.interface';
+import { IUser } from '../../shared/interfaces/models/user.interface';
 
 @Injectable()
 export class GameService extends BaseService {
@@ -33,25 +34,35 @@ export class GameService extends BaseService {
     getUsersGames() {
         let games: IGame[] = [];
 
+        let user1: IUser = {
+            auth_Token: '',
+            id: '0',
+            email: 'rbryan21@gmail.com',
+            username: 'rbryan21'
+        };
+
         let game1: IGame = {
             id: 0,
             name: 'Game 1',
             description: 'Game 1 description',
-            genre: 'Action'
+            genre: 'Action',
+            author: user1
         };
 
         let game2: IGame = {
             id: 1,
             name: 'Game 2',
             description: 'Game 2 description',
-            genre: 'Horror'
+            genre: 'Horror',
+            author: user1
         };
 
         let game3: IGame = {
             id: 1,
             name: 'Game 3',
             description: 'Game 3 description',
-            genre: 'Mystery'
+            genre: 'Mystery',
+            author: user1
         };
 
         games.push(game1);
@@ -71,8 +82,8 @@ export class GameService extends BaseService {
             .catch(this.handleError);
     }
 
-    insertGame(game: IGame) {
-
+    saveGame(game: IGameCreationViewModel) {
+        
     }
 
 }

@@ -1,18 +1,26 @@
 <div class="solo-content">
     
-        <div class="page-header">
-            <h1>Your games</h1>
-            <h2>View your saved games or created games below</h2>
-        </div>
+    <div class="page-header">
+        <h1>Your games</h1>
+        <h2>View your saved games or created games below</h2>
+    </div>
 
-        <!-- Saved games -->
-        <div class="page-section">
-            <game-card-grid [games]="games" [columnWidth]=12 (play)="playClicked($event)" (edit)="editClicked($event)"></game-card-grid>
-        </div>
+    <!-- Saved games -->
+    <div class="page-section">
+        <h1>Saved games</h1>
+        <game-card-grid [games]="games" [columnWidth]=12 [displayPlay]=true [displayDelete]=true
+            (play)="playClicked($event)" (edit)="editClicked($event)"></game-card-grid>
+    </div>
 
-        <!-- Created Games -->
-        <div class="page-section">
-            <h1>Created games</h1>
-        </div>
+    <!-- Created Games -->
+    <div class="page-section">
+        <h1>Created games</h1>
+
+        <!-- Create a new game -->
+        <button type="button" class="btn wa-button-dark" id="newGameButton" [routerLink]="['new']">Create a new game</button>
+
+        <game-card-grid [games]="games" [columnWidth]=12 [displayEdit]=true [displayDelete]=true
+            (play)="playClicked($event)" (edit)="editClicked($event)"></game-card-grid>
+    </div>
 
 </div>

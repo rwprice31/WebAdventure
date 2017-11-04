@@ -16,6 +16,7 @@ export class GameCardComponent {
     @Input() displayPlay: boolean = false;
     @Input() displaySave: boolean = false;
     @Input() displayEdit: boolean = false;
+    @Input() displayDelete: boolean = false;
 
     @Output() save: EventEmitter<any> = new EventEmitter();
     @Output() edit: EventEmitter<any> = new EventEmitter();
