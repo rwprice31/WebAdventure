@@ -15,6 +15,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 export class MyGamesHomeComponent implements OnInit {
 
   private games: IGame[];
+  private savedGames: IGame[];
 
   constructor(private gameService: GameService,
     private userService: UserService,
@@ -40,6 +41,10 @@ export class MyGamesHomeComponent implements OnInit {
         }
       }
     );
+  }
+
+  getUsersSavedGames() {
+
   }
 
   playClicked($event) {
