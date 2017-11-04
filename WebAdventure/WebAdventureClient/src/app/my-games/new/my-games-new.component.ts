@@ -1,3 +1,4 @@
+import { IGenresResponse } from './../../shared/interfaces/responses/genres/genres-response.interface';
 import { Component, OnInit, Inject } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -45,7 +46,13 @@ export class MyGamesNewComponent implements OnInit {
     }
   
     getGenres() {
-        this.genreService.getGenres().subscribe((genres: IGenre[]) => this.genres = genres);
+      this.genreService.getGenres().subscribe( (res: IGenresResponse) => {
+        if (res.status) {
+          this.genres = res.genres;
+        } else {
+          this.toastr.error(res.statusText);
+        }
+      });
     }
   
     save() {
