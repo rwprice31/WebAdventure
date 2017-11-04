@@ -1,3 +1,4 @@
+import { EditGuard } from './../../core/services/guards/edit-guard.service';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -12,6 +13,7 @@ const routes: Routes = [
     { 
         path: '', 
         component: EditComponent,
+        canActivate: [ EditGuard ],
         children: [
             {
                 path: 'monster', component: MonsterComponent

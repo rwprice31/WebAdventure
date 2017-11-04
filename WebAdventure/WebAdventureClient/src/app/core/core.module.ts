@@ -1,6 +1,7 @@
-import { AuthInterceptor } from './services/auth-interceptor.service';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
+import { AuthInterceptor } from './services/auth-interceptor.service';
 
 import { GameService } from './services/game.service';
 import { GenreService } from './services/genre.service';
@@ -11,6 +12,7 @@ import { CanDeactivateGuard } from './services/guards/can-deactivate-guard.servi
 
 import { AuthGuard } from './services/guards/auth-guard.service';
 import { NotAlreadyLoggedInGuard } from './services/guards/not-already-logged-in-guard.service';
+import { EditGuard } from './services/guards/edit-guard.service';
 
 import { TOASTR_TOKEN } from './services/external-libraries/toastr.service';
 import { JQ_TOKEN } from './services/external-libraries/jQuery.service';
@@ -42,6 +44,7 @@ export declare let jQuery: any;
         AuthGuard,
         NotAlreadyLoggedInGuard,
         CanDeactivateGuard,
+        EditGuard,
         DialogService,
         { provide: TOASTR_TOKEN, useValue: toastr },
         { provide: JQ_TOKEN, useValue: jQuery },
