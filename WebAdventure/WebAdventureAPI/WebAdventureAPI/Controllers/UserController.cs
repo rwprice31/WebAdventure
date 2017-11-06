@@ -1,14 +1,20 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.HttpSys;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.Dtos;
+using WebAdventureAPI.Models.Security;
 using WebAdventureAPI.Services;
+using WebAdventureAPI.Models.Responses;
 
 namespace WebAdventureAPI.Controllers
 {
@@ -18,15 +24,26 @@ namespace WebAdventureAPI.Controllers
         private UserManager<WAUser> userManager;
         private SignInManager<WAUser> signInManager;
         private IEmailSender emailSender;
+        private readonly IJwtFactory jwtFactory;
+        private readonly JsonSerializerSettings serializerSettings;
+        private readonly JwtIssuerOptions jwtOptions;
 
         public UserController(
-            UserManager<WAUser> userManager, 
+            UserManager<WAUser> userManager,
             SignInManager<WAUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IJwtFactory jwtFactory,
+            IOptions<JwtIssuerOptions> jwtOptions)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.emailSender = emailSender;
+            this.jwtFactory = jwtFactory;
+            this.jwtOptions = jwtOptions.Value;
+            serializerSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented
+            };
         }
 
         [HttpGet]
@@ -43,17 +60,25 @@ namespace WebAdventureAPI.Controllers
             var user = userManager.Users.FirstOrDefault(x => x.UserName == newUser.Username);
             if (user != null)
             {
-                var request = BadRequest("");
-                request.StatusCode = 400;
-                return request;
+                Response errorResponse = new Response
+                {
+                    StatusCode = 400,
+                    Status = false,
+                    StatusText = "A user with that username already exists."
+                };
+                return StatusCode(400, errorResponse);
             }
 
             user = userManager.Users.FirstOrDefault(x => x.Email == newUser.Email);
             if (user != null)
             {
-                var request = BadRequest("");
-                request.StatusCode = 401;
-                return request;
+                Response errorResponse = new Response
+                {
+                    StatusCode = 400,
+                    Status = false,
+                    StatusText = "A user with that email already exists."
+                };
+                return StatusCode(400, errorResponse);
             }
 
             var result = await userManager.CreateAsync(new WAUser
@@ -66,18 +91,36 @@ namespace WebAdventureAPI.Controllers
             if (result.Succeeded)
             {
                 user = userManager.Users.FirstOrDefault(x => x.UserName == newUser.Username);
-                var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = Url.Action("Confirm Email", "Account",
-                    new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                await emailSender.SendEmailAsync(user.Email, "Confirm your account",
-                $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
-                return Ok(user.Id);
+
+                NewUserResponse response = new NewUserResponse
+                {
+                    StatusText = "New user successfully created!",
+                    StatusCode = 201,
+                    Status = true,
+                    User = new UserDto
+                    {
+                        Email = user.Email,
+                        Id = user.Id,
+                        Username = user.UserName
+                    }
+                };
+
+                //var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                //var callbackUrl = Url.Action("Confirm Email", "Account",
+                //    new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                //await emailSender.SendEmailAsync(user.Email, "Confirm your account",
+                //$"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
+                return StatusCode(201, response);
             }
             else
             {
-                var request = BadRequest("");
-                request.StatusCode = 404;
-                return request;
+                Response errorResponse = new Response
+                {
+                    StatusCode = 500,
+                    Status = false,
+                    StatusText = "A server error has occured."
+                };
+                return StatusCode(500, errorResponse);
             }
         }
 
@@ -109,26 +152,57 @@ namespace WebAdventureAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            var user = userManager.Users.FirstOrDefault(x => x.Email == loginDto.Email);
-            if (user == null)
+            (ClaimsIdentity identity, WAUser user) = await GetClaimsIdentity(loginDto);
+            if (identity == null || user == null)
             {
-                var result = BadRequest("");
-                result.StatusCode = 401;
-                return result;
+                Response errorResponse = new Response
+                {
+                    StatusCode = 400,
+                    Status = false,
+                    StatusText = "Incorrect login."
+                };
+                return StatusCode(400, errorResponse);
             }
-            else
+
+            UserLoginResponse userLoginResponse = new UserLoginResponse
             {
-                var username = user.UserName;
-                var result = await signInManager.PasswordSignInAsync(username, loginDto.Password, true, false);
-                if (result.Succeeded)
+                StatusCode = 200,
+                Status = true,
+                StatusText = "User logged in successfully!",
+                User = new UserDto
                 {
-                    return Ok();
+                    Auth_Token = await jwtFactory.GenerateEncodedToken(loginDto.Email, identity),
+                    Email = user.Email,
+                    Username = user.UserName,
+                    Id = user.Id
                 }
-                else
+            };
+            return StatusCode(200, userLoginResponse);
+        }
+
+        private async Task<(ClaimsIdentity, WAUser)> GetClaimsIdentity(LoginDto loginDto)
+        {
+
+            ClaimsIdentity identity = null;
+            WAUser user = null;
+
+            if (!string.IsNullOrEmpty(loginDto.Email) && !string.IsNullOrEmpty(loginDto.Password))
+            {
+                // get the user to verifty
+                var userToVerify = await userManager.FindByEmailAsync(loginDto.Email);
+
+                if (userToVerify != null)
                 {
-                    return BadRequest();
+                    // check the credentials  
+                    if (await userManager.CheckPasswordAsync(userToVerify, loginDto.Password))
+                    {
+                        identity =  await Task.FromResult(jwtFactory.GenerateClaimsIdentity(loginDto.Email, userToVerify.Id));
+                        user = userToVerify;
+                    }
                 }
             }
+            // return claims identity and user
+            return (identity, user);
         }
     }
 }

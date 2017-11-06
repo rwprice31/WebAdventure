@@ -10,26 +10,76 @@ body {
     text-align: center;
 }
 
-button {
-    background: $background-dark;
-    color: $text-light;
+a {
+    cursor: pointer;
 }
 
-button:hover {
-    background: $background-light;
-    color: $text-dark;
-    font-weight: bold;
+button {
+
 }
 
 form {
     text-align: left;
     button {
+        background: $background-dark;
+        color: $text-light;
         float: right;
+        margin-right: 5%;
+        &:hover {
+            background: $background-light;
+            color: $text-dark;
+            font-weight: bold;
+            &.invalid-button {
+                background: $background-dark;
+                color: $text-light;
+                font-weight: normal;
+            }
+        }
+    }
+
+    button:first-of-type {
+        margin-right: 0%;
+    }
+    .has-error {
+        border: 1px solid;
+        border-color: red;
+    }
+    .error-block {
+        padding-top: 2px;
+        padding-left: 5px;
+        .error-block-text {
+            font-size: 1em;
+            color: red;
+        }
     }
 }
 
 // Page headings
-h1 {
-    font-size: 2.5em;
-    padding-bottom: 45px;
+.page-header {
+    padding-bottom: 5%;
+    h1 {
+        font-size: 2.5em;
+    }
+    h2 {
+        font-size: 1.25em;
+    }
+}
+
+// For page's with solo content (no side nav, etc.)
+.solo-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 2.5%;
+    padding-left: 20%;
+    padding-right: 20%;
+    .center-text {
+        align-self: center;
+    }
+}
+
+.navbar-toggler {
+    .navbar-toggler-icon {
+
+    }
 }

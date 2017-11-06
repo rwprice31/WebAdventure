@@ -1,10 +1,22 @@
-<h1>Game Information</h1>
+<div class="page-header">
+        <h1>Game Information</h1>
+        <h2>Enter your general game info below</h2>
+</div>
 
-<form [formGroup]="createInfoForm" (ngSubmit)="save(createInfoForm)" novalidate>
+<form [formGroup]="createInfoForm" (ngSubmit)="save(createInfoForm)" novalidate autocomplete="off">
     <div class="form-group row">
         <label for="staticEmail" class="col-sm-2 col-form-label">Name</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" formControlName="name">
+            <input type="text" class="form-control" formControlName="name"
+            [ngClass]="{'has-error': (createInfoForm.get('name').touched || 
+            createInfoForm.get('name').dirty) && !createInfoForm.get('name').valid }">
+            <div class="error-block" *ngIf="createInfoForm.get('name').errors">
+                <span class="error-block-text" *ngIf="(createInfoForm.get('name').touched || 
+                    createInfoForm.get('name').dirty) &&
+                    createInfoForm.get('name').errors.required"> 
+                    A name is required.
+                </span>
+            </div>
         </div>
     </div>
     <div class="form-group row">
@@ -16,10 +28,20 @@
     <div class="form-group row">
         <label for="staticEmail" class="col-sm-2 col-form-label">Genre</label>
         <div class="col-sm-10">
-            <select class="form-control form-control" formControlName="genre">
+            <select class="form-control" formControlName="genre"
+                [ngClass]="{'has-error': (createInfoForm.get('genre').touched || 
+                createInfoForm.get('genre').dirty) && !createInfoForm.get('genre').valid }">
                 <option *ngFor="let genre of genres" value="{{genre.name}}">{{genre.name}}</option>
             </select>
+            <span class="error-block" *ngIf="createInfoForm.get('genre').errors">
+                <span class="error-block-text" *ngIf="(createInfoForm.get('genre').touched || 
+                    createInfoForm.get('genre').dirty) &&
+                    createInfoForm.get('genre').errors.required"> 
+                    A genre selection is required.
+                </span>
+            </span>
         </div>
     </div>
-    <button type="submit" class="btn">Save</button>
+    <button type="submit" class="btn" [disabled]="!createInfoForm.valid"
+         [ngClass]="{'invalid-button': !createInfoForm.valid }">Save</button>
 </form>

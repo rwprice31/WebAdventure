@@ -1,73 +1,67 @@
-import { Component, OnInit } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { IUserLoginResponse } from './../shared/interfaces/responses/user-login.response';
+import { UserService } from './../core/services/user.service';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Dir } from '@angular/cdk/bidi';
-import 'rxjs/add/operator/map';
 
-import { loginModel } from './loginModel';
+import { IToastr } from './../shared/interfaces/external-libraries/toastr.interface';
+import { IUserLoginViewModel } from './../shared/interfaces/view-models/user-login-view-model.interface';
+
+import { TOASTR_TOKEN } from './../core/services/external-libraries/toastr.service';
 
 @Component({
-  selector: 'login-form',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 
 export class LoginComponent implements OnInit {
 
-  model = new loginModel('','');
-  error : string = "Please enter valid credentials";
-  public myForm = new FormGroup({
-      email: new FormControl('', [<any>Validators.required]),
-      password: new FormControl('', [<any>Validators.required, <any>Validators.minLength(8)])
+  loginForm: FormGroup;
+
+  constructor(private formBuilder: FormBuilder,
+    private userService: UserService,
+    private router: Router,
+    @Inject(TOASTR_TOKEN) private toastr: IToastr) {
+  }
+
+  ngOnInit() {
+
+    console.log('Current user = ' + this.userService.getCurrentUser());
+
+    this.buildForm();
+  }
+
+  buildForm() {
+    this.loginForm = this.formBuilder.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required]
     });
-  public submitted: boolean;
-  public events: any[] = [];
-  private apiUrl = 'https://localhost:44337/api/users/login'
-  data: any ={};
-
-  constructor(private http: Http, private router: Router) {
   }
 
-  ngOnInit(){
-  }
-
-  login(model, isValid: boolean) {
-    this.submitted = true;
-    if (isValid) {
-      this.loginUser(model.email, model.password);
-    }
-  }
-
-  loginUser(email, password) {
-
-    var obj = {
-      "email" : email,
-      "password" : password
+  login() {
+    let userLogin: IUserLoginViewModel = {
+      email: this.loginForm.controls['email'].value,
+      password: this.loginForm.controls['password'].value
     };
-
-    return this.http.post(this.apiUrl, obj).map((res: Response) =>
-    {
-      if (res.status == 200) {
-        this.router.navigate(['']);
-      }
-    }).subscribe(
-      suc => {
-      },
-      err => {
-        if (err.status == 401) {
-          this.myForm.reset();
-          this.error = "Invalid Email";
-        }
-        else if (err.status == 400) {
-          this.myForm.reset();
-          this.error = "Invalid Email/Password";
-        }
-        else {
-          this.myForm.reset();
-          this.error = "There was an error";
+    this.userService.loginUser(userLogin).subscribe(
+      (res: IUserLoginResponse) => {
+        if (res.status) {
+          console.log('Login success = ', res);
+          this.toastr.success('Successfully logged in!');
+          if (!!this.userService.getRedirectUrl()) {
+            this.router.navigate([this.userService.getRedirectUrl()]);
+            this.userService.setRedirectUrl(null);
+          } else {
+            this.router.navigate(['home']);
+          }
+        } else {
+          console.log('Login failed = ', res);
+          this.loginForm.controls['password'].reset();
+          this.toastr.error(res.statusText);
         }
       }
     );
   }
+
+ 
 }

@@ -1,11 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
-import { MatSnackBar } from '@angular/material';
 
-import { signupModel } from './signupModel';
+import { matchOtherValidator } from './../shared/functions/match-other-validator';
+
+import { UserService } from './../core/services/user.service';
+import { TOASTR_TOKEN } from './../core/services/external-libraries/toastr.service';
+
+import { IUserRegistrationResponse } from './../shared/interfaces/responses/user-registration-response.interface';
+import { IUserRegistrationViewModel } from './../shared/interfaces/view-models/user-registration-view-model.interface';
+import { IToastr } from './../shared/interfaces/external-libraries/toastr.interface';
 
 @Component({
   templateUrl: './signup.component.html',
@@ -13,68 +19,48 @@ import { signupModel } from './signupModel';
 })
 export class SignupComponent implements OnInit {
 
-  private snackBar: MatSnackBar;
-  model = new signupModel('','','','');
-  error : string = "Please eneter valid credentials";
-  public submitted: boolean;
-  private apiUrl = 'https://localhost:44337/api/users/new';
-  data: any ={};
-  passwordError: string = "Password must contain a number";
-  confirmPasswordError: string = "Password must contain a number";
-  
-  public myForm = new FormGroup({
-    email: new FormControl('', [<any>Validators.required, <any>Validators.maxLength(60), <any>Validators.minLength(5)]),
-    username: new FormControl('', [<any>Validators.required, <any>Validators.minLength(5), <any>Validators.maxLength(40)]),
-    password: new FormControl('', [<any>Validators.required, <any>Validators.minLength(8), 
-              <any>Validators.maxLength(30)]),
-    confirmPassword: new FormControl('', [<any>Validators.required, <any>Validators.minLength(8), 
-              <any>Validators.maxLength(30)])
-  });
+  signupForm: FormGroup;
 
-  constructor(private http: Http, private router: Router){}
+  constructor(private http: Http,
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private userService: UserService,
+    @Inject(TOASTR_TOKEN) private toastr: IToastr
+  ) {
 
-  ngOnInit(){}
-
-  register(model, isValid: boolean) {
-    this.submitted = true;
-    if (model.password != model.confirmPassword) {
-      isValid = false;
-      this.error = "Passwords must match";
-    }
-    if (isValid) {
-      this.registerUser(model);
-    }
   }
 
-  registerUser(model) {
-    var obj = { 
-      "email" : model.email,
-      "username" : model.username,
-      "password" : model.password
+  ngOnInit() {
+    this.buildForm();
+  }
+
+  buildForm() {
+    this.signupForm = this.formBuilder.group({
+      email: ['', [Validators.email, Validators.required, Validators.maxLength(60)]],
+      username: ['', [Validators.required, Validators.maxLength(40)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      passwordConfirmation: ['', [Validators.required, matchOtherValidator('password')]]
+    });
+  }
+
+  signup() {
+    let user: IUserRegistrationViewModel = {
+      email: this.signupForm.controls['email'].value,
+      username: this.signupForm.controls['username'].value,
+      password: this.signupForm.controls['password'].value
     };
-
-    return this.http.post(this.apiUrl, obj).map((res: Response) =>
-  {
-    if (res.status == 200) {
-      this.router.navigate(['']);
-    }
-  }).subscribe(
-    suc => {
-    },
-    err => {
-      if (err.status == 400) {
-        this.myForm.reset();
-        this.error = "Username already exists. Please try again";
+    this.userService.register(user).subscribe( (res: IUserRegistrationResponse) => {
+      if (res.status) {
+        console.log('Registeration success = ', res);
+        this.toastr.success('Successfully registered!');
+        this.router.navigate(['home']);
+      } else {
+        console.log('Registration failed = ', res);
+        this.signupForm.reset();
+        this.toastr.error(res.statusText);
       }
-      else if (err.status == 401) {
-        this.myForm.reset();
-        this.error = "Email is already in use. Please try again";
-      }
-      else if (err.status = 404) {
-        this.myForm.reset();
-        this.error = "There was an error";
-      }
-    }
-  )
+    });
   }
+
  }
+

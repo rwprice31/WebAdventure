@@ -1,3 +1,5 @@
+import { AuthInterceptor } from './core/services/auth-interceptor.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ViewContainerRef, Component } from '@angular/core';
@@ -21,7 +23,7 @@ import { AppComponent } from './app.component';
     FormsModule,
     HttpModule
   ],
-  providers: [AppComponent],
-  bootstrap: [AppComponent]
+  providers: [ AppComponent ],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }
