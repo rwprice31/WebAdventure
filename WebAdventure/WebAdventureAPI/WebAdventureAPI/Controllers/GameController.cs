@@ -27,7 +27,6 @@ namespace WebAdventureAPI.Controllers
             this.userManager = userManager;
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public JsonResult GetAllGames()
         {
