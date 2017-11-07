@@ -4,4 +4,10 @@ import { Component } from '@angular/core';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent { }
+export class EditComponent {
+
+  private gameId: number;
+
+  
+  
+ }
