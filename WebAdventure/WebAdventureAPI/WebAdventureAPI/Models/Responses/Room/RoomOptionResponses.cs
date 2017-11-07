@@ -9,11 +9,11 @@ namespace WebAdventureAPI.Models.Responses.Room
 {
     public class RoomOptionResponses : Response
     {
-        public List<RoomActionOutcomeInfoDto> Options { get; set; }
+        public List<DbModels.RoomActionOutcomeInfo> Options { get; set; }
 
-        public RoomActionOutcomeDto Option { get; set; }
+        public DbModels.RoomActionOutcomeInfo Option { get; set; }
 
-        public RoomOptionResponses GetRoomOptionSuccess(List<RoomActionOutcomeInfoDto> options) => new RoomOptionResponses
+        public RoomOptionResponses GetRoomOptionSuccess(List<DbModels.RoomActionOutcomeInfo> options) => new RoomOptionResponses
         {
             Status = true,
             StatusCode = 201,
@@ -21,7 +21,7 @@ namespace WebAdventureAPI.Models.Responses.Room
             Options = options
         };
 
-        public RoomOptionResponses GetCreateRoomOptionSuccess(RoomActionOutcomeDto option) => new RoomOptionResponses
+        public RoomOptionResponses GetCreateRoomOptionSuccess(DbModels.RoomActionOutcomeInfo option) => new RoomOptionResponses
         {
             Status = true,
             StatusCode = 204,

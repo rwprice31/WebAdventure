@@ -47,19 +47,12 @@ namespace WebAdventureAPI.Controllers
                     GameId = gameId
                 };
 
-                if (roomDto.Id == 0)
-                {
-                    repo.AddRoomToDb(newRoom);
-                    var roomId = repo.GetRoomId(newRoom);
+                repo.AddRoomToDb(newRoom);
+                var roomId = repo.GetRoomId(newRoom);
 
-                    roomDto.Id = roomId;
+                newRoom.Id = roomId;
 
-                    return StatusCode(201, roomResponses.CreateResponse(roomDto));
-                }
-                else
-                {
-                    return StatusCode(404, ErrorResponse.CustomErrorCode(404, "Room already exist"));
-                }
+                return StatusCode(201, roomResponses.CreateResponse(newRoom));
             }
             catch (Exception)
             {
@@ -67,12 +60,12 @@ namespace WebAdventureAPI.Controllers
             }
         }
 
-        [HttpPut]
-        public IActionResult UpdateRoom([FromBody] RoomDto roomDto, [FromRoute] int gameId)
+        [HttpPut("{roomId}")]
+        public IActionResult UpdateRoom([FromBody] RoomDto roomDto, [FromRoute] int gameId, [FromRoute] int roomId)
         {
             var room = new Room
             {
-                Id = roomDto.Id,
+                Id = roomId,
                 Name = roomDto.Name,
                 Descr = roomDto.Descr,
                 GameId = gameId
@@ -85,7 +78,7 @@ namespace WebAdventureAPI.Controllers
             else
             {
                 repo.UpdateRoom(room);
-                return StatusCode(204, roomResponses.UpdateResponse(roomDto));
+                return StatusCode(204, roomResponses.UpdateResponse(room));
             }
         }
 
@@ -95,10 +88,10 @@ namespace WebAdventureAPI.Controllers
             try
             {
                 var rooms = repo.GetRoomsForGame(gameId);
-                var roomList = new List<RoomDto>();
+                var roomList = new List<Room>();
                 foreach (var x in rooms)
                 {
-                    roomList.Add(new RoomDto
+                    roomList.Add(new Room
                     {
                         Id = x.Id,
                         Descr = x.Descr,
@@ -134,20 +127,8 @@ namespace WebAdventureAPI.Controllers
             try
             {
                 var list = repo.GetActionOutcomeByRoom(roomId);
-                var optionList = new List<RoomActionOutcomeInfoDto>();
 
-                foreach (var x in list)
-                {
-                    optionList.Add(new RoomActionOutcomeInfoDto
-                    {
-                        ActionDescr = x.ActionDescr,
-                        ItemDescr = x.ItemDescr,
-                        MonsterDescr = x.MonsterDescr,
-                        NextRoomName = x.NextRoomName
-                    });
-                }
-
-                return StatusCode(200, roomOptionResponses.GetRoomOptionSuccess(optionList));
+                return StatusCode(200, roomOptionResponses.GetRoomOptionSuccess(list));
             }
             catch (Exception)
             {
@@ -160,7 +141,7 @@ namespace WebAdventureAPI.Controllers
         {
             try
             {
-                repo.CreateRoomActionOutcome(raoDto.RoomId,
+                var roomActionOutcome = repo.CreateRoomActionOutcome(raoDto.RoomId,
                     new Models.DbModels.Action
                     {
                         Id = raoDto.ActionId,
@@ -174,7 +155,7 @@ namespace WebAdventureAPI.Controllers
                         NextRoomId = raoDto.NextRoomId
                     });
 
-                return StatusCode(204, roomOptionResponses.GetCreateRoomOptionSuccess(raoDto));
+                return StatusCode(204, roomOptionResponses.GetCreateRoomOptionSuccess(roomActionOutcome));
             }
             catch (Exception)
             {

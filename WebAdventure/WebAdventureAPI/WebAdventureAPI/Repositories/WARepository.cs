@@ -119,14 +119,14 @@ namespace WebAdventureAPI.Repositories
         public void DeleteRoom(int id)
         {
             var roomOptionOutcomes = (from rao in context.RoomActionOutcome
-                               join ra in context.RoomAction on rao.RoomActionId equals ra.Id
-                               where ra.RoomId == id
-                               select new RoomActionOutcome
-                               {
-                                   Id = rao.Id,
-                                   RoomActionId = ra.Id,
-                                   OutcomeId = rao.OutcomeId
-                               }).ToList();
+                                      join ra in context.RoomAction on rao.RoomActionId equals ra.Id
+                                      where ra.RoomId == id
+                                      select new RoomActionOutcome
+                                      {
+                                          Id = rao.Id,
+                                          RoomActionId = ra.Id,
+                                          OutcomeId = rao.OutcomeId
+                                      }).ToList();
 
             context.RoomActionOutcome.RemoveRange(roomOptionOutcomes);
             SaveChanges();
@@ -151,7 +151,7 @@ namespace WebAdventureAPI.Repositories
             SaveChanges();
         }
 
-        public void CreateRoomActionOutcome(int roomId, Models.DbModels.Action action, Outcome outcome)
+        public RoomActionOutcomeInfo CreateRoomActionOutcome(int roomId, Models.DbModels.Action action, Outcome outcome)
         {
             var _action = GetAction(action);
 
@@ -190,6 +190,18 @@ namespace WebAdventureAPI.Repositories
             });
 
             SaveChanges();
+
+            return new RoomActionOutcomeInfo
+            {
+                ActionId = _action.Id,
+                ActionDescr = _action.Descr,
+                MonsterId = _outcome.MonsterId,
+                MonsterDescr = GetMonsterName(_outcome.MonsterId),
+                NextRoomId = _outcome.NextRoomId,
+                NextRoomName = GetRoomName(_outcome.NextRoomId),
+                ItemId = _outcome.ItemId,
+                ItemDescr = GetItemName(_outcome.ItemId)
+            };
         }
 
         public List<RoomActionOutcomeInfo> GetActionOutcomeByRoom(int id)
@@ -252,6 +264,27 @@ namespace WebAdventureAPI.Repositories
             return (from o in context.Outcome
                     where o.ItemId == outcome.ItemId || o.MonsterId == outcome.MonsterId || o.NextRoomId == outcome.NextRoomId
                     select o).FirstOrDefault();
+        }
+
+        private string GetMonsterName(int id)
+        {
+            return (from m in context.Monster
+                    where m.Id == id
+                    select m.Name).FirstOrDefault();
+        }
+
+        private string GetRoomName(int id)
+        {
+            return (from r in context.Room
+                    where r.Id == id
+                    select r.Name).FirstOrDefault();
+        }
+
+        private string GetItemName(int id)
+        {
+            return (from i in context.Item
+                    where i.Id == id
+                    select i.Descr).FirstOrDefault();
         }
     }
 }
