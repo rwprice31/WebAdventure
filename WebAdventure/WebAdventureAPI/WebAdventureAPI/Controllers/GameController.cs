@@ -10,7 +10,6 @@ using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.Dtos;
 using WebAdventureAPI.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using WebAdventureAPI.Models.Responses.Games;
 using WebAdventureAPI.Models.Responses;
 
 namespace WebAdventureAPI.Controllers
@@ -20,11 +19,13 @@ namespace WebAdventureAPI.Controllers
     {
         private IWARepository repo;
         private UserManager<WAUser> userManager;
+        private GameResponses responses;
 
         public GameController(IWARepository repo, UserManager<WAUser> userManager)
         {
             this.repo = repo;
             this.userManager = userManager;
+            responses = new GameResponses();
         }
 
         [HttpGet]
@@ -35,6 +36,7 @@ namespace WebAdventureAPI.Controllers
             {
                 list.Add(new GameDto
                 {
+                    Id = x.Id,
                     Author = userManager.Users.FirstOrDefault(a => a.Id == x.AuthorId).UserName,
                     Genre = repo.GetGenreById(x.GenreId).Descr,
                     Name = x.Name,
@@ -51,70 +53,52 @@ namespace WebAdventureAPI.Controllers
         {
             try
             {
+                var newGame = new Game
+                {
+                    Name = gameDto.Name,
+                    Descr = gameDto.Descr,
+                    AuthorId = gameDto.Author,
+                    GenreId = repo.GetGenreByDescr(gameDto.Genre).Id,
+                };
+
                 if (gameDto.Id == 0)
                 {
-                    var newGame = new Game
-                    {
-                        Name = gameDto.Name,
-                        Descr = gameDto.Descr,
-                        AuthorId = gameDto.Author,
-                        GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
-                    };
                     repo.AddGameToDb(newGame);
-                    int newGameId = repo.GetGameId(newGame);
-                    GameCreationResponse successResponse = new GameCreationResponse
-                    {
-                        StatusText = "New game successfully created!",
-                        StatusCode = 201,
-                        Status = true,
-                        Game = new GameDto
-                        {
-                            Id = newGameId,
-                            Author = gameDto.Author,
-                            Descr = gameDto.Descr,
-                            Genre = gameDto.Genre,
-                            Name = gameDto.Name
-                        }
-                    };
-                    return StatusCode(201, successResponse);
+
+                    gameDto.Id = repo.GetGameId(newGame);
+
+                    return StatusCode(201, responses.CreateRepsone(gameDto));
                 }
                 else
                 {
-                    var game = new Game
-                    {
-                        Id = gameDto.Id,
-                        Name = gameDto.Name,
-                        Descr = gameDto.Descr,
-                        AuthorId = gameDto.Author,
-                        GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
-                    };
-                    repo.UpdateGame(game);
-                    GameUpdationResponse successResponse = new GameUpdationResponse
-                    {
-                        StatusText = "Game successfully updated!",
-                        StatusCode = 204,
-                        Status = true,
-                        Game = new GameDto
-                        {
-                            Id = gameDto.Id,
-                            Author = gameDto.Author,
-                            Descr = gameDto.Descr,
-                            Genre = gameDto.Genre,
-                            Name = gameDto.Name
-                        }
-                    };
-                    return StatusCode(204, successResponse);
+                    newGame.Id = gameDto.Id;
+
+                    repo.UpdateGame(newGame);
+
+                    return StatusCode(204, responses.UpdateResponse(gameDto));
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Response errorResponse = new Response
-                {
-                    StatusCode = 500,
-                    Status = false,
-                    StatusText = "A server error has occured."
-                };
-                return StatusCode(500, errorResponse);
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpDelete]
+        public IActionResult DeleteGame([FromBody] GameIdDto gameIdDto)
+        {
+            try
+            {
+                // get game
+                // delete everything from every table
+                // delete game
+                // returhn success
+                return null;
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
             }
         }
 

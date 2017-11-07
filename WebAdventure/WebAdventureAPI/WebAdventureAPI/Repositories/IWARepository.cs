@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebAdventureAPI.Models;
+using WebAdventureAPI.Models.DbModels;
+using WebAdventureAPI.Models.Dtos;
 
 namespace WebAdventureAPI.Repositories
 {
@@ -19,6 +21,16 @@ namespace WebAdventureAPI.Repositories
 
         void AddGameToDb(Game game);
 
+        void AddRoomToDb(Room room);
+
+        List<Room> GetRoomsForGame(int gameId);
+
+        int GetRoomId(Room room);
+
+        void UpdateRoom(Room room);
+
+        void DeleteRoom(int id);
+
         Genre GetGenreByDescr(string descr);
 
         void SaveChanges();
@@ -26,5 +38,11 @@ namespace WebAdventureAPI.Repositories
         int GetGameId(Game game);
 
         void UpdateGame(Game game);
+
+        List<RoomActionOutcomeInfo> GetActionOutcomeByRoom(int id);
+
+        void CreateRoomActionOutcome(int roomId, Models.DbModels.Action action, Outcome outcome);
+
+        void DeleteActionOutcome(ActionOutcomeDeleteDto dto);
     }
 }

@@ -8,6 +8,13 @@ namespace WebAdventureAPI.Models.Responses
 {
     public class NewUserResponse : Response
     {
+        public NewUserResponse()
+        {
+            StatusText = "New user successfully created!";
+            StatusCode = 201;
+            Status = true;
+        }
+
         public UserDto User { get; set; }
     }
 }

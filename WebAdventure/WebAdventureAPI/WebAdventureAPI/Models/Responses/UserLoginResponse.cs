@@ -8,6 +8,13 @@ namespace WebAdventureAPI.Models.Responses
 {
     public class UserLoginResponse : Response
     {
+        public UserLoginResponse()
+        {
+            StatusCode = 200;
+            Status = true;
+            StatusText = "User logged in successfully!";
+        }
+
         public UserDto User { get; set; }
     }
 }
