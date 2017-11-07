@@ -38,15 +38,15 @@ export class ResetPasswordComponent implements OnInit{
       buildForm() {
         this.resetForm = this.formBuilder.group({
           email: ['', [Validators.email, Validators.required, Validators.maxLength(60)]],
-          password: ['', Validators.required, Validators.minLength(8)],
-          confirmPassword: ['', [Validators.required, matchOtherValidator('password')]]
+          thisPassword: ['', [Validators.required, Validators.minLength(8)]],
+          confirmPassword: ['', [Validators.required, matchOtherValidator('thisPassword')]]
         });
       }
 
       reset() {
         let user: IUserResetPasswordViewModel = {
           email: this.resetForm.controls['email'].value,
-          password: this.resetForm.controls['password'].value
+          password: this.resetForm.controls['thisPassword'].value
         };
         this.userService.resetPassword(user).subscribe((res: IUserResetPasswordResponse) => {
           if (res.status) {
