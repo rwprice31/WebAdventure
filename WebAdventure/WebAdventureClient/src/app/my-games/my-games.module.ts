@@ -1,15 +1,15 @@
-import { CreateRoutingModule } from './create-routing.module';
+import { MyGamesRoutingModule } from './my-games-routing.module';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
-      CreateRoutingModule.components
+    MyGamesRoutingModule.components
   ],
   imports: [
     SharedModule,
-    CreateRoutingModule
+    MyGamesRoutingModule
   ],
   providers: []
 })
-export class CreateModule { }
+export class MyGamesModule { }

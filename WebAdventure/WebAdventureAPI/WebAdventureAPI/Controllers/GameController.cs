@@ -32,20 +32,26 @@ namespace WebAdventureAPI.Controllers
         public JsonResult GetAllGames()
         {
             var list = new List<GameDto>();
-            foreach (var x in repo.GetAllGames())
+            foreach (var game in repo.GetAllGames())
             {
+                var user = userManager.Users.FirstOrDefault(u => u.Id == game.AuthorId);
                 list.Add(new GameDto
                 {
-                    Id = x.Id,
-                    Author = userManager.Users.FirstOrDefault(a => a.Id == x.AuthorId).UserName,
-                    Genre = repo.GetGenreById(x.GenreId).Descr,
-                    Name = x.Name,
-                    Descr = x.Descr
+                    Id = game.Id,
+                    Author = new UserDto
+                    {
+                        Id = user.Id,
+                        Email = user.Email,
+                        Username = user.UserName
+                    },
+                    Genre = repo.GetGenreById(game.GenreId).Descr,
+                    Name = game.Name,
+                    Descr = game.Descr
                 });
             }
-
             return Json(list);
         }
+
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
@@ -53,32 +59,67 @@ namespace WebAdventureAPI.Controllers
         {
             try
             {
+                if (gameDto.Id != 0)
+                {
+                    return StatusCode(400, ErrorResponse.CustomErrorCode(400, "You're not creating a game."));
+                }
                 var newGame = new Game
                 {
                     Name = gameDto.Name,
                     Descr = gameDto.Descr,
-                    AuthorId = gameDto.Author,
-                    GenreId = repo.GetGenreByDescr(gameDto.Genre).Id,
+                    AuthorId = gameDto.Author.Id,
+                    GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
                 };
-
-                if (gameDto.Id == 0)
+                repo.AddGameToDb(newGame);
+                int newGameId = repo.GetGameId(newGame);
+                var newGameDto = new GameDto
                 {
-                    repo.AddGameToDb(newGame);
-
-                    gameDto.Id = repo.GetGameId(newGame);
-
-                    return StatusCode(201, responses.CreateRepsone(gameDto));
-                }
-                else
-                {
-                    newGame.Id = gameDto.Id;
-
-                    repo.UpdateGame(newGame);
-
-                    return StatusCode(204, responses.UpdateResponse(gameDto));
-                }
+                    Id = newGameId,
+                    Author = gameDto.Author,
+                    Descr = gameDto.Descr,
+                    Genre = gameDto.Genre,
+                    Name = gameDto.Name
+                };
+                var successResponse = responses.CreateResponse(newGameDto);
+                return StatusCode(201, successResponse);
             }
             catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut]
+        public IActionResult UpdateGame([FromBody] GameDto gameDto)
+        {
+            try
+            {
+                if (gameDto.Id == 0)
+                {
+                    return StatusCode(400, ErrorResponse.CustomErrorCode(400, "You're not updating a game."));
+                }
+                var game = new Game
+                {
+                    Id = gameDto.Id,
+                    Name = gameDto.Name,
+                    Descr = gameDto.Descr,
+                    AuthorId = gameDto.Author.Id,
+                    GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
+                };
+                repo.UpdateGame(game);
+                var updatedGameDto = new GameDto
+                {
+                    Id = gameDto.Id,
+                    Author = gameDto.Author,
+                    Descr = gameDto.Descr,
+                    Genre = gameDto.Genre,
+                    Name = gameDto.Name
+                };
+                var successResponse = responses.UpdateResponse(updatedGameDto);
+                return StatusCode(204, successResponse);
+            }
+            catch (Exception e)
             {
                 return StatusCode(500, ErrorResponse.ServerError);
             }
@@ -104,22 +145,35 @@ namespace WebAdventureAPI.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
-        [Route("author")]
-        public JsonResult GetGameByAuthor([FromBody] AuthorDto authorDto)
+        [Route("{authorId}")]
+        public IActionResult GetGameByAuthor([FromRoute] string authorId)
         {
-            var list = new List<GameDto>();
-            foreach (var x in repo.GetGamesByAuthor(authorDto.Author))
+            try
             {
-                list.Add(new GameDto
+                var usersGames = new List<GameDto>();
+                foreach (var game in repo.GetGamesByAuthor(authorId))
                 {
-                    Author = userManager.Users.FirstOrDefault(a => a.Id == x.AuthorId).UserName,
-                    Genre = repo.GetGenreById(x.GenreId).Descr,
-                    Name = x.Name,
-                    Descr = x.Descr
-                });
+                    var user = userManager.Users.FirstOrDefault(u => u.Id == game.AuthorId);
+                    usersGames.Add(new GameDto
+                    {
+                        Id = game.Id,
+                        Author = new UserDto
+                        {
+                            Id = user.Id,
+                            Email = user.Email,
+                            Username = user.UserName
+                        },
+                        Genre = repo.GetGenreById(game.GenreId).Descr,
+                        Name = game.Name,
+                        Descr = game.Descr
+                    });
+                }
+                return StatusCode(200, responses.AuthorsGamesFound(usersGames.ToArray()));
             }
-
-            return Json(list);
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
         }
 
         private WAUser VerifyUserCredentials(string email, string passwordHash)

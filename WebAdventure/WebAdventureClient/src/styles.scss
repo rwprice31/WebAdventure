@@ -14,32 +14,31 @@ a {
     cursor: pointer;
 }
 
-button {
+.wa-button-dark {
+    background: $background-dark;
+    color: $text-light;
+    margin-right: 5%;
+    &:hover {
+        background: $background-light;
+        color: $text-dark;
+        font-weight: bold;
+        &.invalid-button {
+            background: $background-dark;
+            color: $text-light;
+            font-weight: normal;
+        }
+    }
+}
 
+button:first-of-type {
+    margin-right: 0%;
 }
 
 form {
-    text-align: left;
     button {
-        background: $background-dark;
-        color: $text-light;
         float: right;
-        margin-right: 5%;
-        &:hover {
-            background: $background-light;
-            color: $text-dark;
-            font-weight: bold;
-            &.invalid-button {
-                background: $background-dark;
-                color: $text-light;
-                font-weight: normal;
-            }
-        }
     }
-
-    button:first-of-type {
-        margin-right: 0%;
-    }
+    text-align: left;
     .has-error {
         border: 1px solid;
         border-color: red;
@@ -54,17 +53,6 @@ form {
     }
 }
 
-// Page headings
-.page-header {
-    padding-bottom: 5%;
-    h1 {
-        font-size: 2.5em;
-    }
-    h2 {
-        font-size: 1.25em;
-    }
-}
-
 // For page's with solo content (no side nav, etc.)
 .solo-content {
     display: flex;
@@ -76,6 +64,26 @@ form {
     .center-text {
         align-self: center;
     }
+    h1 {
+        font-size: 2.5em;
+    }
+    h2 {
+        font-size: 1.25em;
+    }
+    .page-header {
+        padding-bottom: 5%;
+        h1 {
+            font-size: 3em;
+            font-weight: bold;
+        }
+        h2 {
+            font-size: 1.5em;
+        }
+    }
+    .page-section {
+        padding-bottom: 10%;
+    }
+
 }
 
 .navbar-toggler {

@@ -36,10 +36,10 @@
                 </div>
             </div>
         </div>           
-        <button type="submit" class="btn" [disabled]="!loginForm.valid"
+        <button type="submit" class="btn wa-button-dark" [disabled]="!loginForm.valid"
             [ngClass]="{'invalid-button': !loginForm.valid }">Login</button>
-           <button type="link" class="btn" routerLinkActive="active" [routerLink]="['/signup']">Sign up</button>
-           <button type="link" class="btn" routerLinkActive="active" [routerLink]="['/resetpassword']">Reset Password</button> 
+           <button type="link" class="btn wa-button-dark" routerLinkActive="active" [routerLink]="['/signup']">Sign up</button>
+           <button type="link" class="btn wa-button-dark" routerLinkActive="active" [routerLink]="['/resetpassword']">Reset Password</button> 
     </form>
 </div>
 <!-- <button modal-trigger="modal">

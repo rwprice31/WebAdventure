@@ -20,6 +20,7 @@ using WebAdventureAPI.Repositories;
 using WebAdventureAPI.Services;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using WebAdventureAPI.Contexts;
 
 namespace WebAdventureAPI
 {
@@ -154,8 +155,6 @@ namespace WebAdventureAPI
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            waContext.Database.Migrate();
-
             var options = new RewriteOptions()
                 .AddRedirectToHttps();
 
@@ -176,6 +175,9 @@ namespace WebAdventureAPI
                     defaults: new { controller = "Home", action = "Index" }
                     );
             });
+
+            waContext.Database.Migrate();
+            waContext.EnsureSeedDataForContext();
         }
     }
 }

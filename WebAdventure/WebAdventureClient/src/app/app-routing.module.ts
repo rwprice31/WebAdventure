@@ -7,26 +7,21 @@ import { NotAlreadyLoggedInGuard } from './core/services/guards/not-already-logg
 
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found.component';
-import { GamesComponent } from './games/games.component';
+import { BrowseGamesComponent } from './browse-games/browse-games.component';
 import { SignupComponent } from './signup/signup.component';
 import { LoginComponent } from './login/login.component';
 import { ResetPasswordComponent } from './resetpassword/resetpassword.component';
-
-
-// Create
-import { CreateComponent } from './create/create.component';
-import { CreateInfoComponent } from './create/info/create-info.component';
 
 const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'login', canActivate: [NotAlreadyLoggedInGuard], component: LoginComponent },
     { path: 'signup', component: SignupComponent },
-    { path: 'games', component: GamesComponent },
+    { path: 'games', component: BrowseGamesComponent },
     { path: 'resetpassword', component: ResetPasswordComponent},
     { 
-        path: 'create',
+        path: 'my-games',
         canActivate: [AuthGuard],
-        loadChildren: 'app/create/create.module#CreateModule'
+        loadChildren: 'app/my-games/my-games.module#MyGamesModule'
     },
     { path: '',  pathMatch: 'full', redirectTo: 'home' },
     { path: '**', pathMatch: 'full', component: PageNotFoundComponent } // catch any unfound routes and redirect to home page
@@ -41,5 +36,5 @@ const routes: Routes = [
 })
 export class AppRoutingModule {
     static components = [ HomeComponent, LoginComponent, SignupComponent, ResetPasswordComponent,
-        GamesComponent, PageNotFoundComponent ];
+        BrowseGamesComponent, PageNotFoundComponent ];
  }
