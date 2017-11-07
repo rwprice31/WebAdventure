@@ -60,25 +60,13 @@ namespace WebAdventureAPI.Controllers
             var user = userManager.Users.FirstOrDefault(x => x.UserName == newUser.Username);
             if (user != null)
             {
-                Response errorResponse = new Response
-                {
-                    StatusCode = 400,
-                    Status = false,
-                    StatusText = "A user with that username already exists."
-                };
-                return StatusCode(400, errorResponse);
+                return StatusCode(400, ErrorResponse.CustomErrorCode(400, "A user with that username already exists."));
             }
 
             user = userManager.Users.FirstOrDefault(x => x.Email == newUser.Email);
             if (user != null)
             {
-                Response errorResponse = new Response
-                {
-                    StatusCode = 400,
-                    Status = false,
-                    StatusText = "A user with that email already exists."
-                };
-                return StatusCode(400, errorResponse);
+                return StatusCode(400, ErrorResponse.CustomErrorCode(400, "A user with that email already exists."));
             }
 
             var result = await userManager.CreateAsync(new WAUser
@@ -92,11 +80,8 @@ namespace WebAdventureAPI.Controllers
             {
                 user = userManager.Users.FirstOrDefault(x => x.UserName == newUser.Username);
 
-                NewUserResponse response = new NewUserResponse
+                var response = new NewUserResponse
                 {
-                    StatusText = "New user successfully created!",
-                    StatusCode = 201,
-                    Status = true,
                     User = new UserDto
                     {
                         Email = user.Email,
@@ -114,13 +99,7 @@ namespace WebAdventureAPI.Controllers
             }
             else
             {
-                Response errorResponse = new Response
-                {
-                    StatusCode = 500,
-                    Status = false,
-                    StatusText = "A server error has occured."
-                };
-                return StatusCode(500, errorResponse);
+                return StatusCode(500, ErrorResponse.ServerError);
             }
         }
 
@@ -155,20 +134,11 @@ namespace WebAdventureAPI.Controllers
             (ClaimsIdentity identity, WAUser user) = await GetClaimsIdentity(loginDto);
             if (identity == null || user == null)
             {
-                Response errorResponse = new Response
-                {
-                    StatusCode = 400,
-                    Status = false,
-                    StatusText = "Incorrect login."
-                };
-                return StatusCode(400, errorResponse);
+                return StatusCode(400, ErrorResponse.CustomErrorCode(400, "Incorrect Login"));
             }
 
-            UserLoginResponse userLoginResponse = new UserLoginResponse
+            return StatusCode(200, new UserLoginResponse
             {
-                StatusCode = 200,
-                Status = true,
-                StatusText = "User logged in successfully!",
                 User = new UserDto
                 {
                     Auth_Token = await jwtFactory.GenerateEncodedToken(loginDto.Email, identity),
@@ -176,8 +146,7 @@ namespace WebAdventureAPI.Controllers
                     Username = user.UserName,
                     Id = user.Id
                 }
-            };
-            return StatusCode(200, userLoginResponse);
+            });
         }
 
         private async Task<(ClaimsIdentity, WAUser)> GetClaimsIdentity(LoginDto loginDto)
