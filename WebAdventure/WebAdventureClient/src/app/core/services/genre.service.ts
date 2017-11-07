@@ -1,34 +1,38 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-
+import { HttpClient, HttpResponse, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/map'; 
-import 'rxjs/add/operator/catch';
+
+import { ConfigService } from './utils/config.service';
+import { BaseService } from './base.service';
 
 import { IGenre } from '../../shared/interfaces/models/genre.interface';
-
-let genre1: IGenre = {
-    name: 'Action',
-    description: 'Action description'
-};
-let genre2: IGenre = {
-    name: 'Horror',
-    description: 'Horror description'
-};
+import { IResponse } from './../../shared/interfaces/responses/response.interface';
+import { IGenresResponse } from './../../shared/interfaces/responses/genres/genres-response.interface';
 
 @Injectable()
-export class GenreService {
-    baseUrl: string = "";
-    genreArray: IGenre[];
+export class GenreService extends BaseService {
 
-    constructor(private http: HttpClient) {
-        this.genreArray = [genre1, genre2];
+    private baseUrl: string;
+    private headers: HttpHeaders;
+
+    private genreRoute: string;
+
+    constructor(private http: HttpClient,
+        private configService: ConfigService) {
+        super();
+        this.baseUrl = configService.getApiURI();
+        this.genreRoute = this.baseUrl + 'genres';
+        this.headers = configService.getHeaders();
     }
 
-    getGenres() : Observable<IGenre[]> {
-        return Observable.of(this.genreArray);
+    getGenres(): Observable<IResponse> {
+        console.log('Sending GET to ' + this.genreRoute);
+        return this.http.get<IGenresResponse>(this.genreRoute, { headers: this.headers })
+            .map( (res: IGenresResponse ) => {
+                console.log('IGenresResponse = ', res);
+                return res;
+            })
+            .catch(this.handleError);
     }
 
 }

@@ -27,6 +27,8 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
+    this.toastr.info('You must log in to view this content');
+
     // store the attempted URL for redirecting
     this.userSerivce.setRedirectUrl(url);
 

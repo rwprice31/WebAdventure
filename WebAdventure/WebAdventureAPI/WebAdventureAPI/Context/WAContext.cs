@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.DbModels;
 
-namespace WebAdventureAPI
+namespace WebAdventureAPI.Contexts
 {
     public class WAContext : IdentityDbContext<WAUser>
     {
