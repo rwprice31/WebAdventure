@@ -58,13 +58,34 @@ namespace WebAdventureAPI.Controllers
                 }
                 else
                 {
-                    repo.UpdateRoom(newRoom);
-                    return StatusCode(204, roomResponses.UpdateResponse(roomDto));
+                    return StatusCode(404, ErrorResponse.CustomErrorCode(404, "Room already exist"));
                 }
             }
             catch (Exception)
             {
                 return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [HttpPut]
+        public IActionResult UpdateRoom([FromBody] RoomDto roomDto, [FromRoute] int gameId)
+        {
+            var room = new Room
+            {
+                Id = roomDto.Id,
+                Name = roomDto.Name,
+                Descr = roomDto.Descr,
+                GameId = gameId
+            };
+
+            if (room.Id == 0)
+            {
+                return StatusCode(404, "Room does not exist");
+            }
+            else
+            {
+                repo.UpdateRoom(room);
+                return StatusCode(204, roomResponses.UpdateResponse(roomDto));
             }
         }
 

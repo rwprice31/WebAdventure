@@ -11,16 +11,18 @@ namespace WebAdventureAPI.Models.Responses
     {
         public GameDto Game { get; set; }
 
-        public GameDto[] Games { get; set; }
+        public GetGameDto[] Games { get; set; }
 
-        public GameResponses CreateResponse(GameDto game)
+        public GetGameDto GetGame { get; set; }
+
+        public GameResponses CreateResponse(GetGameDto game)
         {
             return new GameResponses
             {
                 StatusText = "New game successfully created!",
                 StatusCode = 201,
                 Status = true,
-                Game = game
+                GetGame = game
             };
         }
 
@@ -35,7 +37,7 @@ namespace WebAdventureAPI.Models.Responses
             };
         }
 
-        public GameResponses AuthorsGamesFound(GameDto[] usersGames)
+        public GameResponses AuthorsGamesFound(GetGameDto[] usersGames)
         {
             return new GameResponses
             {
