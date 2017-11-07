@@ -31,11 +31,11 @@ namespace WebAdventureAPI.Controllers
         [HttpGet]
         public JsonResult GetAllGames()
         {
-            var list = new List<GameDto>();
+            var list = new List<GetGameDto>();
             foreach (var game in repo.GetAllGames())
             {
                 var user = userManager.Users.FirstOrDefault(u => u.Id == game.AuthorId);
-                list.Add(new GameDto
+                list.Add(new GetGameDto
                 {
                     Id = game.Id,
                     Author = new UserDto
@@ -59,10 +59,6 @@ namespace WebAdventureAPI.Controllers
         {
             try
             {
-                if (gameDto.Id != 0)
-                {
-                    return StatusCode(400, ErrorResponse.CustomErrorCode(400, "You're not creating a game."));
-                }
                 var newGame = new Game
                 {
                     Name = gameDto.Name,
@@ -71,8 +67,10 @@ namespace WebAdventureAPI.Controllers
                     GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
                 };
                 repo.AddGameToDb(newGame);
+
                 int newGameId = repo.GetGameId(newGame);
-                var newGameDto = new GameDto
+
+                var newGameDto = new GetGameDto
                 {
                     Id = newGameId,
                     Author = gameDto.Author,
@@ -80,6 +78,7 @@ namespace WebAdventureAPI.Controllers
                     Genre = gameDto.Genre,
                     Name = gameDto.Name
                 };
+
                 var successResponse = responses.CreateResponse(newGameDto);
                 return StatusCode(201, successResponse);
             }
@@ -90,33 +89,29 @@ namespace WebAdventureAPI.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPut]
-        public IActionResult UpdateGame([FromBody] GameDto gameDto)
+        [HttpPut("{gameId}")]
+        public IActionResult UpdateGame([FromBody] GameDto gameDto, [FromRoute] int gameId)
         {
             try
             {
-                if (gameDto.Id == 0)
+                if (gameId == 0)
                 {
                     return StatusCode(400, ErrorResponse.CustomErrorCode(400, "You're not updating a game."));
                 }
+
                 var game = new Game
                 {
-                    Id = gameDto.Id,
+                    Id = gameId,
                     Name = gameDto.Name,
                     Descr = gameDto.Descr,
                     AuthorId = gameDto.Author.Id,
                     GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
                 };
+
                 repo.UpdateGame(game);
-                var updatedGameDto = new GameDto
-                {
-                    Id = gameDto.Id,
-                    Author = gameDto.Author,
-                    Descr = gameDto.Descr,
-                    Genre = gameDto.Genre,
-                    Name = gameDto.Name
-                };
-                var successResponse = responses.UpdateResponse(updatedGameDto);
+
+                var successResponse = responses.UpdateResponse(gameDto);
+
                 return StatusCode(204, successResponse);
             }
             catch (Exception e)
@@ -126,8 +121,8 @@ namespace WebAdventureAPI.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpDelete]
-        public IActionResult DeleteGame([FromBody] GameIdDto gameIdDto)
+        [HttpDelete("{gameId}")]
+        public IActionResult DeleteGame([FromBody] GameIdDto gameIdDto, [FromRoute] int gameId)
         {
             try
             {
@@ -150,11 +145,11 @@ namespace WebAdventureAPI.Controllers
         {
             try
             {
-                var usersGames = new List<GameDto>();
+                var usersGames = new List<GetGameDto>();
                 foreach (var game in repo.GetGamesByAuthor(authorId))
                 {
                     var user = userManager.Users.FirstOrDefault(u => u.Id == game.AuthorId);
-                    usersGames.Add(new GameDto
+                    usersGames.Add(new GetGameDto
                     {
                         Id = game.Id,
                         Author = new UserDto
