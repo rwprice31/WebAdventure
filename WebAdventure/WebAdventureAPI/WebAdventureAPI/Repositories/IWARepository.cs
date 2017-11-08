@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.DbModels;
 using WebAdventureAPI.Models.Dtos;
@@ -11,38 +7,42 @@ namespace WebAdventureAPI.Repositories
 {
     public interface IWARepository
     {
-        List<Game> GetGamesByAuthor(string author);
+        GameDto AddGameToDb(Game game);
+
+        Room AddRoomToDb(RoomDto room, int gameId);
+
+        ActionOutcomeInfoDto CreateActionOutcome(int roomId, ActionOutcomeInfoDto dto, int gameId);
+
+        ItemInfoDto CreateItem(ItemCreationDto dto, int gameId);
+
+        void DeleteActionOutcome(ActionOutcomeDeleteDto dto);
+
+        void DeleteRoom(int id);
+
+        List<ActionOutcomeInfoDto> GetActionOutcomeByRoom(int id);
 
         List<Game> GetAllGames();
 
         List<Genre> GetAllGenres();
 
-        Genre GetGenreById(int id);
+        int GetGameId(Game game);
 
-        void AddGameToDb(Game game);
-
-        void AddRoomToDb(Room room);
-
-        List<Room> GetRoomsForGame(int gameId);
-
-        int GetRoomId(Room room);
-
-        void UpdateRoom(Room room);
-
-        void DeleteRoom(int id);
+        List<Game> GetGamesByAuthor(string author);
 
         Genre GetGenreByDescr(string descr);
 
+        Genre GetGenreById(int id);
+
+        List<ItemInfoDto> GetItemsForGame(int gameId);
+
+        List<Room> GetRoomsForGame(int gameId);
+
         void SaveChanges();
 
-        int GetGameId(Game game);
+        GameDto UpdateGame(GameDto game, int gameId);
 
-        void UpdateGame(Game game);
+        Item UpdateItem(int itemId, UpdateItemDto dto);
 
-        List<RoomActionOutcomeInfo> GetActionOutcomeByRoom(int id);
-
-        RoomActionOutcomeInfo CreateRoomActionOutcome(int roomId, Models.DbModels.Action action, Outcome outcome);
-
-        void DeleteActionOutcome(ActionOutcomeDeleteDto dto);
+        void UpdateRoom(Room room);
     }
 }

@@ -66,20 +66,9 @@ namespace WebAdventureAPI.Controllers
                     AuthorId = gameDto.Author.Id,
                     GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
                 };
-                repo.AddGameToDb(newGame);
+                var game = repo.AddGameToDb(newGame);
 
-                int newGameId = repo.GetGameId(newGame);
-
-                var newGameDto = new GetGameDto
-                {
-                    Id = newGameId,
-                    Author = gameDto.Author,
-                    Descr = gameDto.Descr,
-                    Genre = gameDto.Genre,
-                    Name = gameDto.Name
-                };
-
-                var successResponse = responses.CreateResponse(newGameDto);
+                var successResponse = responses.CreateResponse(game);
                 return StatusCode(201, successResponse);
             }
             catch (Exception)
@@ -99,20 +88,9 @@ namespace WebAdventureAPI.Controllers
                     return StatusCode(400, ErrorResponse.CustomErrorCode(400, "You're not updating a game."));
                 }
 
-                var game = new Game
-                {
-                    Id = gameId,
-                    Name = gameDto.Name,
-                    Descr = gameDto.Descr,
-                    AuthorId = gameDto.Author.Id,
-                    GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
-                };
+                var game = repo.UpdateGame(gameDto, gameId);
 
-                repo.UpdateGame(game);
-
-                var successResponse = responses.UpdateResponse(gameDto);
-
-                return StatusCode(204, successResponse);
+                return StatusCode(200, responses.UpdateResponse(game));
             }
             catch (Exception e)
             {
@@ -145,11 +123,11 @@ namespace WebAdventureAPI.Controllers
         {
             try
             {
-                var usersGames = new List<GetGameDto>();
+                var usersGames = new List<GameDto>();
                 foreach (var game in repo.GetGamesByAuthor(authorId))
                 {
                     var user = userManager.Users.FirstOrDefault(u => u.Id == game.AuthorId);
-                    usersGames.Add(new GetGameDto
+                    usersGames.Add(new GameDto
                     {
                         Id = game.Id,
                         Author = new UserDto
@@ -163,7 +141,7 @@ namespace WebAdventureAPI.Controllers
                         Descr = game.Descr
                     });
                 }
-                return StatusCode(200, responses.AuthorsGamesFound(usersGames.ToArray()));
+                return StatusCode(200, responses.AuthorsGamesFound(usersGames));
             }
             catch (Exception)
             {

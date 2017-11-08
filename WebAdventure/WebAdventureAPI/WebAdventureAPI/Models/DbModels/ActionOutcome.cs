@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace WebAdventureAPI.Models.DbModels
 {
-    public class RoomActionOutcome
+    public class ActionOutcome
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int RoomActionId { get; set; }
+        public int ActionId { get; set; }
 
         public int OutcomeId { get; set; }
     }
