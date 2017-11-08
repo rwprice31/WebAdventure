@@ -136,6 +136,7 @@ namespace WebAdventureAPI
             services.AddTransient<IEmailSender, AuthMessageSender>();
 
             services.Configure<AuthMessageSenderOptions>(config);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

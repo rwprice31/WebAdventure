@@ -40,8 +40,6 @@ namespace WebAdventureAPI.Controllers
                     Id = game.Id,
                     Author = new UserDto
                     {
-                        Id = user.Id,
-                        Email = user.Email,
                         Username = user.UserName
                     },
                     Genre = repo.GetGenreById(game.GenreId).Descr,
@@ -93,6 +91,11 @@ namespace WebAdventureAPI.Controllers
         [HttpPut]
         public IActionResult UpdateGame([FromBody] GameDto gameDto)
         {
+            (IActionResult result, bool isOwner) = EnsureAuthorOwnsGame(gameDto);
+            if (!isOwner)
+            {
+                return result;
+            }
             try
             {
                 if (gameDto.Id == 0)
@@ -179,6 +182,18 @@ namespace WebAdventureAPI.Controllers
         private WAUser VerifyUserCredentials(string email, string passwordHash)
         {
             return userManager.Users.FirstOrDefault(u => u.Email == email && u.PasswordHash == passwordHash);
+        }
+
+        private (IActionResult, bool) EnsureAuthorOwnsGame(GameDto gameDto)
+        {
+            var currentUser = gameDto.Author;
+            List<Game> currentUsersGames = repo.GetGamesByAuthor(currentUser.Id);
+            if (currentUsersGames.Find(g => g.Id == gameDto.Id) == null)
+            {
+                var result = StatusCode(400, ErrorResponse.CustomErrorCode(400, "You can't update a game you do not own"));
+                return (result, false);
+            }
+            return (null, true);
         }
     }
 }
