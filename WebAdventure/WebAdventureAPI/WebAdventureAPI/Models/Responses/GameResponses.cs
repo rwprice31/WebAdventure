@@ -13,6 +13,28 @@ namespace WebAdventureAPI.Models.Responses
 
         public GameDto[] Games { get; set; }
 
+        public GameResponses GameFoundResponse(GameDto game)
+        {
+            return new GameResponses
+            {
+                StatusText = "Game successfully found!",
+                StatusCode = 200,
+                Status = true,
+                Game = game
+            };
+        }
+
+        public GameResponses GamesFoundResponse(GameDto[] games)
+        {
+            return new GameResponses
+            {
+                StatusText = "Game successfully found!",
+                StatusCode = 200,
+                Status = true,
+                Games = games
+            };
+        }
+
         public GameResponses CreateResponse(GameDto game)
         {
             return new GameResponses

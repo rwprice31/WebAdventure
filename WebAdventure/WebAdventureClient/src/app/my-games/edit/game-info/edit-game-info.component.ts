@@ -17,8 +17,8 @@ import { DialogService } from './../../../core/services/dialog.service';
 import { IGamesResponse } from './../../../shared/interfaces/responses/games/games-response.interface';
 
 @Component({
-  templateUrl: './game-info.component.html',
-  styleUrls: ['./game-info.component.scss']
+  templateUrl: './edit-game-info.component.html',
+  styleUrls: ['./edit-game-info.component.scss']
 })
 export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
 
@@ -38,6 +38,7 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
 
   ngOnInit() {
     this.getGenres();
+    this.retreiveGameInfo();
     this.buildForm();
   }
 
@@ -59,14 +60,10 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
     });
   }
 
-  save() {
+  retreiveGameInfo() {
+  }
 
-    this.gameService.getGames().subscribe(
-      (res: IGamesResponse) => {
-        console.log('Response received in createInfo = ', JSON.stringify(res));
-      }
-    );
-
+  updateGameInfo() {
     // this.game = {
     //   id: 0,
     //   name: this.createInfoForm.controls['name'].value,

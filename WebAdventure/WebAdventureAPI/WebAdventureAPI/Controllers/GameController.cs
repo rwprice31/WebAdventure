@@ -29,27 +29,67 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetAllGames()
+        public IActionResult GetGames([FromQuery] string author)
         {
-            var list = new List<GameDto>();
-            foreach (var game in repo.GetAllGames())
+            try
             {
-                var user = userManager.Users.FirstOrDefault(u => u.Id == game.AuthorId);
-                list.Add(new GameDto
+                // get games by author
+                if (author != null)
                 {
-                    Id = game.Id,
-                    Author = new UserDto
+                    return GetGameByAuthorId(author);
+                }
+                else
+                {
+                    // get all games
+                    var games = new List<GameDto>();
+                    foreach (var game in repo.GetAllGames())
                     {
-                        Username = user.UserName
-                    },
-                    Genre = repo.GetGenreById(game.GenreId).Descr,
-                    Name = game.Name,
-                    Descr = game.Descr
-                });
+                        var user = userManager.Users.FirstOrDefault(u => u.Id == game.AuthorId);
+                        games.Add(new GameDto
+                        {
+                            Id = game.Id,
+                            Author = new UserDto
+                            {
+                                Username = user.UserName
+                            },
+                            Genre = repo.GetGenreById(game.GenreId).Descr,
+                            Name = game.Name,
+                            Descr = game.Descr
+                        });
+                    }
+                    return StatusCode(200, responses.GamesFoundResponse(games.ToArray()));
+                }
             }
-            return Json(list);
+            catch (Exception e)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
         }
 
+        [HttpGet("{gameId}")]
+        public async Task<IActionResult> GetGame([FromRoute] int gameId)
+        {
+            Game game = repo.GetGame(gameId);
+            WAUser gameAuthor = await repo.GetGameAuthor(game);
+            GameDto gameDto = new GameDto
+            {
+                Descr = game.Descr,
+                Name = game.Name,
+                Id = game.Id,
+                Author =
+                {
+                    Username = gameAuthor.UserName
+                }
+            };
+            if (game != null)
+            {
+                return StatusCode(200 ,responses.GameFoundResponse(gameDto));
+            }
+            else
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
@@ -146,10 +186,7 @@ namespace WebAdventureAPI.Controllers
             }
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet]
-        [Route("{authorId}")]
-        public IActionResult GetGameByAuthor([FromRoute] string authorId)
+        private IActionResult GetGameByAuthorId(string authorId)
         {
             try
             {

@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CanDeactivateGuard } from './../../core/services/guards/can-deactivate-guard.service';
 
 import { EditComponent } from './edit.component';
-import { GameInfoComponent } from './game-info/game-info.component';
+import { GameInfoComponent } from './game-info/edit-game-info.component';
 import { MonsterComponent } from './monster/monster.component';
 
 // path's after /create/

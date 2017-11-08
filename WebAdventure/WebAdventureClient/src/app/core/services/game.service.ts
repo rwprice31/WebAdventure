@@ -17,6 +17,9 @@ import { IGamesResponse } from './../../shared/interfaces/responses/games/games-
 import { IGameCreationResponse } from './../../shared/interfaces/responses/games/game-creation-response.interface';
 import { IGameUpdationResponse } from './../../shared/interfaces/responses/games/game-updation-response.interface';
 import { IUser } from '../../shared/interfaces/models/user.interface';
+import { IGameViewModel } from '../../shared/interfaces/view-models/games/game-view-model.interface';
+import { IGameResponse } from '../../shared/interfaces/responses/games/game-response.interface';
+import { HttpParams } from '@angular/common/http';
 
 export let gameIdsLocalStorage = 'authorsGameIds';
 
@@ -27,6 +30,7 @@ export class GameService extends BaseService {
     private headers: HttpHeaders;
 
     private gameRoute: string;
+    private authorQueryParam = "author";
 
     constructor(private http: HttpClient,
         private configService: ConfigService) {
@@ -36,10 +40,21 @@ export class GameService extends BaseService {
         this.gameRoute = this.baseUrl + 'games';
     }
 
+    getGame(game: IGameViewModel): Observable<IResponse> {
+        let route: string = this.gameRoute + '/' + game.gameId;
+        console.log('Sending GET to ' + route);
+        return this.http.get<IGameResponse>(route, { headers: this.headers})
+        .map( (res: IGameResponse ) => {
+            return res;
+        })
+        .catch(this.handleError); 
+    }
+
     getUsersGames(game: IUsersGamesViewModel): Observable<IResponse> {
-        let route: string = this.gameRoute + '/' + game.userId;
-        // console.log('Sending GET to ' + route);
-        return this.http.get<IUsersGameResponse>(route, { headers: this.headers})
+        // console.log('Sending GET to ' + this.gameRoute + ' with param ?author=' + game.userId);
+        let params = new HttpParams()
+            .set(this.authorQueryParam, game.userId);
+        return this.http.get<IUsersGameResponse>(this.gameRoute, { headers: this.headers, params: params})
         .map( (res: IUsersGameResponse ) => {
             if (res.status) {
                 this.storeAuthorsGameIdsInLocalStorage(res.games);

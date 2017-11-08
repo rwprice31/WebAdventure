@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,10 +14,13 @@ namespace WebAdventureAPI.Repositories
     public class WARepository : IWARepository
     {
         private WAContext context;
+        private UserManager<WAUser> userManager;
 
-        public WARepository(WAContext context)
+        public WARepository(WAContext context,
+            UserManager<WAUser> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
 
         public void AddGameToDb(Game game)
@@ -252,6 +256,17 @@ namespace WebAdventureAPI.Repositories
             return (from o in context.Outcome
                     where o.ItemId == outcome.ItemId || o.MonsterId == outcome.MonsterId || o.NextRoomId == outcome.NextRoomId
                     select o).FirstOrDefault();
+        }
+
+        public Game GetGame(int gameId)
+        {
+            return (from g in context.Game
+                    where g.Id == gameId select g).FirstOrDefault();
+        }
+
+        public async Task<WAUser> GetGameAuthor(Game game)
+        {
+            return await userManager.FindByIdAsync(game.AuthorId);
         }
     }
 }
