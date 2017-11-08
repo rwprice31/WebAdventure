@@ -38,12 +38,6 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
 
   ngOnInit() {
     this.getGenres();
-
-    this.route.params.subscribe( params => {
-      this.gameId = +params['id'];
-      console.log('This game id = ' + this.gameId);
-    });
-
     this.buildForm();
   }
 

@@ -26,10 +26,10 @@ export class GenreService extends BaseService {
     }
 
     getGenres(): Observable<IResponse> {
-        console.log('Sending GET to ' + this.genreRoute);
+        // console.log('Sending GET to ' + this.genreRoute);
         return this.http.get<IGenresResponse>(this.genreRoute, { headers: this.headers })
             .map( (res: IGenresResponse ) => {
-                console.log('IGenresResponse = ', res);
+                // console.log('IGenresResponse = ', res);
                 return res;
             })
             .catch(this.handleError);

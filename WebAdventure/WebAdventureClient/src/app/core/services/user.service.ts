@@ -66,26 +66,26 @@ export class UserService extends BaseService {
     }
 
     register(user: IUserRegistrationViewModel): Observable<IResponse> {
-        console.log('Body entering register = ' + JSON.stringify(user));
-        console.log('Sending POST to ' + this.registrationRoute);
+        // console.log('Body entering register = ' + JSON.stringify(user));
+        // console.log('Sending POST to ' + this.registrationRoute);
         let body = JSON.stringify(user);
         return this.http.post<IUserRegistrationResponse>(this.registrationRoute, body, { headers: this.headers})
             .map( (res: IUserRegistrationResponse ) => {
-                console.log('IUserRegistrationResponse = ', res);
+                // console.log('IUserRegistrationResponse = ', res);
                 return res;
             })
             .catch(this.handleError);
     }
 
     loginUser(user: IUserLoginViewModel): Observable<IResponse> {
-        console.log('Body entering loginUser = ' + JSON.stringify(user));
-        console.log('Sending POST to ' + this.loginRoute);
+        // console.log('Body entering loginUser = ' + JSON.stringify(user));
+        // console.log('Sending POST to ' + this.loginRoute);
         let body = JSON.stringify(user);
         return this.http.post<IUserLoginResponse>(this.loginRoute, body, { headers: this.headers })
         .map( (res: IUserLoginResponse) => {
-            console.log('IUserLoginResponse = ', res);
+            // console.log('IUserLoginResponse = ', res);
             if (res.status) {
-                console.log('Setting current user equal to ', res.user);
+                // console.log('Setting current user equal to ', res.user);
                 this.setCurrentUserToLocalStorage(res.user);
             }
             return res;
@@ -109,7 +109,7 @@ export class UserService extends BaseService {
 
 
     resetPassword(user: IUserResetPasswordViewModel): Observable<IResponse>{
-  
+
       console.log('Reset password = ' + JSON.stringify(user));
       console.log('Sending POST to ' + this.baseUrl + 'users/reset');
       let body = JSON.stringify(user);

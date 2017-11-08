@@ -9,7 +9,7 @@ export abstract class BaseService {
 
         let errorResponse: IResponse;
 
-        console.log('Error = ', error);
+        // console.log('Error = ', error);
 
         if (error.status === 0) {
             errorResponse = {

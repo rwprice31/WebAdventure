@@ -12,12 +12,12 @@ export class AuthInterceptor implements HttpInterceptor {
 
     const userService = this.injector.get(UserService);
 
-    console.log('User Service = ', userService.getCurrentUser());
+    // console.log('User Service = ', userService.getCurrentUser());
 
     // if there's a current user - add authorization token
     if (userService.getCurrentUser()) {
       let authReq = req.clone( { headers: req.headers.set('Authorization', 'Bearer ' + userService.getCurrentUser().auth_Token)});
-      console.log('Setting auth header = ' + userService.getCurrentUser().auth_Token);
+      // console.log('Setting auth header = ' + userService.getCurrentUser().auth_Token);
       return next.handle(authReq);
     }
 

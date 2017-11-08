@@ -27,17 +27,17 @@ export class MyGamesHomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getUsersGames();
+    this.retrieveUsersGames();
   }
 
-  getUsersGames() {
+  retrieveUsersGames() {
     let user: IUsersGamesViewModel = {
       userId: this.userService.getCurrentUser().id
     };
     this.gameService.getUsersGames(user).subscribe(
       (res: IUsersGameResponse) => {
         if (res.status) {
-          console.log('IUsersGameReponse received = ', res.games);
+          // console.log('IUsersGameReponse received = ', res.games);
           this.games = res.games;
         } else {
           this.toastr.error(res.statusText);
@@ -46,17 +46,21 @@ export class MyGamesHomeComponent implements OnInit {
     );
   }
 
-  getUsersSavedGames() {
+  public getUsersGames(): IGame[] {
+    return this.games;
+  }
+
+  private retrieveUsersSavedGames() {
 
   }
 
-  playClicked($event) {
-    console.log('Save event received in game home' + JSON.stringify($event));
+  private playClicked($event) {
+    // console.log('Save event received in game home' + JSON.stringify($event));
   }
 
-  editClicked($event) {
-    console.log('Edit event received in game home' + JSON.stringify($event));
-    this.router.navigate(['edit', $event.id]);
+  private editClicked($event) {
+    // console.log('Edit event received in game home' + JSON.stringify($event));
+    this.router.navigate(['my-games/edit', $event.id]);
   }
 
 }

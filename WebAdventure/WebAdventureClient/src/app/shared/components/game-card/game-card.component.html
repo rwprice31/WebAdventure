@@ -23,18 +23,18 @@
             <!-- Play, Edit, Delete, Save buttons -->
             <div class="row bottom-row">
                     <div class="col-3" *ngIf="displaySave">
-                        <button type="button" class="btn btn-light">Save</button>
+                        <button type="button" class="btn btn-light" (click)="saveClicked()">Save</button>
                     </div>
                     <div class="col-3" *ngIf="displayPlay">
-                        <button type="button" class="btn btn-light">Play</button>        
+                        <button type="button" class="btn btn-light" (click)="playClicked()">Play</button>        
                     </div>
                     <div class="col-3" *ngIf="displayEdit">
-                        <button type="button" class="btn btn-light">Edit</button>          
+                        <button type="button" class="btn btn-light" (click)="editClicked()">Edit</button>          
                     </div> 
                     <div class="col-3" *ngIf="displayDelete">
-                        <button type="button" class="btn btn-light">Delete</button>             
+                        <button type="button" class="btn btn-light" (click)="deleteClicked()">Delete</button>             
                     </div>                                                    
             </div>
         </div>
-        
+        ig
 </div>
