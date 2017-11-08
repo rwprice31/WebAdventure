@@ -18,6 +18,8 @@ import { IGameCreationResponse } from './../../shared/interfaces/responses/games
 import { IGameUpdationResponse } from './../../shared/interfaces/responses/games/game-updation-response.interface';
 import { IUser } from '../../shared/interfaces/models/user.interface';
 
+export let gameIdsLocalStorage = 'authorsGameIds';
+
 @Injectable()
 export class GameService extends BaseService {
 
@@ -72,13 +74,20 @@ export class GameService extends BaseService {
         .catch(this.handleError);
     }
 
+    addGameIdToLocalStorage(id: number) {
+        console.log('Id = ' + id);
+        let gameIds = JSON.parse(localStorage.getItem(gameIdsLocalStorage));
+        gameIds.push(id);
+        localStorage.setItem(gameIdsLocalStorage, JSON.stringify(gameIds));
+    }
+
     storeAuthorsGameIdsInLocalStorage(games: IGame[]) {
         // console.log('games = ' + games.toString());
         let gameIds = [];
         games.forEach(game => {
             gameIds.push(game.id);
         });
-        localStorage.setItem('authorsGameIds', JSON.stringify(gameIds));
+        localStorage.setItem(gameIdsLocalStorage, JSON.stringify(gameIds));
     }
 
 }

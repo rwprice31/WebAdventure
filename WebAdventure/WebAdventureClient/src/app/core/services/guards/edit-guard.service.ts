@@ -11,6 +11,8 @@ import { IUsersGamesViewModel } from '../../../shared/interfaces/view-models/gam
 import { IUsersGameResponse } from '../../../shared/interfaces/responses/games/users-games-response.interface';
 import { MyGamesHomeComponent } from '../../../my-games/home/my-games-home.component';
 
+import { gameIdsLocalStorage } from './../game.service';
+
 @Injectable()
 export class EditGuard implements CanActivate {
     
@@ -25,12 +27,10 @@ export class EditGuard implements CanActivate {
 
     fetchIdFromRoute(route: ActivatedRouteSnapshot) {
         this.gameId = +route.params['id'];
-        console.log('This game id = ', this.gameId);
-        
     }
 
     retrieveUsersGamesIdFromLocalStorage(): void {        
-        this.usersGameIds = JSON.parse(localStorage.getItem('authorsGameIds'));
+        this.usersGameIds = JSON.parse(localStorage.getItem(gameIdsLocalStorage));
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
