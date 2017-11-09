@@ -9,9 +9,9 @@ namespace WebAdventureAPI.Models.Responses.Room
 {
     public class RoomResponses : Response
     {
-        public RoomDto Room { get; set; }
+        public DbModels.Room Room { get; set; }
 
-        public List<RoomDto> Rooms { get; set; }
+        public List<DbModels.Room> Rooms { get; set; }
 
         public RoomResponses DeleteRoomResponse() => new RoomResponses
         {
@@ -21,7 +21,7 @@ namespace WebAdventureAPI.Models.Responses.Room
             Room = null,
         };
 
-        public RoomResponses GetAllRoomsResponse(List<RoomDto> roomList) => new RoomResponses
+        public RoomResponses GetAllRoomsResponse(List<DbModels.Room> roomList) => new RoomResponses
         {
             StatusText = "All rooms",
             StatusCode = 201,
@@ -29,7 +29,7 @@ namespace WebAdventureAPI.Models.Responses.Room
             Rooms = roomList
         };
 
-        public RoomResponses CreateResponse(RoomDto room) => new RoomResponses
+        public RoomResponses CreateResponse(DbModels.Room room) => new RoomResponses
         {
             StatusText = "New room successfully created!",
             StatusCode = 201,
@@ -37,7 +37,7 @@ namespace WebAdventureAPI.Models.Responses.Room
             Room = room
         };
 
-        public RoomResponses UpdateResponse(RoomDto room) => new RoomResponses
+        public RoomResponses UpdateResponse(DbModels.Room room) => new RoomResponses
         {
             StatusText = "Game successfully updated!",
             StatusCode = 204,
