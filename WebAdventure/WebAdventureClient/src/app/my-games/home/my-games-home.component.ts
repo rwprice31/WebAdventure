@@ -32,25 +32,9 @@ export class MyGamesHomeComponent implements OnInit {
     this.getUsersCreatedGames();
   }
 
-  retrieveUsersGames() {
-    // let user: IUsersGamesViewModel = {
-    //   userId: this.userService.getCurrentUser().id
-    // };
-    // this.gameService.getUsersGames(user).subscribe(
-    //   (res: IUsersGameResponse) => {
-    //     if (res.status) {
-    //       // console.log('IUsersGameReponse received = ', res.games);
-    //       this.games = res.games;
-    //     } else {
-    //       this.toastr.error(res.statusText);
-    //     }
-    //   }
-    // );
-  }
   getUsersCreatedGames() {
-    this.route.data.subscribe( (data: { games: IGame[] }) => {
-      this.usersCreatedGames = data.games;  
-      console.log('Users created games = ' + this.usersCreatedGames);
+    this.route.data.subscribe( (data: { gamesResponse: IUsersGameResponse }) => {
+      this.usersCreatedGames = data.gamesResponse.games;  
     });
   }
 

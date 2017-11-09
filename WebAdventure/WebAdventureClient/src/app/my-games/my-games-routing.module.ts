@@ -11,9 +11,6 @@ const routes: Routes = [
     { 
         path: '', 
         component: MyGamesComponent,
-        resolve: {
-            games: UsersCreatedGamesResolver
-        },
         children: [
             {
                 path: 'new',
@@ -25,7 +22,10 @@ const routes: Routes = [
             },
             {
                 path: '**',
-                component: MyGamesHomeComponent 
+                component: MyGamesHomeComponent,
+                resolve: {
+                    gamesResponse: UsersCreatedGamesResolver
+                } 
             }
         ]
     }

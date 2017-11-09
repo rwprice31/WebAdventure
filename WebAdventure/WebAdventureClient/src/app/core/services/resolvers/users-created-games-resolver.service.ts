@@ -13,7 +13,7 @@ import { IToastr } from '../../../shared/interfaces/external-libraries/toastr.in
 import { IUsersGameResponse } from '../../../shared/interfaces/responses/games/users-games-response.interface';
 
 @Injectable()
-export class UsersCreatedGamesResolver implements Resolve<IGame[]> {
+export class UsersCreatedGamesResolver implements Resolve<Observable<IUsersGameResponse>> {
 
   constructor(private userService: UserService,
     private gameService: GameService, 
@@ -22,7 +22,7 @@ export class UsersCreatedGamesResolver implements Resolve<IGame[]> {
 
     }
  
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): IGame[] {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IUsersGameResponse> {
       let usersGames: IGame[];
       let currentUser: IUsersGamesViewModel = {
         userId: this.userService.getCurrentUser().id
@@ -31,17 +31,26 @@ export class UsersCreatedGamesResolver implements Resolve<IGame[]> {
         this.toastr.error('You must log in to view this content.');
         this.router.navigate(['login']);
       }
-        this.gameService.getUsersGames(currentUser).subscribe(
+
+      return this.gameService.getUsersGames(currentUser).map(
         (res: IUsersGameResponse) => {
-          if (res.status) {
-            // console.log('IUsersGameReponse received = ', res.games);
-            res.games = usersGames;
-          } else {  
-            this.toastr.error(res.statusText);
-          }
+          console.log('Games response in resolve = ' + res);
+          return res;
         }
       );
-      return usersGames;
+
+      //   return this.gameService.getUsersGames(currentUser).subscribe(
+      //   (res: IUsersGameResponse) => {
+      //     if (res.status) {
+      //       // console.log('IUsersGameReponse received = ', res.games);
+      //       res.games = usersGames;
+      //     } else {  
+      //       this.toastr.error(res.statusText);
+      //     }
+      //   }
+      // );
+      // console.log('Resolving users games to ' + usersGames);
+      // return usersGames;
   }
 
 }
