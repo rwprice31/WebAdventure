@@ -20,6 +20,8 @@ import { IGameResponse } from '../../../shared/interfaces/responses/games/game-r
 import { compareFormGroupValues } from '../../../shared/functions/copy-form-group';
 
 import * as _ from 'lodash';
+import { IGameUpdationResponse } from '../../../shared/interfaces/responses/games/game-updation-response.interface';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   templateUrl: './edit-game-info.component.html',
@@ -38,6 +40,7 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
     private genreService: GenreService,
     private gameService: GameService,
     private dialogService: DialogService,
+    private userService: UserService,
     @Inject(TOASTR_TOKEN) private toastr: IToastr,
     private route: ActivatedRoute) {
   }
@@ -87,15 +90,23 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
   }
 
   updateGameInfo() {
-    // this.game = {
-    //   id: 0,
-    //   name: this.createInfoForm.controls['name'].value,
-    //   description: this.createInfoForm.controls['description'].value,
-    //   genre: this.createInfoForm.controls['genre'].value
-    // };
-    // this.gameInfoService.insertGame(this.game).subscribe((game: IGame) => {
-    //   this.toastr.success('Game saved!');
-    // });
+    this.game = {
+      id: this.game.id,
+      name: this.createInfoForm.controls['name'].value,
+      descr: this.createInfoForm.controls['description'].value,
+      genre: this.createInfoForm.controls['genre'].value,
+      author: this.userService.getCurrentUser()
+    };
+    console.log('Passing this updated game into updateGame ' + JSON.stringify(this.game));
+    this.gameService.updateGame(this.game).subscribe( (res: IGameUpdationResponse) => {
+      if (res.status) {
+        this.game = res.game;
+        this.setFormValues();
+        this.toastr.success(res.statusText);
+      } else {
+        this.toastr.error(res.statusText);
+      }
+    });
   }
 
   canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {

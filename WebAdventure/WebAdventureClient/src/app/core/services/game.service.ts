@@ -90,6 +90,16 @@ export class GameService extends BaseService {
         .catch(this.handleError);
     }
 
+    updateGame(game: IGameUpdationViewModel): Observable<IResponse> {
+        let body = JSON.stringify(game);
+        return this.http.put<IGameUpdationResponse>(this.gameRoute + '/' + game.id, body, { headers: this.headers})
+        .map( (res: IGameUpdationResponse) => {
+            console.log('IGameUpdationResponse = ', res);
+            return res;
+        })
+        .catch(this.handleError);
+    }
+
     addGameIdToLocalStorage(id: number) {
         console.log('Id = ' + id);
         let gameIds = JSON.parse(localStorage.getItem(gameIdsLocalStorage));
