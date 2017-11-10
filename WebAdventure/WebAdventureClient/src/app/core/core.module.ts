@@ -20,7 +20,8 @@ import { JQ_TOKEN } from './services/external-libraries/jQuery.service';
 import { IToastr } from '../shared/interfaces/external-libraries/toastr.interface';
 
 import { EnsureModuleLoadedOnceGuard } from '../shared/ensureModuleLoadedOnceGuard';
-import { UsersCreatedGamesResolver } from './services/resolvers/users-created-games-resolver.service';
+import { UsersCreatedGamesResolver } from './services/resolvers/games/users-created-games-resolver.service';
+import { GameInfoResolver } from './services/resolvers/games/edit/game-info-resolver.service';
 
 export declare let toastr: IToastr;
 export declare let jQuery: any;
@@ -48,6 +49,7 @@ export declare let jQuery: any;
         EditGuard,
         DialogService,
         UsersCreatedGamesResolver,
+        GameInfoResolver,
         { provide: TOASTR_TOKEN, useValue: toastr },
         { provide: JQ_TOKEN, useValue: jQuery },
         {

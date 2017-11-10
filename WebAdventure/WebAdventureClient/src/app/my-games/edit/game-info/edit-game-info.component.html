@@ -1,9 +1,9 @@
 <div class="page-header">
         <h1>Game Information</h1>
-        <h2>Enter your general game info below</h2>
+        <h2>Update your game information below</h2>
 </div>
 
-<form [formGroup]="createInfoForm" (ngSubmit)="save(createInfoForm)" novalidate autocomplete="off">
+<form [formGroup]="createInfoForm" (ngSubmit)="update(createInfoForm)" novalidate autocomplete="off">
     <div class="form-group row">
         <label for="staticEmail" class="col-sm-2 col-form-label">Name</label>
         <div class="col-sm-10">
@@ -43,5 +43,5 @@
         </div>
     </div>
     <button type="submit" class="btn" [disabled]="!createInfoForm.valid"
-         [ngClass]="{'invalid-button': !createInfoForm.valid }">Save</button>
+         [ngClass]="{'invalid-button': !createInfoForm.valid }">Update</button>
 </form>

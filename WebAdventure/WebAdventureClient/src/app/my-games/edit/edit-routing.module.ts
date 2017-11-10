@@ -7,6 +7,7 @@ import { CanDeactivateGuard } from './../../core/services/guards/can-deactivate-
 import { EditComponent } from './edit.component';
 import { GameInfoComponent } from './game-info/edit-game-info.component';
 import { MonsterComponent } from './monster/monster.component';
+import { GameInfoResolver } from '../../core/services/resolvers/games/edit/game-info-resolver.service';
 
 // path's after /create/
 const routes: Routes = [
@@ -21,7 +22,10 @@ const routes: Routes = [
             {
                 path: '**', 
                 component: GameInfoComponent, // redirect all other paths to create info
-                canDeactivate: [CanDeactivateGuard]
+                canDeactivate: [CanDeactivateGuard],
+                resolve: {
+                    gameResponse: GameInfoResolver 
+                }
             }
         ]
     }

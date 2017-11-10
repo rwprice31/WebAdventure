@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MyGamesComponent } from './my-games.component';
 import { MyGamesHomeComponent } from './home/my-games-home.component';
 import { MyGamesNewComponent } from './new/my-games-new.component';
-import { UsersCreatedGamesResolver } from '../core/services/resolvers/users-created-games-resolver.service';
+import { UsersCreatedGamesResolver } from '../core/services/resolvers/games/users-created-games-resolver.service';
 
 // path's after /my-games/
 const routes: Routes = [

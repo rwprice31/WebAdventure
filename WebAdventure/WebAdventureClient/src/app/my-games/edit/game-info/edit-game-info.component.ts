@@ -1,6 +1,6 @@
 import { IGenresResponse } from './../../../shared/interfaces/responses/genres/genres-response.interface';
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import { CanComponentDeactivate } from './../../../core/services/guards/can-deactivate-guard.service';
@@ -15,6 +15,11 @@ import { TOASTR_TOKEN } from './../../../core/services/external-libraries/toastr
 import { DialogService } from './../../../core/services/dialog.service';
 
 import { IGamesResponse } from './../../../shared/interfaces/responses/games/games-response.interface';
+import { IGameResponse } from '../../../shared/interfaces/responses/games/game-response.interface';
+
+import { compareFormGroupValues } from '../../../shared/functions/copy-form-group';
+
+import * as _ from 'lodash';
 
 @Component({
   templateUrl: './edit-game-info.component.html',
@@ -23,6 +28,7 @@ import { IGamesResponse } from './../../../shared/interfaces/responses/games/gam
 export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
 
   game: IGame;
+  originalInfoForm: FormGroup;
   createInfoForm: FormGroup;
   genres: IGenre[];
   confirmNavigation: boolean;
@@ -38,8 +44,7 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
 
   ngOnInit() {
     this.getGenres();
-    this.retreiveGameInfo();
-    this.buildForm();
+    this.retrieveGameInfo();
   }
 
   buildForm() {
@@ -47,6 +52,27 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
       name: ['', Validators.required],
       description: [''],
       genre: ['', Validators.required]
+    });
+    this.setFormValues();
+  }
+
+  setFormValues() {
+    this.createInfoForm.setValue({
+      name: this.game.name,
+      description: this.game.descr,
+      genre: this.game.genre
+    });
+    this.originalInfoForm = _.cloneDeep(this.createInfoForm);
+  }
+
+  retrieveGameInfo() {
+    this.route.data.subscribe( (data: { gameResponse: IGameResponse }) => {
+      if (data.gameResponse.status) {
+        this.game = data.gameResponse.game;
+        this.buildForm();
+      } else {
+        this.toastr.error(data.gameResponse.statusText);
+      }
     });
   }
 
@@ -58,9 +84,6 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
         this.toastr.error(res.statusText);
       }
     });
-  }
-
-  retreiveGameInfo() {
   }
 
   updateGameInfo() {
@@ -76,8 +99,12 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
   }
 
   canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {
-    // probably will want to check to see if anything's been updated first
-    return this.dialogService.confirm('Leave and lose unsaved changes?');
+    // only prompt for message if values have changed
+    if (!compareFormGroupValues(this.originalInfoForm, this.createInfoForm)) {
+      return this.dialogService.confirm('Leave and lose unsaved changes?');
+    } else {
+      return true;
+    }
   }
 
 

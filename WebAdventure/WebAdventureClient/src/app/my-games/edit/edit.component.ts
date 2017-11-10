@@ -1,26 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IGame } from '../../shared/interfaces/models/game.interface';
+import { Observable } from 'rxjs/Observable';
+import { GameService } from '../../core/services/game.service';
 
 @Component({
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent {
+export class EditComponent implements OnInit {
 
-  private gameId: number;
+  constructor(private route: ActivatedRoute,
+    private gameService: GameService) { }
 
-  constructor(private route: ActivatedRoute) { }
-  
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.gameId = +params['id']; 
-      console.log('Game id = ' + this.gameId);
+      this.gameService.setGameCurrentlyEdittingInLocalStorage(+params['id']);
     });
   }
 
-  getGameId(): number {
-    return this.gameId;
-  }
-  
- }
+}

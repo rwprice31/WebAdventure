@@ -26,6 +26,8 @@ export class UserService extends BaseService {
 
     private currentUser: IUser;
 
+    private userLocalStorage = 'user';
+
     private baseUrl = '';
     private headers: HttpHeaders;
     private redirectUrl: string;
@@ -51,17 +53,17 @@ export class UserService extends BaseService {
 
     setCurrentUserToLocalStorage(user: IUser) {
         console.log('Setting user to local storage = ', JSON.stringify(user));
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem(this.userLocalStorage, JSON.stringify(user));
     }
 
     getCurrentUser(): IUser {
-        let user: IUser = JSON.parse(localStorage.getItem('user'));
+        let user: IUser = JSON.parse(localStorage.getItem(this.userLocalStorage));
         return user;
     }
 
     logout() {
         console.log('Logged out!');
-        localStorage.removeItem('user');
+        localStorage.removeItem(this.userLocalStorage);
         this.currentUser = null;
     }
 

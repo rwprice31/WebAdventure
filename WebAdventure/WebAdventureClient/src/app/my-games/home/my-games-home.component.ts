@@ -9,7 +9,7 @@ import { IUserRegistrationViewModel } from './../../shared/interfaces/view-model
 import { IUsersGameResponse } from './../../shared/interfaces/responses/games/users-games-response.interface';
 import { IGame } from './../../shared/interfaces/models/game.interface';
 import { GameService } from './../../core/services/game.service';
-import { UsersCreatedGamesResolver } from '../../core/services/resolvers/users-created-games-resolver.service';
+import { UsersCreatedGamesResolver } from '../../core/services/resolvers/games/users-created-games-resolver.service';
 
 @Component({
   templateUrl: './my-games-home.component.html',

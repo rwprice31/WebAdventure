@@ -22,6 +22,7 @@ import { IGameResponse } from '../../shared/interfaces/responses/games/game-resp
 import { HttpParams } from '@angular/common/http';
 
 export let gameIdsLocalStorage = 'authorsGameIds';
+export let gameCurrentlyEdittingLocalStorage = 'currentlyEdittingGameId';
 
 @Injectable()
 export class GameService extends BaseService {
@@ -30,7 +31,7 @@ export class GameService extends BaseService {
     private headers: HttpHeaders;
 
     private gameRoute: string;
-    private authorQueryParam = "author";
+    private authorQueryParam = 'author';
 
     constructor(private http: HttpClient,
         private configService: ConfigService) {
@@ -103,6 +104,15 @@ export class GameService extends BaseService {
             gameIds.push(game.id);
         });
         localStorage.setItem(gameIdsLocalStorage, JSON.stringify(gameIds));
+    }
+
+    setGameCurrentlyEdittingInLocalStorage(gameId: number) {
+        // console.log('Setting gameId ' + gameId + ' to ' + gameCurrentlyEdittingLocalStorage + ' in local storage');
+        localStorage.setItem(gameCurrentlyEdittingLocalStorage, gameId.toString());
+    }
+
+    getGameCurrentlyEdittingFromLocalStorage(): number {
+        return +localStorage.getItem(gameCurrentlyEdittingLocalStorage);
     }
 
 }
