@@ -71,17 +71,19 @@ namespace WebAdventureAPI.Controllers
         {
             Game game = repo.GetGame(gameId);
             WAUser gameAuthor = await repo.GetGameAuthor(game);
-            GameDto gameDto = new GameDto
+            var genre = repo.GetGenreById(game.GenreId);
+            var gameDto = new GameDto()
             {
                 Descr = game.Descr,
                 Name = game.Name,
                 Id = game.Id,
-                Author =
+                Genre = genre.Descr,
+                Author = new UserDto()
                 {
                     Username = gameAuthor.UserName
                 }
             };
-            if (game != null)
+            if (gameDto != null)
             {
                 return StatusCode(200 ,responses.GameFoundResponse(gameDto));
             }
