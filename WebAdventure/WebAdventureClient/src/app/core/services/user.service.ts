@@ -26,6 +26,8 @@ export class UserService extends BaseService {
 
     private currentUser: IUser;
 
+    private userLocalStorage = 'user';
+
     private baseUrl = '';
     private headers: HttpHeaders;
     private redirectUrl: string;
@@ -51,41 +53,41 @@ export class UserService extends BaseService {
 
     setCurrentUserToLocalStorage(user: IUser) {
         console.log('Setting user to local storage = ', JSON.stringify(user));
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem(this.userLocalStorage, JSON.stringify(user));
     }
 
     getCurrentUser(): IUser {
-        let user: IUser = JSON.parse(localStorage.getItem('user'));
+        let user: IUser = JSON.parse(localStorage.getItem(this.userLocalStorage));
         return user;
     }
 
     logout() {
         console.log('Logged out!');
-        localStorage.removeItem('user');
+        localStorage.removeItem(this.userLocalStorage);
         this.currentUser = null;
     }
 
     register(user: IUserRegistrationViewModel): Observable<IResponse> {
-        console.log('Body entering register = ' + JSON.stringify(user));
-        console.log('Sending POST to ' + this.registrationRoute);
+        // console.log('Body entering register = ' + JSON.stringify(user));
+        // console.log('Sending POST to ' + this.registrationRoute);
         let body = JSON.stringify(user);
         return this.http.post<IUserRegistrationResponse>(this.registrationRoute, body, { headers: this.headers})
             .map( (res: IUserRegistrationResponse ) => {
-                console.log('IUserRegistrationResponse = ', res);
+                // console.log('IUserRegistrationResponse = ', res);
                 return res;
             })
             .catch(this.handleError);
     }
 
     loginUser(user: IUserLoginViewModel): Observable<IResponse> {
-        console.log('Body entering loginUser = ' + JSON.stringify(user));
-        console.log('Sending POST to ' + this.loginRoute);
+        // console.log('Body entering loginUser = ' + JSON.stringify(user));
+        // console.log('Sending POST to ' + this.loginRoute);
         let body = JSON.stringify(user);
         return this.http.post<IUserLoginResponse>(this.loginRoute, body, { headers: this.headers })
         .map( (res: IUserLoginResponse) => {
-            console.log('IUserLoginResponse = ', res);
+            // console.log('IUserLoginResponse = ', res);
             if (res.status) {
-                console.log('Setting current user equal to ', res.user);
+                // console.log('Setting current user equal to ', res.user);
                 this.setCurrentUserToLocalStorage(res.user);
             }
             return res;
@@ -110,7 +112,6 @@ export class UserService extends BaseService {
 
 
     resetPassword(user: IUserResetPasswordViewModel): Observable<IResponse>{
-      
       console.log('Reset password = ' + JSON.stringify(user));
       console.log('Sending POST to ' + this.baseUrl + 'users/reset');
       let body = JSON.stringify(user);

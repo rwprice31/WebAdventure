@@ -65,6 +65,7 @@ export class MyGamesNewComponent implements OnInit {
         };
         this.gameService.saveGame(game).subscribe( (res: IGameCreationResponse) => {
           if (res.status) {
+            this.gameService.addGameIdToLocalStorage(res.game.id);
             this.router.navigate(['my-games/edit', res.game.id]);
           } else {
             this.toastr.error(res.statusText);
