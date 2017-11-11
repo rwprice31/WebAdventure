@@ -51,7 +51,7 @@ namespace WebAdventureAPI.Models.Responses
             return new GameResponses
             {
                 StatusText = "Game successfully updated!",
-                StatusCode = 204,
+                StatusCode = 200,
                 Status = true,
                 Game = game
             };

@@ -130,8 +130,8 @@ namespace WebAdventureAPI.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPut]
-        public IActionResult UpdateGame([FromBody] GameDto gameDto)
+        [HttpPut("{gameId}")]
+        public IActionResult UpdateGame([FromRoute] int gameId, [FromBody] GameDto gameDto)
         {
             (IActionResult result, bool isOwner) = EnsureAuthorOwnsGame(gameDto);
             if (!isOwner)
@@ -162,7 +162,7 @@ namespace WebAdventureAPI.Controllers
                     Name = gameDto.Name
                 };
                 var successResponse = responses.UpdateResponse(updatedGameDto);
-                return StatusCode(204, successResponse);
+                return StatusCode(200, successResponse);
             }
             catch (Exception e)
             {
