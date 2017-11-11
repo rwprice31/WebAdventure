@@ -15,7 +15,7 @@ export class EditComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.gameService.setGameCurrentlyEdittingInLocalStorage(+params['id']);
+      this.gameService.storeGameIdUsersCurrentlyEdittingInSessionStorage(+params['id']);
     });
   }
 

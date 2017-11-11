@@ -17,16 +17,16 @@ import { IUserLoginViewModel } from './../../shared/interfaces/view-models/user-
 import { IUserRegistrationResponse } from './../../shared/interfaces/responses/user-registration-response.interface';
 import { IUserLoginResponse } from './../../shared/interfaces/responses/user-login.response';
 
-import { IUserResetPassword } from "../../shared/interfaces/user-resetPassword.interface";
-import { IUserResetPasswordViewModel } from "../../shared/interfaces/view-models/IUser-resetpassword-view-model";
-import { IUserResetPasswordResponse } from "../../shared/interfaces/responses/reset-password-response";
+import { IUserResetPassword } from '../../shared/interfaces/user-resetPassword.interface';
+import { IUserResetPasswordViewModel } from '../../shared/interfaces/view-models/IUser-resetpassword-view-model';
+import { IUserResetPasswordResponse } from '../../shared/interfaces/responses/reset-password-response';
 
 @Injectable()
 export class UserService extends BaseService {
 
     private currentUser: IUser;
 
-    private userLocalStorage = 'user';
+    private userSessionStorage = 'user';
 
     private baseUrl = '';
     private headers: HttpHeaders;
@@ -51,19 +51,19 @@ export class UserService extends BaseService {
         this.currentUser = this.getCurrentUser();
     }
 
-    setCurrentUserToLocalStorage(user: IUser) {
+    setCurrentUserToSessionStorage(user: IUser) {
         console.log('Setting user to local storage = ', JSON.stringify(user));
-        localStorage.setItem(this.userLocalStorage, JSON.stringify(user));
+        sessionStorage.setItem(this.userSessionStorage, JSON.stringify(user));
     }
 
     getCurrentUser(): IUser {
-        let user: IUser = JSON.parse(localStorage.getItem(this.userLocalStorage));
+        let user: IUser = JSON.parse(sessionStorage.getItem(this.userSessionStorage));
         return user;
     }
 
     logout() {
-        console.log('Logged out!');
-        localStorage.removeItem(this.userLocalStorage);
+        // console.log('Logged out!');
+        sessionStorage.clear();
         this.currentUser = null;
     }
 
@@ -88,7 +88,7 @@ export class UserService extends BaseService {
             // console.log('IUserLoginResponse = ', res);
             if (res.status) {
                 // console.log('Setting current user equal to ', res.user);
-                this.setCurrentUserToLocalStorage(res.user);
+                this.setCurrentUserToSessionStorage(res.user);
             }
             return res;
         })
@@ -97,7 +97,7 @@ export class UserService extends BaseService {
 
     updateCurrentUser(user: IUserUpdateViewModel) {
         this.currentUser.email = user.email;
-        //this.currentUser.username = user.username;
+        this.currentUser.username = user.username;
         this.http.put(this.updateUserRoute, user, { headers: this.headers })
         .map( (res: Response) => {
             if (res.status === 200 || res.status === 204) {
@@ -111,7 +111,7 @@ export class UserService extends BaseService {
 
 
 
-    resetPassword(user: IUserResetPasswordViewModel): Observable<IResponse>{
+    resetPassword(user: IUserResetPasswordViewModel): Observable<IResponse> {
       console.log('Reset password = ' + JSON.stringify(user));
       console.log('Sending POST to ' + this.baseUrl + 'users/reset');
       let body = JSON.stringify(user);

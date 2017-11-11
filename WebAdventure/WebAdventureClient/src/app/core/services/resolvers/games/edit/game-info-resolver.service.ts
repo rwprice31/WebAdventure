@@ -19,7 +19,7 @@ export class GameInfoResolver implements Resolve<Observable<IGameResponse>> {
     private router: Router,
     private route: ActivatedRoute,
     @Inject(TOASTR_TOKEN) private toastr: IToastr) {
-      this.gameId = gameService.getGameCurrentlyEdittingFromLocalStorage();
+      this.gameId = gameService.getGameIdUsersCurrentlyEdittingFromSessionStorage();
       // console.log('Game id in info resolver = ' + this.gameId);
     }
 
