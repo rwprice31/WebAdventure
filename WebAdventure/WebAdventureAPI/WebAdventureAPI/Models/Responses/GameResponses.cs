@@ -9,11 +9,11 @@ namespace WebAdventureAPI.Models.Responses
 {
     public class GameResponses : Response
     {
-        public GameDto Game { get; set; }
+        public GetGameDto Game { get; set; }
 
-        public GameDto[] Games { get; set; }
+        public GetGameDto[] Games { get; set; }
 
-        public GameResponses GameFoundResponse(GameDto game)
+        public GameResponses GameFoundResponse(GetGameDto game)
         {
             return new GameResponses
             {
@@ -24,7 +24,7 @@ namespace WebAdventureAPI.Models.Responses
             };
         }
 
-        public GameResponses GamesFoundResponse(GameDto[] games)
+        public GameResponses GamesFoundResponse(GetGameDto[] games)
         {
             return new GameResponses
             {
@@ -35,7 +35,7 @@ namespace WebAdventureAPI.Models.Responses
             };
         }
 
-        public GameResponses CreateResponse(GameDto game)
+        public GameResponses CreateResponse(GetGameDto game)
         {
             return new GameResponses
             {
@@ -46,7 +46,7 @@ namespace WebAdventureAPI.Models.Responses
             };
         }
 
-        public GameResponses UpdateResponse(GameDto game)
+        public GameResponses UpdateResponse(GetGameDto game)
         {
             return new GameResponses
             {
@@ -57,7 +57,7 @@ namespace WebAdventureAPI.Models.Responses
             };
         }
 
-        public GameResponses AuthorsGamesFound(GameDto[] usersGames)
+        public GameResponses AuthorsGamesFound(GetGameDto[] usersGames)
         {
             return new GameResponses
             {

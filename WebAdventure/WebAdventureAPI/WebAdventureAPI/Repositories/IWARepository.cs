@@ -45,7 +45,7 @@ namespace WebAdventureAPI.Repositories
 
         List<RoomActionOutcomeInfo> GetActionOutcomeByRoom(int id);
 
-        void CreateRoomActionOutcome(int roomId, Models.DbModels.Action action, Outcome outcome);
+        RoomActionOutcomeInfo CreateRoomActionOutcome(int roomId, Models.DbModels.Action action, Outcome outcome);
 
         void DeleteActionOutcome(ActionOutcomeDeleteDto dto);
     }

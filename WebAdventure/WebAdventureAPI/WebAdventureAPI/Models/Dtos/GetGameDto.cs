@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace WebAdventureAPI.Models.Dtos
 {
-    public class GameDto
+    public class GetGameDto
     {
+        public int Id { get; set; }
+
         public UserDto Author { get; set; }
 
         public string Genre { get; set; }

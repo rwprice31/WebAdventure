@@ -41,11 +41,11 @@ namespace WebAdventureAPI.Controllers
                 else
                 {
                     // get all games
-                    var games = new List<GameDto>();
+                    var games = new List<GetGameDto>();
                     foreach (var game in repo.GetAllGames())
                     {
                         var user = userManager.Users.FirstOrDefault(u => u.Id == game.AuthorId);
-                        games.Add(new GameDto
+                        games.Add(new GetGameDto
                         {
                             Id = game.Id,
                             Author = new UserDto
@@ -72,7 +72,7 @@ namespace WebAdventureAPI.Controllers
             Game game = repo.GetGame(gameId);
             WAUser gameAuthor = await repo.GetGameAuthor(game);
             var genre = repo.GetGenreById(game.GenreId);
-            var gameDto = new GameDto()
+            var gameDto = new GetGameDto()
             {
                 Descr = game.Descr,
                 Name = game.Name,
@@ -99,10 +99,6 @@ namespace WebAdventureAPI.Controllers
         {
             try
             {
-                if (gameDto.Id != 0)
-                {
-                    return StatusCode(400, ErrorResponse.CustomErrorCode(400, "You're not creating a game."));
-                }
                 var newGame = new Game
                 {
                     Name = gameDto.Name,
@@ -111,8 +107,10 @@ namespace WebAdventureAPI.Controllers
                     GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
                 };
                 repo.AddGameToDb(newGame);
+
                 int newGameId = repo.GetGameId(newGame);
-                var newGameDto = new GameDto
+
+                var newGameDto = new GetGameDto
                 {
                     Id = newGameId,
                     Author = gameDto.Author,
@@ -120,6 +118,7 @@ namespace WebAdventureAPI.Controllers
                     Genre = gameDto.Genre,
                     Name = gameDto.Name
                 };
+
                 var successResponse = responses.CreateResponse(newGameDto);
                 return StatusCode(201, successResponse);
             }
@@ -133,29 +132,30 @@ namespace WebAdventureAPI.Controllers
         [HttpPut("{gameId}")]
         public IActionResult UpdateGame([FromRoute] int gameId, [FromBody] GameDto gameDto)
         {
-            (IActionResult result, bool isOwner) = EnsureAuthorOwnsGame(gameDto);
+            (IActionResult result, bool isOwner) = EnsureAuthorOwnsGame(gameDto, gameId);
             if (!isOwner)
             {
                 return result;
             }
             try
             {
-                if (gameDto.Id == 0)
+                if (gameId == 0)
                 {
                     return StatusCode(400, ErrorResponse.CustomErrorCode(400, "You're not updating a game."));
                 }
+
                 var game = new Game
                 {
-                    Id = gameDto.Id,
+                    Id = gameId,
                     Name = gameDto.Name,
                     Descr = gameDto.Descr,
                     AuthorId = gameDto.Author.Id,
                     GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
                 };
                 repo.UpdateGame(game);
-                var updatedGameDto = new GameDto
+                var updatedGameDto = new GetGameDto
                 {
-                    Id = gameDto.Id,
+                    Id = gameId,
                     Author = gameDto.Author,
                     Descr = gameDto.Descr,
                     Genre = gameDto.Genre,
@@ -171,8 +171,8 @@ namespace WebAdventureAPI.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpDelete]
-        public IActionResult DeleteGame([FromBody] GameIdDto gameIdDto)
+        [HttpDelete("{gameId}")]
+        public IActionResult DeleteGame([FromBody] GameIdDto gameIdDto, [FromRoute] int gameId)
         {
             try
             {
@@ -192,17 +192,15 @@ namespace WebAdventureAPI.Controllers
         {
             try
             {
-                var usersGames = new List<GameDto>();
+                var usersGames = new List<GetGameDto>();
                 foreach (var game in repo.GetGamesByAuthor(authorId))
                 {
                     var user = userManager.Users.FirstOrDefault(u => u.Id == game.AuthorId);
-                    usersGames.Add(new GameDto
+                    usersGames.Add(new GetGameDto
                     {
                         Id = game.Id,
                         Author = new UserDto
                         {
-                            Id = user.Id,
-                            Email = user.Email,
                             Username = user.UserName
                         },
                         Genre = repo.GetGenreById(game.GenreId).Descr,
@@ -223,11 +221,11 @@ namespace WebAdventureAPI.Controllers
             return userManager.Users.FirstOrDefault(u => u.Email == email && u.PasswordHash == passwordHash);
         }
 
-        private (IActionResult, bool) EnsureAuthorOwnsGame(GameDto gameDto)
+        private (IActionResult, bool) EnsureAuthorOwnsGame(GameDto gameDto, int gameId)
         {
             var currentUser = gameDto.Author;
             List<Game> currentUsersGames = repo.GetGamesByAuthor(currentUser.Id);
-            if (currentUsersGames.Find(g => g.Id == gameDto.Id) == null)
+            if (currentUsersGames.Find(g => g.Id == gameId) == null)
             {
                 var result = StatusCode(400, ErrorResponse.CustomErrorCode(400, "You can't update a game you do not own"));
                 return (result, false);

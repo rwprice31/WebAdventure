@@ -97,7 +97,7 @@ export class UserService extends BaseService {
 
     updateCurrentUser(user: IUserUpdateViewModel) {
         this.currentUser.email = user.email;
-        this.currentUser.username = user.username;
+        //this.currentUser.username = user.username;
         this.http.put(this.updateUserRoute, user, { headers: this.headers })
         .map( (res: Response) => {
             if (res.status === 200 || res.status === 204) {
@@ -110,15 +110,18 @@ export class UserService extends BaseService {
     }
 
 
-    resetPassword(user: IUserResetPasswordViewModel): Observable<IResponse>{
 
+    resetPassword(user: IUserResetPasswordViewModel): Observable<IResponse>{
       console.log('Reset password = ' + JSON.stringify(user));
       console.log('Sending POST to ' + this.baseUrl + 'users/reset');
       let body = JSON.stringify(user);
-      return this.http.post<IUserResetPasswordResponse>(this.resetPasswordRoute, body, { headers: this.headers })
+      return this.http.post<IUserResetPasswordResponse>(this.resetPasswordRoute, user, { headers: this.headers })
         .map((res: IUserResetPasswordResponse) => {
-          console.log('IUserResetPasswordResponse = ', res);
-          return res;
+          if (res.status) {
+            console.log('IUserResetPasswordResponse = ', res);
+            return res;
+          }
+         
         })
         .catch(this.handleError);
     }
