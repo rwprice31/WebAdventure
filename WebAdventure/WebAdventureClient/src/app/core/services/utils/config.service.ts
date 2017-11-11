@@ -2,6 +2,11 @@ import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Headers, RequestOptions } from '@angular/http';
 
+/**
+ * @class ConfigService
+ * @description Encapsulates information that all HTTP services will shared, such as headers, or 
+ * api URL
+ */
 @Injectable()
 export class ConfigService {
 

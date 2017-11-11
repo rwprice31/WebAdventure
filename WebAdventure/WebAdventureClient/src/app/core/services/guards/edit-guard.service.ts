@@ -11,6 +11,11 @@ import { IUsersGamesViewModel } from '../../../shared/interfaces/view-models/gam
 import { IUsersGameResponse } from '../../../shared/interfaces/responses/games/users-games-response.interface';
 import { MyGamesHomeComponent } from '../../../my-games/home/my-games-home.component';
 
+/**
+ * @class EditGuard
+ * @description A guard that let's routes only be activated if the user owns the game they
+ * are attempting to edit.
+ */
 @Injectable()
 export class EditGuard implements CanActivate {
     

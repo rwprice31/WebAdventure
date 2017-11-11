@@ -9,6 +9,11 @@ import { IToastr } from '../../../../../shared/interfaces/external-libraries/toa
 import { IGameViewModel } from '../../../../../shared/interfaces/view-models/games/game-view-model.interface';
 import { EditComponent } from '../../../../../my-games/edit/edit.component';
 
+/**
+ * @class GameInfoResolver
+ * @description Resolver that provides a IGameResponse observable to component's that are set
+ * to resolve to this class.
+ */
 @Injectable()
 export class GameInfoResolver implements Resolve<Observable<IGameResponse>> {
 
