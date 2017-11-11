@@ -109,8 +109,6 @@ export class UserService extends BaseService {
         .catch(this.handleError);
     }
 
-
-
     resetPassword(user: IUserResetPasswordViewModel): Observable<IResponse> {
       console.log('Reset password = ' + JSON.stringify(user));
       console.log('Sending POST to ' + this.baseUrl + 'users/reset');

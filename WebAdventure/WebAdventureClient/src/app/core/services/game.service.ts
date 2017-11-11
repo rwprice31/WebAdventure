@@ -101,7 +101,7 @@ export class GameService extends BaseService {
      * @description Stores the given game id as the game the user is currently editting in session session
      */
     storeGameIdUsersCurrentlyEdittingInSessionStorage(gameId: number): void {
-        // console.log('Setting gameId ' + gameId + ' to ' + gameCurrentlyEdittingSessionStorage + ' in session storage');
+        // console.log('Setting gameId ' + gameId + ' to ' + this.gameCurrentlyEdittingSessionStorage + ' in session storage');
         sessionStorage.setItem(this.gameCurrentlyEdittingSessionStorage, gameId.toString());
     }
 

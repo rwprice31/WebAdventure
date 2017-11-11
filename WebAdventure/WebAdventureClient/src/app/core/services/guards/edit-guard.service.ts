@@ -31,6 +31,7 @@ export class EditGuard implements CanActivate {
         this.fetchIdFromRoute(route);
         this.usersGameIds = this.gameService.getCurrentUsersOwnedGameIdsFromSessionStorage();
         if (this.usersGameIds.includes(this.gameId)) {
+            this.gameService.storeGameIdUsersCurrentlyEdittingInSessionStorage(this.gameId);
             return true;
         } else {
             this.toastr.warning('You cannot edit a game you do not own.');

@@ -34,7 +34,7 @@ export class UsersCreatedGamesResolver implements Resolve<Observable<IUsersGameR
 
       return this.gameService.getUsersGames(currentUser).map(
         (res: IUsersGameResponse) => {
-          console.log('Games response in resolve = ' + res);
+          // console.log('Games response in resolve = ' + res);
           return res;
         }
       );
