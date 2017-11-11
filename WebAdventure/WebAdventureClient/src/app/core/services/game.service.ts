@@ -21,6 +21,10 @@ import { IGameViewModel } from '../../shared/interfaces/view-models/games/game-v
 import { IGameResponse } from '../../shared/interfaces/responses/games/game-response.interface';
 import { HttpParams } from '@angular/common/http';
 
+/**
+ * @class GameService
+ * @description Encapsulates the logic for API and session storage interactivity involving games
+ */
 @Injectable()
 export class GameService extends BaseService {
 
@@ -41,7 +45,8 @@ export class GameService extends BaseService {
         this.gameRoute = this.baseUrl + 'games';
     }
 
-    /**@name removeGameSessionStorage
+    /**
+     * @name removeGameSessionStorage
      * @returns void
      * @description Removes all game-related information from session storage
      */
