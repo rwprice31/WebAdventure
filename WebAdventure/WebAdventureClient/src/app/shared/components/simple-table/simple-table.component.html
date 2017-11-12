@@ -1,0 +1,12 @@
+<table class="table table-hover table-dark">
+  <thead>
+    <tr>
+      <th *ngFor="let column of columns" scope="col">{{column.name}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of rows">       
+        <td *ngFor="let rowData of row.rowData">{{rowData.data}}</td>
+    </tr>
+  </tbody>
+</table>
