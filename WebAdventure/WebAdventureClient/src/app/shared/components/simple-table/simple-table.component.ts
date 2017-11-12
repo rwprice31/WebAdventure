@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import * as _ from 'lodash';
 
 export interface SimpleTableColumn {
@@ -9,14 +9,20 @@ export interface SimpleTableColumn {
 
 export interface SimpleTableRowCell {
     columnName: string;
+    hidden?: boolean;
     data: string;
 }
 
 export interface SimpleTableRow {
+    rowID?: number;
     rowData?: SimpleTableRowCell[];
 }
 
-@Component({selector: 'simple-table', templateUrl: './simple-table.component.html', styleUrls: ['./simple-table.component.scss']})
+@Component({
+    selector: 'simple-table', 
+    templateUrl: './simple-table.component.html', 
+    styleUrls: ['./simple-table.component.scss']}
+)
 export class SimpleTableComponent {
 
     @Input()columns: SimpleTableColumn[] = [
@@ -33,6 +39,7 @@ export class SimpleTableComponent {
     ];
     @Input()rows: SimpleTableRow[] = [
         {
+            rowID: 12,
             rowData: [
                 {
                     columnName: 'First Name',
@@ -47,6 +54,7 @@ export class SimpleTableComponent {
             ]
         },
         {
+            rowID: 13,
             rowData: [
                 {
                     columnName: 'First Name',
@@ -63,9 +71,11 @@ export class SimpleTableComponent {
     ];
     @Input()editAbility: boolean = true;
     @Input()deleteAbility: boolean = false;
-    @Input()backgroundColor: string = '#343a40';
-    @Input()onHoverColor: string = '#e9ecef';
-    @Input()textColor: string = 'white';
+
+    @Output() edit: EventEmitter<SimpleTableRow> = new EventEmitter();
+    @Output() delete: EventEmitter<SimpleTableRow> = new EventEmitter();
+
+    private rowsWithoutHiddenFields: SimpleTableRow[];
 
     private unrecognizedColumnError = 'The following column is not recognized: ';
     private tooManyRowCellsError = 'You cannot have more row cells than columns';
@@ -84,6 +94,17 @@ export class SimpleTableComponent {
             .columns
             .map(c => c.name);
 
+        // let rowsWithoutHiddenFields: SimpleTableRow[] = [];
+
+        // rowsWithoutHiddenFields = this.rows.filter( r => r.rowData.filter( rd => rd.data === 'swag'));
+
+
+        // rowsWithoutHiddenFields.forEach(row => {
+        //     row.rowData.forEach(data => {
+        //         console.log(data);
+        //     });
+        // });
+
         this.rows.forEach(row => {
             if (row.rowData.length > columnNames.length) {
                 throw new Error(this.tooManyRowCellsError);
@@ -91,7 +112,6 @@ export class SimpleTableComponent {
         });
 
         let columnsWithData: Array<string[]> = new Array<string[]>();
-
 
         this.rows.forEach(row => {
             let columnDataForRow: string[] = [];
@@ -134,6 +154,10 @@ export class SimpleTableComponent {
                data: count++ + ''
            });
         });
+    }
+
+    private editClicked($event: SimpleTableRow) {
+        this.edit.emit($event);
     }
 
 }

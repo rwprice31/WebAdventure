@@ -6,7 +6,10 @@
   </thead>
   <tbody>
     <tr *ngFor="let row of rows">       
-        <td *ngFor="let rowData of row.rowData">{{rowData.data}}</td>
+        <td *ngFor="let rowData of row.rowData">{{rowData.data}}
+        </td>
+        <td class="action" (click)="editClicked(row)" *ngIf="editAbility">Edit</td>
+        <td class="action" class="pointer" (click)="editClicked(row)" *ngIf="deleteAbility">Delete</td>
     </tr>
   </tbody>
 </table>
