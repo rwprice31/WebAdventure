@@ -52,7 +52,7 @@ export class MyGamesHomeComponent implements OnInit {
 
   private editClicked($event) {
     // console.log('Edit event received in game home' + JSON.stringify($event));
-    this.router.navigate(['my-games/edit', $event.id]);
+    this.router.navigate(['edit', $event.id], { relativeTo: this.route });
   }
 
 }
