@@ -63,8 +63,9 @@ export class MyGamesNewComponent implements OnInit {
             genre: this.createInfoForm.controls['genre'].value,
             name: this.createInfoForm.controls['name'].value
         };
-        this.gameService.saveGame(game).subscribe( (res: IGameCreationResponse) => {
+        this.gameService.createGame(game).subscribe( (res: IGameCreationResponse) => {
           if (res.status) {
+            this.gameService.addGameIdToCurrentUsersOwnedGameIdsInSessionStorage(res.game.id);
             this.router.navigate(['my-games/edit', res.game.id]);
           } else {
             this.toastr.error(res.statusText);

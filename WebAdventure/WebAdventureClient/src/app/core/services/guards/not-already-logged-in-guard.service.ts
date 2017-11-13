@@ -6,6 +6,10 @@ import { IToastr } from './../../../shared/interfaces/external-libraries/toastr.
 
 import { TOASTR_TOKEN } from './../external-libraries/toastr.service';
 
+/**
+ * @class NotAlreadyLoggedInGuard
+ * @description A guard that let's routes be activated if a user is not already logged in.
+ */
 @Injectable()
 export class NotAlreadyLoggedInGuard implements CanActivate {
 

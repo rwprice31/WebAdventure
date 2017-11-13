@@ -18,9 +18,10 @@ export class GameCardComponent {
     @Input() displayEdit: boolean = false;
     @Input() displayDelete: boolean = false;
 
-    @Output() save: EventEmitter<any> = new EventEmitter();
-    @Output() edit: EventEmitter<any> = new EventEmitter();
-    @Output() play: EventEmitter<any> = new EventEmitter();
+    @Output() save: EventEmitter<IGame> = new EventEmitter();
+    @Output() edit: EventEmitter<IGame> = new EventEmitter();
+    @Output() play: EventEmitter<IGame> = new EventEmitter();
+    @Output() delete: EventEmitter<IGame> = new EventEmitter();
 
     saveClicked() {
         this.save.emit(this.game);
@@ -32,6 +33,10 @@ export class GameCardComponent {
 
     playClicked() {
         this.play.emit(this.game);
+    }
+
+    deleteClicked() {
+        this.delete.emit(this.game);
     }
 
 }

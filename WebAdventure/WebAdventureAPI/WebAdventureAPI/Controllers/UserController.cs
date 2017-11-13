@@ -116,9 +116,16 @@ namespace WebAdventureAPI.Controllers
             {
                 var token = await userManager.GeneratePasswordResetTokenAsync(user);
                 var result = await userManager.ResetPasswordAsync(user, token, reset.NewPassword);
+                
                 if (result.Succeeded)
                 {
-                    return Ok("Password Update Successfully.");
+                    return StatusCode(200, new ResetPasswordResponse
+                    {
+                        User = new UserDto
+                        {
+                            
+                        }
+                    });
                 }
                 else
                 {
@@ -147,6 +154,43 @@ namespace WebAdventureAPI.Controllers
                     Id = user.Id
                 }
             });
+        }
+
+        [HttpPut("update")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UpdateUser([FromBody] NewUserDto newUser)
+        {
+            
+            var user = userManager.Users.FirstOrDefault(x => x.Email == newUser.Email);
+            if (user != null)
+            {
+                return StatusCode(400, ErrorResponse.CustomErrorCode(400, "User does not exist."));
+            }
+
+            var result = await userManager.CreateAsync(new WAUser
+            {              
+                Email = newUser.Email
+            },
+            newUser.Password);
+
+            if (result.Succeeded)
+            {
+                user = userManager.Users.FirstOrDefault(x => x.UserName == newUser.Username);
+
+                var response = "Password Update Successfully.";
+
+
+                //var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                //var callbackUrl = Url.Action("Confirm Email", "Account",
+                //    new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                //await emailSender.SendEmailAsync(user.Email, "Confirm your account",
+                //$"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
+                return StatusCode(201, response);
+            }
+            else
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
         }
 
         private async Task<(ClaimsIdentity, WAUser)> GetClaimsIdentity(LoginDto loginDto)

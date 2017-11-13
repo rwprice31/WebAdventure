@@ -6,6 +6,10 @@ import { IToastr } from './../../../shared/interfaces/external-libraries/toastr.
 
 import { TOASTR_TOKEN } from './../external-libraries/toastr.service';
 
+/**
+ * @class AuthGuard
+ * @description A guard that let's routes only be activated if a current user is logged in.
+ */
 @Injectable()
 export class AuthGuard implements CanActivate {
 
@@ -17,7 +21,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     let url: string = state.url;
-    console.log('URL = ' + url);
+    // console.log('URL = ' + url);
     return this.checkLogin(url);
   }
 

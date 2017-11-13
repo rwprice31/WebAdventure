@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.DbModels;
 using WebAdventureAPI.Models.Dtos;
@@ -11,6 +12,12 @@ namespace WebAdventureAPI.Repositories
 
         Room AddRoomToDb(RoomDto room, int gameId);
 
+        Game GetGame(int id);
+
+        Task<WAUser> GetGameAuthor(Game game);
+
+        List<Game> GetAllGames();
+
         ActionOutcomeInfoDto CreateActionOutcome(int roomId, ActionOutcomeInfoDto dto, int gameId);
 
         ItemInfoDto CreateItem(ItemCreationDto dto, int gameId);
@@ -22,8 +29,6 @@ namespace WebAdventureAPI.Repositories
         void DeleteRoom(int id);
 
         List<ActionOutcomeInfoDto> GetActionOutcomeByRoom(int id);
-
-        List<Game> GetAllGames();
 
         List<Genre> GetAllGenres();
 

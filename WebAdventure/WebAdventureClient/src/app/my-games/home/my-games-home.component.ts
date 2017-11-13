@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { IToastr } from './../../shared/interfaces/external-libraries/toastr.interface';
 import { TOASTR_TOKEN } from './../../core/services/external-libraries/toastr.service';
@@ -9,6 +9,7 @@ import { IUserRegistrationViewModel } from './../../shared/interfaces/view-model
 import { IUsersGameResponse } from './../../shared/interfaces/responses/games/users-games-response.interface';
 import { IGame } from './../../shared/interfaces/models/game.interface';
 import { GameService } from './../../core/services/game.service';
+import { UsersCreatedGamesResolver } from '../../core/services/resolvers/games/users-created-games-resolver.service';
 
 @Component({
   templateUrl: './my-games-home.component.html',
@@ -16,47 +17,42 @@ import { GameService } from './../../core/services/game.service';
 })
 export class MyGamesHomeComponent implements OnInit {
 
-  private games: IGame[];
+  private usersCreatedGames: IGame[];
   private savedGames: IGame[];
 
   constructor(private gameService: GameService,
     private userService: UserService,
     private router: Router,
+    private route: ActivatedRoute,
     @Inject(TOASTR_TOKEN) private toastr: IToastr) {
 
   }
 
   ngOnInit(): void {
-    this.getUsersGames();
+    this.getUsersCreatedGames();
   }
 
-  getUsersGames() {
-    let user: IUsersGamesViewModel = {
-      userId: this.userService.getCurrentUser().id
-    };
-    this.gameService.getUsersGames(user).subscribe(
-      (res: IUsersGameResponse) => {
-        if (res.status) {
-          console.log('IUsersGameReponse received = ', res.games);
-          this.games = res.games;
-        } else {
-          this.toastr.error(res.statusText);
-        }
-      }
-    );
+  getUsersCreatedGames() {
+    this.route.data.subscribe( (data: { gamesResponse: IUsersGameResponse }) => {
+      this.usersCreatedGames = data.gamesResponse.games;  
+    });
   }
 
-  getUsersSavedGames() {
+  public getUsersGames(): IGame[] {
+    return this.usersCreatedGames;
+  }
+
+  private retrieveUsersSavedGames() {
 
   }
 
-  playClicked($event) {
-    console.log('Save event received in game home' + JSON.stringify($event));
+  private playClicked($event) {
+    // console.log('Save event received in game home' + JSON.stringify($event));
   }
 
-  editClicked($event) {
-    console.log('Edit event received in game home' + JSON.stringify($event));
-    this.router.navigate(['edit', $event.id]);
+  private editClicked($event) {
+    // console.log('Edit event received in game home' + JSON.stringify($event));
+    this.router.navigate(['my-games/edit', $event.id]);
   }
 
 }
