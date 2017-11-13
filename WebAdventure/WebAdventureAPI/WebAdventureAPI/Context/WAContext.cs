@@ -39,11 +39,7 @@ namespace WebAdventureAPI.Contexts
 
         public DbSet<ItemPlayer> ItemPlayer { get; set; }
 
-        public DbSet<Weapon> Weapon { get; set; }
-
-        public DbSet<Health> Health { get; set; }
-
-        public DbSet<Defense> Defense { get; set; }
+        public DbSet<ItemType> ItemType { get; set; }
 
         public DbSet<Outcome> Outcome { get; set; }
 

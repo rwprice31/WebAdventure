@@ -14,8 +14,6 @@ namespace WebAdventureAPI.Models.Dtos
 
         public string Descr { get; set; }
 
-        public int NumberField1 { get; set; }
-
-        public int NumberField2 { get; set; }
+        public int Points { get; set; }
     }
 }

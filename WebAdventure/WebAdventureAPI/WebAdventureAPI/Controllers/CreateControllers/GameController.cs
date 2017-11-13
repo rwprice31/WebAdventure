@@ -118,7 +118,7 @@ namespace WebAdventureAPI.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
-        [Route("{authorId}")]
+        [Route("author/{authorId}")]
         public IActionResult GetGameByAuthor([FromRoute] string authorId)
         {
             try

@@ -40,5 +40,12 @@ namespace WebAdventureAPI.Models.Responses.Item
                 item
             }
         };
+
+        public ItemResponse DeleteItemResponse() => new ItemResponse
+        {
+            Status = true,
+            StatusCode = 201,
+            StatusText = "Item Deleted"
+        };
     }
 }

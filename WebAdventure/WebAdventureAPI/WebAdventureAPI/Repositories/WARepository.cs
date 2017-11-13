@@ -301,24 +301,26 @@ namespace WebAdventureAPI.Repositories
 
         public List<ItemInfoDto> GetItemsForGame(int gameId)
         {
-            return (from i in context.Item
-                    join h in context.Health on i.Id equals h.Id
-                    join w in context.Weapon on i.Id equals w.Id
-                    join d in context.Defense on i.Id equals d.Id
-                    where i.GameId == gameId
-                    select new ItemInfoDto
-                    {
-                        ItemId = i.Id,
-                        Name = i.Name,
-                        Descr = i.Descr,
-                        HealthId = h.Id,
-                        HealthPoints = h.HealthPoints,
-                        WeaponId = w.Id,
-                        MaxDamage = w.MaxDamage,
-                        MinDamage = w.MinDamage,
-                        DefenseId = d.Id,
-                        DefensePoints = d.DefensePoints
-                    }).ToList();
+            var items = (from i in context.Item
+                         where i.GameId == gameId
+                         select i).ToList();
+
+            var itemInfoList = new List<ItemInfoDto>();
+            foreach (var x in items)
+            {
+                itemInfoList.Add(new ItemInfoDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Descr = x.Descr,
+                    Points = x.Points,
+                    Type = (from it in context.ItemType
+                            where it.Id == x.ItemTypeId
+                            select it.Type).FirstOrDefault()
+                });
+            }
+
+            return itemInfoList;
         }
 
         public ItemInfoDto CreateItem(ItemCreationDto dto, int gameId)
@@ -327,108 +329,58 @@ namespace WebAdventureAPI.Repositories
             {
                 Name = dto.Name,
                 Descr = dto.Descr,
-                GameId = gameId
+                GameId = gameId,
+                Points = dto.Points,
+                ItemTypeId = (from it in context.ItemType
+                            where dto.Type.Equals(it.Type)
+                            select it.Id).FirstOrDefault()
             });
             SaveChanges();
 
-            var newItem = (from i in context.Item
-                           where i.Descr == dto.Descr
-                           select i).FirstOrDefault();
-
-            SaveChanges();
-
-            if (dto.Type.Equals("Weapon"))
+            return new ItemInfoDto
             {
-                context.Weapon.Add(new Weapon
-                {
-                    ItemId = newItem.Id,
-                    MaxDamage = dto.NumberField1,
-                    MinDamage = dto.NumberField2
-                });
-            }
-            else if (dto.Type.Equals("Defense"))
-            {
-                context.Defense.Add(new Defense
-                {
-                    ItemId = newItem.Id,
-                    DefensePoints = dto.NumberField1
-                });
-            }
-            else
-            {
-                context.Health.Add(new Health
-                {
-                    ItemId = newItem.Id,
-                    HealthPoints = dto.NumberField1
-                });
-            }
-            SaveChanges();
-
-            return (from i in context.Item
-                    join w in context.Weapon on i.Id equals w.ItemId
-                    join h in context.Health on i.Id equals h.ItemId
-                    join d in context.Defense on i.Id equals d.ItemId
-                    where i.Id == newItem.Id
-                    select new ItemInfoDto
-                    {
-                        ItemId = i.Id,
-                        Name = i.Name,
-                        Descr = i.Descr,
-                        WeaponId = w.Id,
-                        MaxDamage = w.MaxDamage,
-                        MinDamage = w.MinDamage,
-                        HealthId = h.Id,
-                        HealthPoints = h.HealthPoints,
-                        DefenseId = d.Id,
-                        DefensePoints = d.DefensePoints
-                    }).FirstOrDefault();
+                Id = (from i in context.Item
+                      where i.Name == dto.Name && i.GameId == gameId && i.Descr == dto.Descr && i.Points == dto.Points
+                      select i.Id).FirstOrDefault(),
+                Name = dto.Name,
+                Descr = dto.Descr,
+                Points = dto.Points,
+                Type = dto.Type
+            };
         }
 
-        public Item UpdateItem(int itemId, UpdateItemDto dto)
+        public ItemInfoDto UpdateItem(int itemId, UpdateItemDto dto)
         {
-            var item = new Item();
-            if (dto.Type.Equals("Weapon"))
+            var oldItem = (from i in context.Item
+                           where i.Id == itemId
+                           select i).FirstOrDefault();
+
+            oldItem.Name = dto.Name;
+            oldItem.Descr = dto.Descr;
+            oldItem.Points = dto.Points;
+            oldItem.ItemTypeId = (from it in context.ItemType
+                                where it.Type == dto.Type
+                                select it.Id).FirstOrDefault();
+
+            SaveChanges();
+
+            return new ItemInfoDto
             {
-                var weapon = (from w in context.Weapon
-                              where w.Id == itemId
-                              select w).FirstOrDefault();
-                weapon.MaxDamage = dto.NumberField1;
-                weapon.MinDamage = dto.NumberField2;
+                Id = itemId,
+                Name = dto.Name,
+                Descr = dto.Descr,
+                Points = dto.Points,
+                Type = dto.Type
+            };
+        }
 
-                item = (from i in context.Item
-                        where i.Id == weapon.ItemId
+        public void DeleteItem(int itemId)
+        {
+            var item = (from i in context.Item
+                        where i.Id == itemId
                         select i).FirstOrDefault();
-                item.Name = dto.Name;
-                item.Descr = dto.Descr;
-            }
-            else if (dto.Type.Equals("Health"))
-            {
-                var health = (from h in context.Health
-                              where h.Id == itemId
-                              select h).FirstOrDefault();
-                health.HealthPoints = dto.NumberField1;
 
-                item = (from i in context.Item
-                        where i.Id == health.ItemId
-                        select i).FirstOrDefault();
-                item.Name = dto.Name;
-                item.Descr = dto.Descr;
-            }
-            else
-            {
-                var defense = (from h in context.Defense
-                               where h.Id == itemId
-                               select h).FirstOrDefault();
-                defense.DefensePoints = dto.NumberField1;
-
-                item = (from i in context.Item
-                        where i.Id == defense.ItemId
-                        select i).FirstOrDefault();
-                item.Name = dto.Name;
-                item.Descr = dto.Descr;
-            }
-
-            return item;
+            context.Item.Remove(item);
         }
     }
 }

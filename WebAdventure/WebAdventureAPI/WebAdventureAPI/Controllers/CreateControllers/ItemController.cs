@@ -14,7 +14,7 @@ using WebAdventureAPI.Repositories;
 
 namespace WebAdventureAPI.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/games/{gameId}/item")]
     public class ItemController : Controller
     {
@@ -63,10 +63,24 @@ namespace WebAdventureAPI.Controllers
                 var item = repo.UpdateItem(itemId, dto);
                 return StatusCode(200, response.UpdateItemResponse(new ItemInfoDto
                 {
-                    ItemId = item.Id,
+                    Id = item.Id,
                     Name = item.Name,
                     Descr = item.Descr
                 }));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [HttpDelete("{itemId}")]
+        public IActionResult DeleteItem([FromRoute] int itemId)
+        {
+            try
+            {
+                repo.DeleteItem(itemId);
+                return StatusCode(201, response.DeleteItemResponse());
             }
             catch (Exception ex)
             {

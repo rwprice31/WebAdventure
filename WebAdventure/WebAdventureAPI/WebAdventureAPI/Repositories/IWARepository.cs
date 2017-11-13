@@ -17,6 +17,8 @@ namespace WebAdventureAPI.Repositories
 
         void DeleteActionOutcome(ActionOutcomeDeleteDto dto);
 
+        void DeleteItem(int itemId);
+
         void DeleteRoom(int id);
 
         List<ActionOutcomeInfoDto> GetActionOutcomeByRoom(int id);
@@ -41,7 +43,7 @@ namespace WebAdventureAPI.Repositories
 
         GameDto UpdateGame(GameDto game, int gameId);
 
-        Item UpdateItem(int itemId, UpdateItemDto dto);
+        ItemInfoDto UpdateItem(int itemId, UpdateItemDto dto);
 
         void UpdateRoom(Room room);
     }
