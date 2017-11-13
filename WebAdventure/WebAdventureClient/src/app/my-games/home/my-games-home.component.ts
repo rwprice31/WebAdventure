@@ -1,3 +1,6 @@
+import { Component, OnInit, Inject } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { IToastr } from './../../shared/interfaces/external-libraries/toastr.interface';
 import { TOASTR_TOKEN } from './../../core/services/external-libraries/toastr.service';
 import { IUsersGamesViewModel } from './../../shared/interfaces/view-models/games/users-games-view-model.interface';
@@ -6,7 +9,6 @@ import { IUserRegistrationViewModel } from './../../shared/interfaces/view-model
 import { IUsersGameResponse } from './../../shared/interfaces/responses/games/users-games-response.interface';
 import { IGame } from './../../shared/interfaces/models/game.interface';
 import { GameService } from './../../core/services/game.service';
-import { Component, OnInit, Inject } from '@angular/core';
 
 @Component({
   templateUrl: './my-games-home.component.html',
@@ -19,6 +21,7 @@ export class MyGamesHomeComponent implements OnInit {
 
   constructor(private gameService: GameService,
     private userService: UserService,
+    private router: Router,
     @Inject(TOASTR_TOKEN) private toastr: IToastr) {
 
   }
@@ -53,6 +56,7 @@ export class MyGamesHomeComponent implements OnInit {
 
   editClicked($event) {
     console.log('Edit event received in game home' + JSON.stringify($event));
+    this.router.navigate(['edit', $event.id]);
   }
 
 }
