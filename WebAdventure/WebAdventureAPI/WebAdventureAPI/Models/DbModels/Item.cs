@@ -14,6 +14,14 @@ namespace WebAdventureAPI.Models.DbModels
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        public string Name { get; set; }
+
         public string Descr { get; set; }
+
+        public int GameId { get; set; }
+
+        public int Points { get; set; }
+
+        public int ItemTypeId { get; set; }
     }
 }

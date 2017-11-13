@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace WebAdventureAPI.Models.DbModels
 {
-    public class Health
+    public class ActionOutcome
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int ItemId { get; set; }
+        public int ActionId { get; set; }
 
-        public int HealthPoints { get; set; }
+        public int OutcomeId { get; set; }
     }
 }

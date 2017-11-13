@@ -19,5 +19,9 @@ namespace WebAdventureAPI.Models.DbModels
         public int ItemId { get; set; }
 
         public int NextRoomId { get; set; }
+
+        public int GameId { get; set; }
+
+        public int RoomId { get; set; }
     }
 }
