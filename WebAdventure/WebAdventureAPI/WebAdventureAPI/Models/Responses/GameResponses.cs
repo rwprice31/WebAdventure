@@ -9,11 +9,31 @@ namespace WebAdventureAPI.Models.Responses
 {
     public class GameResponses : Response
     {
-        public GameDto Game { get; set; }
+        public GetGameDto Game { get; set; }
 
         public GetGameDto[] Games { get; set; }
 
-        public GetGameDto GetGame { get; set; }
+        public GameResponses GameFoundResponse(GetGameDto game)
+        {
+            return new GameResponses
+            {
+                StatusText = "Game successfully found!",
+                StatusCode = 200,
+                Status = true,
+                Game = game
+            };
+        }
+
+        public GameResponses GamesFoundResponse(GetGameDto[] games)
+        {
+            return new GameResponses
+            {
+                StatusText = "Game successfully found!",
+                StatusCode = 200,
+                Status = true,
+                Games = games
+            };
+        }
 
         public GameResponses CreateResponse(GetGameDto game)
         {
@@ -22,16 +42,16 @@ namespace WebAdventureAPI.Models.Responses
                 StatusText = "New game successfully created!",
                 StatusCode = 201,
                 Status = true,
-                GetGame = game
+                Game = game
             };
         }
 
-        public GameResponses UpdateResponse(GameDto game)
+        public GameResponses UpdateResponse(GetGameDto game)
         {
             return new GameResponses
             {
                 StatusText = "Game successfully updated!",
-                StatusCode = 204,
+                StatusCode = 200,
                 Status = true,
                 Game = game
             };

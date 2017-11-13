@@ -29,29 +29,69 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetAllGames()
+        public IActionResult GetGames([FromQuery] string author)
         {
-            var list = new List<GetGameDto>();
-            foreach (var game in repo.GetAllGames())
+            try
             {
-                var user = userManager.Users.FirstOrDefault(u => u.Id == game.AuthorId);
-                list.Add(new GetGameDto
+                // get games by author
+                if (author != null)
                 {
-                    Id = game.Id,
-                    Author = new UserDto
+                    return GetGameByAuthorId(author);
+                }
+                else
+                {
+                    // get all games
+                    var games = new List<GetGameDto>();
+                    foreach (var game in repo.GetAllGames())
                     {
-                        Id = user.Id,
-                        Email = user.Email,
-                        Username = user.UserName
-                    },
-                    Genre = repo.GetGenreById(game.GenreId).Descr,
-                    Name = game.Name,
-                    Descr = game.Descr
-                });
+                        var user = userManager.Users.FirstOrDefault(u => u.Id == game.AuthorId);
+                        games.Add(new GetGameDto
+                        {
+                            Id = game.Id,
+                            Author = new UserDto
+                            {
+                                Username = user.UserName
+                            },
+                            Genre = repo.GetGenreById(game.GenreId).Descr,
+                            Name = game.Name,
+                            Descr = game.Descr
+                        });
+                    }
+                    return StatusCode(200, responses.GamesFoundResponse(games.ToArray()));
+                }
             }
-            return Json(list);
+            catch (Exception e)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
         }
 
+        [HttpGet("{gameId}")]
+        public async Task<IActionResult> GetGame([FromRoute] int gameId)
+        {
+            Game game = repo.GetGame(gameId);
+            WAUser gameAuthor = await repo.GetGameAuthor(game);
+            var genre = repo.GetGenreById(game.GenreId);
+            var gameDto = new GetGameDto()
+            {
+                Descr = game.Descr,
+                Name = game.Name,
+                Id = game.Id,
+                Genre = genre.Descr,
+                Author = new UserDto()
+                {
+                    Username = gameAuthor.UserName
+                }
+            };
+            if (gameDto != null)
+            {
+                return StatusCode(200 ,responses.GameFoundResponse(gameDto));
+            }
+            else
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
@@ -90,8 +130,13 @@ namespace WebAdventureAPI.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("{gameId}")]
-        public IActionResult UpdateGame([FromBody] GameDto gameDto, [FromRoute] int gameId)
+        public IActionResult UpdateGame([FromRoute] int gameId, [FromBody] GameDto gameDto)
         {
+            (IActionResult result, bool isOwner) = EnsureAuthorOwnsGame(gameDto, gameId);
+            if (!isOwner)
+            {
+                return result;
+            }
             try
             {
                 if (gameId == 0)
@@ -107,12 +152,17 @@ namespace WebAdventureAPI.Controllers
                     AuthorId = gameDto.Author.Id,
                     GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
                 };
-
                 repo.UpdateGame(game);
-
-                var successResponse = responses.UpdateResponse(gameDto);
-
-                return StatusCode(204, successResponse);
+                var updatedGameDto = new GetGameDto
+                {
+                    Id = gameId,
+                    Author = gameDto.Author,
+                    Descr = gameDto.Descr,
+                    Genre = gameDto.Genre,
+                    Name = gameDto.Name
+                };
+                var successResponse = responses.UpdateResponse(updatedGameDto);
+                return StatusCode(200, successResponse);
             }
             catch (Exception e)
             {
@@ -138,10 +188,7 @@ namespace WebAdventureAPI.Controllers
             }
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet]
-        [Route("{authorId}")]
-        public IActionResult GetGameByAuthor([FromRoute] string authorId)
+        private IActionResult GetGameByAuthorId(string authorId)
         {
             try
             {
@@ -154,8 +201,6 @@ namespace WebAdventureAPI.Controllers
                         Id = game.Id,
                         Author = new UserDto
                         {
-                            Id = user.Id,
-                            Email = user.Email,
                             Username = user.UserName
                         },
                         Genre = repo.GetGenreById(game.GenreId).Descr,
@@ -174,6 +219,18 @@ namespace WebAdventureAPI.Controllers
         private WAUser VerifyUserCredentials(string email, string passwordHash)
         {
             return userManager.Users.FirstOrDefault(u => u.Email == email && u.PasswordHash == passwordHash);
+        }
+
+        private (IActionResult, bool) EnsureAuthorOwnsGame(GameDto gameDto, int gameId)
+        {
+            var currentUser = gameDto.Author;
+            List<Game> currentUsersGames = repo.GetGamesByAuthor(currentUser.Id);
+            if (currentUsersGames.Find(g => g.Id == gameId) == null)
+            {
+                var result = StatusCode(400, ErrorResponse.CustomErrorCode(400, "You can't update a game you do not own"));
+                return (result, false);
+            }
+            return (null, true);
         }
     }
 }

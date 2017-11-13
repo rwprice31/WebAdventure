@@ -70,24 +70,18 @@ form {
     h2 {
         font-size: 1.25em;
     }
-    .page-header {
-        padding-bottom: 5%;
-        h1 {
-            font-size: 3em;
-            font-weight: bold;
-        }
-        h2 {
-            font-size: 1.5em;
-        }
-    }
-    .page-section {
-        padding-bottom: 10%;
-    }
-
 }
 
-.navbar-toggler {
-    .navbar-toggler-icon {
-
+.page-header {
+    padding-bottom: 5%;
+    h1 {
+        font-size: 3em;
+        font-weight: bold;
     }
+    h2 {
+        font-size: 1.5em;
+    }
+}
+.page-section {
+    padding-bottom: 10%;
 }

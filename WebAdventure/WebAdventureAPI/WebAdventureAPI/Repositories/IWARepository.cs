@@ -13,6 +13,10 @@ namespace WebAdventureAPI.Repositories
     {
         List<Game> GetGamesByAuthor(string author);
 
+        Game GetGame(int id);
+
+        Task<WAUser> GetGameAuthor(Game game);
+
         List<Game> GetAllGames();
 
         List<Genre> GetAllGenres();
