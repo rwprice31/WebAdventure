@@ -11,8 +11,11 @@ import { IUsersGamesViewModel } from '../../../shared/interfaces/view-models/gam
 import { IUsersGameResponse } from '../../../shared/interfaces/responses/games/users-games-response.interface';
 import { MyGamesHomeComponent } from '../../../my-games/home/my-games-home.component';
 
-import { gameIdsLocalStorage } from './../game.service';
-
+/**
+ * @class EditGuard
+ * @description A guard that let's routes only be activated if the user owns the game they
+ * are attempting to edit.
+ */
 @Injectable()
 export class EditGuard implements CanActivate {
     
@@ -29,14 +32,11 @@ export class EditGuard implements CanActivate {
         this.gameId = +route.params['id'];
     }
 
-    retrieveUsersGamesIdFromLocalStorage(): void {        
-        this.usersGameIds = JSON.parse(localStorage.getItem(gameIdsLocalStorage));
-    }
-
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         this.fetchIdFromRoute(route);
-        this.retrieveUsersGamesIdFromLocalStorage();
+        this.usersGameIds = this.gameService.getCurrentUsersOwnedGameIdsFromSessionStorage();
         if (this.usersGameIds.includes(this.gameId)) {
+            this.gameService.storeGameIdUsersCurrentlyEdittingInSessionStorage(this.gameId);
             return true;
         } else {
             this.toastr.warning('You cannot edit a game you do not own.');

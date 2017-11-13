@@ -28,7 +28,6 @@ export class GameCardComponent {
     }
 
     editClicked() {
-        console.log('Edit clicked in game-card');
         this.edit.emit(this.game);
     }
 

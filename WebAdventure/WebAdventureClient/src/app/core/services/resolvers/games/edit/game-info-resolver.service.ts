@@ -9,6 +9,11 @@ import { IToastr } from '../../../../../shared/interfaces/external-libraries/toa
 import { IGameViewModel } from '../../../../../shared/interfaces/view-models/games/game-view-model.interface';
 import { EditComponent } from '../../../../../my-games/edit/edit.component';
 
+/**
+ * @class GameInfoResolver
+ * @description Resolver that provides a IGameResponse observable to component's that are set
+ * to resolve to this class.
+ */
 @Injectable()
 export class GameInfoResolver implements Resolve<Observable<IGameResponse>> {
 
@@ -19,7 +24,7 @@ export class GameInfoResolver implements Resolve<Observable<IGameResponse>> {
     private router: Router,
     private route: ActivatedRoute,
     @Inject(TOASTR_TOKEN) private toastr: IToastr) {
-      this.gameId = gameService.getGameCurrentlyEdittingFromLocalStorage();
+      this.gameId = gameService.getGameIdUsersCurrentlyEdittingFromSessionStorage();
       // console.log('Game id in info resolver = ' + this.gameId);
     }
 

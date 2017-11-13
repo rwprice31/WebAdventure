@@ -8,15 +8,4 @@ import { GameService } from '../../core/services/game.service';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent implements OnInit {
-
-  constructor(private route: ActivatedRoute,
-    private gameService: GameService) { }
-
-  ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.gameService.setGameCurrentlyEdittingInLocalStorage(+params['id']);
-    });
-  }
-
-}
+export class EditComponent { }

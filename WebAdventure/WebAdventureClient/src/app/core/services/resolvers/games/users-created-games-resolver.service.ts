@@ -12,6 +12,11 @@ import { TOASTR_TOKEN } from '../../external-libraries/toastr.service';
 import { IToastr } from '../../../../shared/interfaces/external-libraries/toastr.interface';
 import { IUsersGameResponse } from '../../../../shared/interfaces/responses/games/users-games-response.interface';
 
+/**
+ * @class UsersCreatedGamesResolver
+ * @description Resolver that provides a IUsersGameResponse observable to component's that are set
+ * to resolve to this class.
+ */
 @Injectable()
 export class UsersCreatedGamesResolver implements Resolve<Observable<IUsersGameResponse>> {
 
@@ -34,7 +39,7 @@ export class UsersCreatedGamesResolver implements Resolve<Observable<IUsersGameR
 
       return this.gameService.getUsersGames(currentUser).map(
         (res: IUsersGameResponse) => {
-          console.log('Games response in resolve = ' + res);
+          // console.log('Games response in resolve = ' + res);
           return res;
         }
       );

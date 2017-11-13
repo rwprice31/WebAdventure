@@ -3,11 +3,22 @@ import { Observable } from 'rxjs/Rx';
 import { Injectable, Injector } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
 
+/**
+ * @class AuthInterceptor
+ * @description An http interceptor that intercepts every HTTP request going out of the angular 
+ * app.
+ */
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   
   constructor(private injector: Injector) { }
 
+  /**
+  * @name intercept
+  * @param req, next
+  * @returns Observable<HttpEvent<any>>
+  * @description Intercepts each HTTP request and sets a Bearer authorization token
+  */ 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     const userService = this.injector.get(UserService);
