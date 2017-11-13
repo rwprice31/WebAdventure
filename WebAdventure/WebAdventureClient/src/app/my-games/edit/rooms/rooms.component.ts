@@ -5,7 +5,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./rooms.component.scss']
 })
 export class RoomsComponent {
-  // editClicked($event: any) {
-  //   console.log('Event received in room component! ' + $event.rowID);
-  // }
+
 }

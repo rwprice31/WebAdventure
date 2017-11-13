@@ -7,4 +7,5 @@
 <button type="button" class="btn wa-button-dark" id="newRoomButton" [routerLink]="['0']">Create a new room</button>
 
       
-<simple-table (edit)="editClicked($event)"></simple-table>
+<simple-table (edit)="editClicked($event)" [columns]="columns" [rows]="rows"
+    [editAbility]="true"></simple-table>

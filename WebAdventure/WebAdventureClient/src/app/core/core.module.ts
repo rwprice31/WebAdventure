@@ -1,3 +1,6 @@
+import { GameRoomResolver } from './services/resolvers/rooms/game-room-resolver.service';
+import { RoomService } from './services/room.service';
+import { GameRoomsResolver } from './services/resolvers/rooms/game-rooms-resolver.service';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -43,6 +46,7 @@ export declare let jQuery: any;
         UserService,
         GameService, 
         GenreService,
+        RoomService,
         AuthGuard,
         NotAlreadyLoggedInGuard,
         CanDeactivateGuard,
@@ -50,6 +54,8 @@ export declare let jQuery: any;
         DialogService,
         UsersCreatedGamesResolver,
         GameInfoResolver,
+        GameRoomsResolver,
+        GameRoomResolver,
         { provide: TOASTR_TOKEN, useValue: toastr },
         { provide: JQ_TOKEN, useValue: jQuery },
         {

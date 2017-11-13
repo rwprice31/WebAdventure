@@ -34,7 +34,11 @@ export class MyGamesHomeComponent implements OnInit {
 
   getUsersCreatedGames() {
     this.route.data.subscribe( (data: { gamesResponse: IUsersGameResponse }) => {
-      this.usersCreatedGames = data.gamesResponse.games;  
+      if (data.gamesResponse.status) {
+        this.usersCreatedGames = data.gamesResponse.games;  
+      } else {
+        this.toastr.error(data.gamesResponse.statusText);
+      }
     });
   }
 

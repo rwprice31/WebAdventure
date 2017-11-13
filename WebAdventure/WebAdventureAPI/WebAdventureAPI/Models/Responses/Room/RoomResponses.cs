@@ -23,7 +23,7 @@ namespace WebAdventureAPI.Models.Responses.Room
 
         public RoomResponses GetAllRoomsResponse(List<DbModels.Room> roomList) => new RoomResponses
         {
-            StatusText = "All rooms",
+            StatusText = "All room's successfully returned!",
             StatusCode = 201,
             Status = true,
             Rooms = roomList
@@ -39,8 +39,8 @@ namespace WebAdventureAPI.Models.Responses.Room
 
         public RoomResponses UpdateResponse(DbModels.Room room) => new RoomResponses
         {
-            StatusText = "Game successfully updated!",
-            StatusCode = 204,
+            StatusText = "Room successfully updated!",
+            StatusCode = 200,
             Status = true,
             Room = room
         };

@@ -19,7 +19,7 @@ using WebAdventureAPI.Models.Responses.Room;
 namespace WebAdventureAPI.Controllers
 {
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/games/{gameId}/room")]
+    [Route("api/games/{gameId}/rooms")]
     public class RoomController : Controller
     {
         private IWARepository repo;
@@ -95,7 +95,8 @@ namespace WebAdventureAPI.Controllers
                     {
                         Id = x.Id,
                         Descr = x.Descr,
-                        Name = x.Name
+                        Name = x.Name,
+                        GameId = x.GameId
                     });
                 }
 

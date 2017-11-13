@@ -1,3 +1,5 @@
+import { GameRoomResolver } from './../../../core/services/resolvers/rooms/game-room-resolver.service';
+import { GameRoomsResolver } from './../../../core/services/resolvers/rooms/game-rooms-resolver.service';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -13,15 +15,18 @@ const routes: Routes = [
         children: [
             { 
                 path: ':id',
-                component: RoomComponent
+                component: RoomComponent,
+                resolve: {
+                    roomResponse: GameRoomResolver
+                }
             },
             {
                 path: '**', 
                 component: RoomsHomeComponent, // redirect all other paths to create info
                 // canDeactivate: [CanDeactivateGuard],
-                // resolve: {
-                //     gameResponse: GameInfoResolver 
-                // }
+                resolve: {
+                    roomsResponse: GameRoomsResolver 
+                }
             }
         ]
     }

@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 
 export interface SimpleTableColumn {
@@ -23,53 +23,11 @@ export interface SimpleTableRow {
     templateUrl: './simple-table.component.html', 
     styleUrls: ['./simple-table.component.scss']}
 )
-export class SimpleTableComponent {
+export class SimpleTableComponent implements OnInit {
 
-    @Input()columns: SimpleTableColumn[] = [
-        {
-            name: 'First Name',
-            width: 1
-        }, {
-            name: 'Last Name',
-            width: 1
-        }, {
-            name: 'Username',
-            width: 1
-        }
-    ];
-    @Input()rows: SimpleTableRow[] = [
-        {
-            rowID: 12,
-            rowData: [
-                {
-                    columnName: 'First Name',
-                    data: 'Robert'
-                }, {
-                    columnName: 'Last Name',
-                    data: 'Bryan'
-                }, {
-                    columnName: 'Username',
-                    data: 'rbryan21'
-                }
-            ]
-        },
-        {
-            rowID: 13,
-            rowData: [
-                {
-                    columnName: 'First Name',
-                    data: 'Robert'
-                }, {
-                    columnName: 'Last Name',
-                    data: 'Bryan'
-                }, {
-                    columnName: 'Username',
-                    data: 'rbryan21'
-                }
-            ]
-        }
-    ];
-    @Input()editAbility: boolean = true;
+    @Input()columns: SimpleTableColumn[] = [];
+    @Input()rows: SimpleTableRow[] = [];
+    @Input()editAbility: boolean = false;
     @Input()deleteAbility: boolean = false;
 
     @Output() edit: EventEmitter<SimpleTableRow> = new EventEmitter();
@@ -80,30 +38,16 @@ export class SimpleTableComponent {
     private unrecognizedColumnError = 'The following column is not recognized: ';
     private tooManyRowCellsError = 'You cannot have more row cells than columns';
     private missingColumnsError = 'You have attempted to set a column\'s data twice. Missing columns: ';
-
-    constructor() {
+    
+    ngOnInit(): void {
         this.formatColumns();
         this.formatRows();
         this.ensureDataValid();
-
     }
 
     private ensureDataValid(): void {
 
-        let columnNames = this
-            .columns
-            .map(c => c.name);
-
-        // let rowsWithoutHiddenFields: SimpleTableRow[] = [];
-
-        // rowsWithoutHiddenFields = this.rows.filter( r => r.rowData.filter( rd => rd.data === 'swag'));
-
-
-        // rowsWithoutHiddenFields.forEach(row => {
-        //     row.rowData.forEach(data => {
-        //         console.log(data);
-        //     });
-        // });
+        let columnNames = this.columns.map(c => c.name);
 
         this.rows.forEach(row => {
             if (row.rowData.length > columnNames.length) {
