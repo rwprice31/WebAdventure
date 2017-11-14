@@ -18,19 +18,17 @@ using WebAdventureAPI.Models.Responses.Room;
 
 namespace WebAdventureAPI.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/games/{gameId}/rooms")]
     public class RoomController : Controller
     {
         private IWARepository repo;
-        private UserManager<WAUser> userManager;
         private RoomResponses roomResponses;
         private RoomOptionResponses roomOptionResponses;
 
-        public RoomController(IWARepository repo, UserManager<WAUser> userManager)
+        public RoomController(IWARepository repo)
         {
             this.repo = repo;
-            this.userManager = userManager;
             roomResponses = new RoomResponses();
             roomOptionResponses = new RoomOptionResponses();
         }
@@ -40,15 +38,8 @@ namespace WebAdventureAPI.Controllers
         {
             try
             {
-                var newRoom = new Room
-                {
-                    Name = roomDto.Name,
-                    Descr = roomDto.Descr,
-                    GameId = gameId
-                };
-                repo.AddRoomToDb(newRoom);
-                var roomId = repo.GetRoomId(newRoom);
-                roomDto.Id = roomId;
+                var newRoom = repo.AddRoomToDb(roomDto, gameId);
+                roomDto.Id = newRoom.Id;
                 return StatusCode(201, roomResponses.CreateResponse(roomDto));
             }
             catch (Exception)
@@ -152,26 +143,13 @@ namespace WebAdventureAPI.Controllers
             }
         }
 
-        [HttpPost("options")]
-        public IActionResult CreateOptionForRoom([FromBody] RoomActionOutcomeDto raoDto)
+        [HttpPost("{roomId}/options")]
+        public IActionResult CreateOptionForRoom([FromRoute] int roomId, [FromBody] ActionOutcomeInfoDto dto, [FromRoute] int gameId)
         {
             try
             {
-                var roomActionOutcome = repo.CreateRoomActionOutcome(raoDto.RoomId,
-                    new Models.DbModels.Action
-                    {
-                        Id = raoDto.ActionId,
-                        Descr = raoDto.ActionDescr
-                    },
-                    new Outcome
-                    {
-                        Id = raoDto.OptionId,
-                        MonsterId = raoDto.MonsterId,
-                        ItemId = raoDto.ItemId,
-                        NextRoomId = raoDto.NextRoomId
-                    });
-
-                return StatusCode(204, roomOptionResponses.GetCreateRoomOptionSuccess(roomActionOutcome));
+                var actionOutcome = repo.CreateActionOutcome(roomId, dto, gameId);
+                return StatusCode(204, roomOptionResponses.GetCreateRoomOptionSuccess(actionOutcome));
             }
             catch (Exception)
             {

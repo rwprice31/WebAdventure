@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.DbModels;
@@ -11,7 +8,9 @@ namespace WebAdventureAPI.Repositories
 {
     public interface IWARepository
     {
-        List<Game> GetGamesByAuthor(string author);
+        GameDto AddGameToDb(Game game);
+
+        Room AddRoomToDb(RoomDto room, int gameId);
 
         Game GetGame(int id);
 
@@ -19,36 +18,40 @@ namespace WebAdventureAPI.Repositories
 
         List<Game> GetAllGames();
 
-        List<Genre> GetAllGenres();
+        ActionOutcomeInfoDto CreateActionOutcome(int roomId, ActionOutcomeInfoDto dto, int gameId);
 
-        Genre GetGenreById(int id);
+        ItemInfoDto CreateItem(ItemCreationDto dto, int gameId);
 
-        void AddGameToDb(Game game);
+        void DeleteActionOutcome(ActionOutcomeDeleteDto dto);
 
-        void AddRoomToDb(Room room);
-
-        List<Room> GetRoomsForGame(int gameId);
-
-        Room GetRoomForGame(int gameId, int roomId);
-
-        int GetRoomId(Room room);
-
-        void UpdateRoom(Room room);
+        void DeleteItem(int itemId);
 
         void DeleteRoom(int id);
 
-        Genre GetGenreByDescr(string descr);
+        Room GetRoomForGame(int gameId, int roomId);
 
-        void SaveChanges();
+        List<ActionOutcomeInfoDto> GetActionOutcomeByRoom(int id);
+
+        List<Genre> GetAllGenres();
 
         int GetGameId(Game game);
 
-        void UpdateGame(Game game);
+        List<Game> GetGamesByAuthor(string author);
 
-        List<RoomActionOutcomeInfo> GetActionOutcomeByRoom(int id);
+        Genre GetGenreByDescr(string descr);
 
-        RoomActionOutcomeInfo CreateRoomActionOutcome(int roomId, Models.DbModels.Action action, Outcome outcome);
+        Genre GetGenreById(int id);
 
-        void DeleteActionOutcome(ActionOutcomeDeleteDto dto);
+        List<ItemInfoDto> GetItemsForGame(int gameId);
+
+        List<Room> GetRoomsForGame(int gameId);
+
+        void SaveChanges();
+
+        GameDto UpdateGame(GameDto game, int gameId);
+
+        ItemInfoDto UpdateItem(int itemId, UpdateItemDto dto);
+
+        void UpdateRoom(Room room);
     }
 }

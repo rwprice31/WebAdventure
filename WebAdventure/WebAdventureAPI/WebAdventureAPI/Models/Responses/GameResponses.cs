@@ -9,11 +9,13 @@ namespace WebAdventureAPI.Models.Responses
 {
     public class GameResponses : Response
     {
-        public GetGameDto Game { get; set; }
 
-        public GetGameDto[] Games { get; set; }
+        public GameDto Game { get; set; }
 
-        public GameResponses GameFoundResponse(GetGameDto game)
+        public List<GameDto> Games { get; set; }
+
+
+        public GameResponses GameFoundResponse(GameDto game)
         {
             return new GameResponses
             {
@@ -24,7 +26,7 @@ namespace WebAdventureAPI.Models.Responses
             };
         }
 
-        public GameResponses GamesFoundResponse(GetGameDto[] games)
+        public GameResponses GamesFoundResponse(List<GameDto> games)
         {
             return new GameResponses
             {
@@ -35,7 +37,7 @@ namespace WebAdventureAPI.Models.Responses
             };
         }
 
-        public GameResponses CreateResponse(GetGameDto game)
+        public GameResponses CreateResponse(GameDto game)
         {
             return new GameResponses
             {
@@ -46,7 +48,7 @@ namespace WebAdventureAPI.Models.Responses
             };
         }
 
-        public GameResponses UpdateResponse(GetGameDto game)
+        public GameResponses UpdateResponse(GameDto game)
         {
             return new GameResponses
             {
@@ -57,14 +59,14 @@ namespace WebAdventureAPI.Models.Responses
             };
         }
 
-        public GameResponses AuthorsGamesFound(GetGameDto[] usersGames)
+        public GameResponses AuthorsGamesFound(List<GameDto> games)
         {
             return new GameResponses
             {
                 StatusText = "Author's games successfully found!",
                 StatusCode = 200,
                 Status = true,
-                Games = usersGames
+                Games = games
             };
         }
     }

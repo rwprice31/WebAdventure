@@ -27,5 +27,7 @@ namespace WebAdventureAPI.Models.DbModels
         public int Speed { get; set; }
 
         public int AttackDescr { get; set; }
+
+        public int GameId { get; set; }
     }
 }

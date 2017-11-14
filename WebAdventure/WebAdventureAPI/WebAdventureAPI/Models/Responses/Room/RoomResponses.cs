@@ -18,7 +18,7 @@ namespace WebAdventureAPI.Models.Responses.Room
             StatusCode = 201,
             StatusText = "Room deleted",
             Status = true,
-            Room = null,
+            Rooms = null,
         };
 
         public RoomResponses GetAllRoomsResponse(List<RoomDto> roomList) => new RoomResponses
