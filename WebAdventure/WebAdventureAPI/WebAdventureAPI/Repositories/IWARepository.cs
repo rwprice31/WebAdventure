@@ -28,6 +28,8 @@ namespace WebAdventureAPI.Repositories
 
         void DeleteRoom(int id);
 
+        Room GetRoomForGame(int gameId, int roomId);
+
         List<ActionOutcomeInfoDto> GetActionOutcomeByRoom(int id);
 
         List<Genre> GetAllGenres();

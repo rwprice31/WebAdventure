@@ -5,8 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CanDeactivateGuard } from './../../core/services/guards/can-deactivate-guard.service';
 
 import { EditComponent } from './edit.component';
-import { GameInfoComponent } from './game-info/edit-game-info.component';
-import { MonsterComponent } from './monster/monster.component';
+import { GameInfoComponent } from './game-info/game-info.component';
 import { GameInfoResolver } from '../../core/services/resolvers/games/edit/game-info-resolver.service';
 
 // path's after /create/
@@ -16,8 +15,9 @@ const routes: Routes = [
         component: EditComponent,
         canActivate: [ EditGuard ],
         children: [
-            {
-                path: 'monster', component: MonsterComponent
+            { 
+                path: 'rooms',
+                loadChildren: 'app/my-games/edit/rooms/rooms.module#RoomsModule'
             },
             {
                 path: '**', 
@@ -39,5 +39,5 @@ const routes: Routes = [
     exports: [ RouterModule ]
 })
 export class EditRoutingModule {
-    static components = [ EditComponent, GameInfoComponent, MonsterComponent ];
+    static components = [ EditComponent, GameInfoComponent ];
  }

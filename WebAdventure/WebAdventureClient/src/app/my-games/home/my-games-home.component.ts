@@ -34,7 +34,11 @@ export class MyGamesHomeComponent implements OnInit {
 
   getUsersCreatedGames() {
     this.route.data.subscribe( (data: { gamesResponse: IUsersGameResponse }) => {
-      this.usersCreatedGames = data.gamesResponse.games;  
+      if (data.gamesResponse.status) {
+        this.usersCreatedGames = data.gamesResponse.games;  
+      } else {
+        this.toastr.error(data.gamesResponse.statusText);
+      }
     });
   }
 
@@ -52,7 +56,7 @@ export class MyGamesHomeComponent implements OnInit {
 
   private editClicked($event) {
     // console.log('Edit event received in game home' + JSON.stringify($event));
-    this.router.navigate(['my-games/edit', $event.id]);
+    this.router.navigate(['edit', $event.id], { relativeTo: this.route });
   }
 
 }

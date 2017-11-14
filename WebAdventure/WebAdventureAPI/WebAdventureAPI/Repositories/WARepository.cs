@@ -145,6 +145,13 @@ namespace WebAdventureAPI.Repositories
                     select r).ToList();
         }
 
+        public Room GetRoomForGame(int gameId, int roomId)
+        {
+            return (from r in context.Room
+                    where r.GameId == gameId && r.Id == roomId
+                    select r).FirstOrDefault();
+        }
+
         public void DeleteRoom(int id)
         {
             var actionOutcome = (from ro in context.ActionOutcome

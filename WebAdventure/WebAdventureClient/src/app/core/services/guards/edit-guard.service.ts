@@ -1,3 +1,5 @@
+import { IGameResponse } from './../../../shared/interfaces/responses/games/game-response.interface';
+import { IGameViewModel } from './../../../shared/interfaces/view-models/games/game-view-model.interface';
 import { UserService } from './../user.service';
 import { Injectable, Inject, OnInit } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
@@ -37,6 +39,18 @@ export class EditGuard implements CanActivate {
         this.usersGameIds = this.gameService.getCurrentUsersOwnedGameIdsFromSessionStorage();
         if (this.usersGameIds.includes(this.gameId)) {
             this.gameService.storeGameIdUsersCurrentlyEdittingInSessionStorage(this.gameId);
+            let game: IGameViewModel = {
+                gameId: this.gameId
+            };
+            this.gameService.getGame(game).subscribe( 
+                (res: IGameResponse) => {
+                   if (res.status) {
+                       console.log(res);
+                       this.gameService.storeGameUsersCurrentlyEdittingInSessionStorage(res.game);
+                   } else {
+                       this.toastr.error('Your game cannot be retrieved at the moment.');
+                   }
+            });
             return true;
         } else {
             this.toastr.warning('You cannot edit a game you do not own.');

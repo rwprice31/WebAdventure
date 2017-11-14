@@ -24,8 +24,8 @@ import { IGameUpdationResponse } from '../../../shared/interfaces/responses/game
 import { UserService } from '../../../core/services/user.service';
 
 @Component({
-  templateUrl: './edit-game-info.component.html',
-  styleUrls: ['./edit-game-info.component.scss']
+  templateUrl: './game-info.component.html',
+  styleUrls: ['./game-info.component.scss']
 })
 export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
 

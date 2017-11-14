@@ -35,7 +35,8 @@ export class GameService extends BaseService {
     private authorQueryParam = 'author';
 
     private usersGameIdsSessionStorage = 'usersGameIds';
-    private gameCurrentlyEdittingSessionStorage = 'currentlyEdittingGameId';
+    private gameCurrentlyEdittingSessionStorage = 'currentlyEdittingGame';
+    private gameIdCurrentlyEdittingSessionStorage = 'currentlyEdittingGameId';
 
     constructor(private http: HttpClient,
         private configService: ConfigService) {
@@ -102,7 +103,7 @@ export class GameService extends BaseService {
      */
     storeGameIdUsersCurrentlyEdittingInSessionStorage(gameId: number): void {
         // console.log('Setting gameId ' + gameId + ' to ' + this.gameCurrentlyEdittingSessionStorage + ' in session storage');
-        sessionStorage.setItem(this.gameCurrentlyEdittingSessionStorage, gameId.toString());
+        sessionStorage.setItem(this.gameIdCurrentlyEdittingSessionStorage, JSON.stringify(gameId));
     }
 
     /**
@@ -111,7 +112,27 @@ export class GameService extends BaseService {
      * @description Retrieves the game id the user is currently editting from session storage
      */
     getGameIdUsersCurrentlyEdittingFromSessionStorage(): number {
-        return +sessionStorage.getItem(this.gameCurrentlyEdittingSessionStorage);
+        return +sessionStorage.getItem(this.gameIdCurrentlyEdittingSessionStorage);
+    }
+
+    /**
+     * @name storeGameUsersCurrentlyEdittingInSessionStorage
+     * @param gameId - the current game the user is editting
+     * @returns void
+     * @description Stores the given game as the game the user is currently editting in session session
+     */
+    storeGameUsersCurrentlyEdittingInSessionStorage(game: IGame): void {
+        // console.log('Setting gameId ' + gameId + ' to ' + this.gameCurrentlyEdittingSessionStorage + ' in session storage');
+        sessionStorage.setItem(this.gameCurrentlyEdittingSessionStorage, JSON.stringify(game));
+    }
+
+    /**
+     * @name getGameUsersCurrentlyEdittingFromSessionStorage
+     * @returns number - the game id
+     * @description Retrieves the game id the user is currently editting from session storage
+     */
+    getGameUsersCurrentlyEdittingFromSessionStorage(): IGame {
+        return JSON.parse(sessionStorage.getItem(this.gameCurrentlyEdittingSessionStorage));
     }
 
     /**
