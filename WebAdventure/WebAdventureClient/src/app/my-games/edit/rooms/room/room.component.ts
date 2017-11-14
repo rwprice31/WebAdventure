@@ -9,18 +9,27 @@ import { RoomService } from './../../../../core/services/room.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IRoom } from './../../../../shared/interfaces/models/room.interface';
 import { Component, Inject, OnInit } from '@angular/core';
+import { IRoomViewModel } from '../../../../shared/interfaces/view-models/rooms/room-view-model.interface';
+import { IRoomResponse } from '../../../../shared/interfaces/responses/rooms/room-response.interface';
+import * as _ from 'lodash';
+import { CanComponentDeactivate } from '../../../../core/services/guards/can-deactivate-guard.service';
+import { Observable } from 'rxjs/Observable';
+import { compareFormGroupValues } from '../../../../shared/functions/copy-form-group';
+import { IRoomUpdationViewModel } from '../../../../shared/interfaces/view-models/rooms/room-updation-view-model.interface';
+import { IRoomUpdationResponse } from '../../../../shared/interfaces/responses/rooms/room-updation-response.interface';
 
 @Component({
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.scss']
 })
-export class RoomComponent implements OnInit {
+export class RoomComponent implements OnInit, CanComponentDeactivate {
 
-    room: IRoom;
-    roomInfoForm: FormGroup;
-    confirmNavigation: boolean;
-    roomId: number;
-    game: IGame;
+    private room: IRoom;
+    private roomInfoForm: FormGroup;
+    private originalRoomInfoForm: FormGroup;
+    private confirmNavigation: boolean;
+    private roomId: number;
+    private gameId: number;
   
     constructor(private formBuilder: FormBuilder,
       private roomService: RoomService,
@@ -33,38 +42,63 @@ export class RoomComponent implements OnInit {
     }
   
     ngOnInit() {
+      this.roomId = this.roomService.getCurrentEdittingRoomFromSessionStorage();
+      if (this.roomId === 0) {
         this.room = null;
-        this.game = this.gameService.getGameUsersCurrentlyEdittingFromSessionStorage();
+      } else {
+        this.retrieveRoom();
+      }
+      this.gameId = this.gameService.getGameIdUsersCurrentlyEdittingFromSessionStorage();
+    }
+
+    private retrieveRoom(): void {
+      this.route.data.subscribe( (data: { roomResponse: IRoomResponse }) => {
+        if (data.roomResponse.status) {
+            this.room = data.roomResponse.room;
+            this.setFormValues();
+            // console.log('This room = ' + JSON.stringify(this.room));
+        } else {
+            this.toastr.error(data.roomResponse.statusText);
+        }
+      });
     }
   
-    buildForm() {
+    private buildForm(): void {
       this.roomInfoForm = this.formBuilder.group({
         name: ['', Validators.required],
         description: ['']
       });
     }
 
-    submit() {
+    private setFormValues(): void {
+      this.roomInfoForm.setValue({
+        name: this.room.name,
+        description: this.room.descr
+      });
+      this.originalRoomInfoForm = _.cloneDeep(this.roomInfoForm);
+    }
+
+    private submit() {
       if (!this.room) {
         this.createRoom();
       } else {
-        // update room
+        this.updateRoom();
       }
     }
 
-    createRoom() {
+    private createRoom() {
       let room: IRoom = {
         id: 0,
         name: this.roomInfoForm.controls['name'].value,
         descr: this.roomInfoForm.controls['description'].value,
         actions: null,
-        game:  this.game
+        gameId:  this.gameId
       };
       this.roomService.createRoom(room).subscribe( 
         (res: IRoomCreationResponse) => {
           if (res.status) {
             // console.log('Success! res = ' + res);
-            this.toastr.success('Room successfully created!');
+            this.toastr.success(res.statusText);
             this.router.navigate(['../'], { relativeTo: this.route});
           } else {
             this.toastr.error(res.statusText);
@@ -72,8 +106,33 @@ export class RoomComponent implements OnInit {
       });
     }
 
-    updateRoom() {
+    private updateRoom() {
+      let room: IRoomUpdationViewModel = {
+        id: this.roomId,
+        name: this.roomInfoForm.controls['name'].value,
+        descr: this.roomInfoForm.controls['description'].value,
+        gameId: this.gameId
+      };
+      this.roomService.updateRoom(room).subscribe(
+        (res: IRoomUpdationResponse) => {
+          if (res.status) {
+            this.room = res.room;
+            this.setFormValues();
+            this.toastr.success(res.statusText);
+          } else {
+            this.toastr.error(res.statusText);
+          }
+        }
+      );
+    }
 
+    canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {
+      // only prompt for message if values have changed
+      if (!compareFormGroupValues(this.originalRoomInfoForm, this.roomInfoForm)) {
+        return this.dialogService.confirm('Leave and lose unsaved changes?');
+      } else {
+        return true;
+      }
     }
 
 }

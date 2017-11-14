@@ -73,7 +73,7 @@ export class SimpleTableComponent implements OnInit {
         });
 
         columnsWithData.forEach(columnData => {
-            console.log(columnData);
+            // console.log(columnData);
             let dataColumnDifference = _.difference(columnNames, columnData);
             if (dataColumnDifference.length > 0) {
                 let columnsDuplicating = dataColumnDifference.join(', ');

@@ -11,6 +11,10 @@ import { ConfigService } from './utils/config.service';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable, Inject, OnInit } from '@angular/core';
 import { BaseService } from './base.service';
+import { IRoomViewModel } from '../../shared/interfaces/view-models/rooms/room-view-model.interface';
+import { IRoomResponse } from '../../shared/interfaces/responses/rooms/room-response.interface';
+import { IRoomUpdationViewModel } from '../../shared/interfaces/view-models/rooms/room-updation-view-model.interface';
+import { IRoomUpdationResponse } from '../../shared/interfaces/responses/rooms/room-updation-response.interface';
 
 
 /**
@@ -78,19 +82,36 @@ export class RoomService extends BaseService {
     /**
      * @name getRooms
      * @returns Observable<IResponse> - an observable that the caller needs to subscribe. A caller should treat 
-     * a successful response as the type IGamesResponse.
-     * @description Sends a HTTP GET request to the API to retrieve all games
+     * a successful response as the type IRoomsResponse.
+     * @description Sends a HTTP GET request to the API to retrieve all rooms
      */
     getRooms(): Observable<IResponse> {
         this.getRoomsRoute();
         console.log('Sending GET to ' + this.roomRoute);
         return this.http.get<IRoomsResponse>(this.roomRoute, { headers: this.headers})
             .map( (res: IRoomsResponse ) => {
-                // console.log('IGamesResponse = ', res);
+                // console.log('IRoomsResponse = ', res);
                 return res;
             })
             .catch(this.handleError);
     }
+
+    /**
+     * @name getRoom
+     * @param game - IRoomViewModel - the view model used for the API request
+     * @returns Observable<IResponse> - an observable that the caller needs to subscribe. A caller should treat 
+     * a successful response as the type IRoomResponse.
+     * @description Sends a HTTP GET request to the API to retrieve an individual room and some response info
+     */
+    getRoom(room: IRoomViewModel): Observable<IResponse> {
+        this.getRoomsRoute();
+        let route: string = this.roomRoute + '/' + room.roomId;
+        return this.http.get<IRoomResponse>(route, { headers: this.headers })
+            .map( (res: IRoomResponse) => {
+                return res;
+            })
+            .catch(this.handleError);
+    }     
 
     /**
      * @name createRoom
@@ -110,6 +131,35 @@ export class RoomService extends BaseService {
             return res;
         });
     }
+
+    /**
+     * @name updateRoom
+     * @param game - IRoomUpdationViewModel - the view model used for the API request
+     * @returns Observable<IResponse> - an observable that the caller needs to subscribe. A caller should treat 
+     * a successful response as the type IRoomUpdationResponse.
+     * @description Sends a HTTP PUT request to the API to update a room
+     */
+    updateRoom(room: IRoomUpdationViewModel): Observable<IResponse> {
+        this.getRoomsRoute();
+        let route: string = this.roomRoute + '/' + room.id;
+        let body = JSON.stringify(room);
+        return this.http.put<IRoomUpdationResponse>(route, body, { headers: this.headers })
+        .map( (res: IRoomUpdationResponse) => {
+            console.log('IRoomUpdationResponse = ', res);
+            return res;
+        });
+    }
+
+
+    // updateGame(game: IGameUpdationViewModel): Observable<IResponse> {
+    //     let body = JSON.stringify(game);
+    //     return this.http.put<IGameUpdationResponse>(this.gameRoute + '/' + game.id, body, { headers: this.headers})
+    //     .map( (res: IGameUpdationResponse) => {
+    //         console.log('IGameUpdationResponse = ', res);
+    //         return res;
+    //     })
+    //     .catch(this.handleError);
+    // }
 
     // createGame(game: IGameCreationViewModel): Observable<IResponse> {
     //     // console.log('Body entering saveGame = ' + JSON.stringify(game));

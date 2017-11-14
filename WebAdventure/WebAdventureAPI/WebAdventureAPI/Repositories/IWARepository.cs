@@ -29,6 +29,8 @@ namespace WebAdventureAPI.Repositories
 
         List<Room> GetRoomsForGame(int gameId);
 
+        Room GetRoomForGame(int gameId, int roomId);
+
         int GetRoomId(Room room);
 
         void UpdateRoom(Room room);

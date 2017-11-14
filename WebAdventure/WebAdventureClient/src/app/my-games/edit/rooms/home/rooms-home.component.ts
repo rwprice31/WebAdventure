@@ -40,39 +40,6 @@ export class RoomsHomeComponent implements OnInit {
         });
     }
 
-    // @Input()rows: SimpleTableRow[] = [
-    //     {
-    //         rowID: 12,
-    //         rowData: [
-    //             {
-    //                 columnName: 'First Name',
-    //                 data: 'Robert'
-    //             }, {
-    //                 columnName: 'Last Name',
-    //                 data: 'Bryan'
-    //             }, {
-    //                 columnName: 'Username',
-    //                 data: 'rbryan21'
-    //             }
-    //         ]
-    //     },
-    //     {
-    //         rowID: 13,
-    //         rowData: [
-    //             {
-    //                 columnName: 'First Name',
-    //                 data: 'Robert'
-    //             }, {
-    //                 columnName: 'Last Name',
-    //                 data: 'Bryan'
-    //             }, {
-    //                 columnName: 'Username',
-    //                 data: 'rbryan21'
-    //             }
-    //         ]
-    //     }
-    // ];
-
     buildTableData() {
 
         this.columns = [
@@ -85,8 +52,6 @@ export class RoomsHomeComponent implements OnInit {
               width: 1
           }  
         ];
-
-        console.log('columns equal ' + this.columns);
 
         this.rooms.forEach(room => {
             this.rows.push({

@@ -5,6 +5,6 @@ export interface IRoom {
     id: number;
     name: string;
     descr: string;
-    game: IGame;
-    actions: IRoomAction[];
+    gameId: number;
+    actions?: IRoomAction[];
 }

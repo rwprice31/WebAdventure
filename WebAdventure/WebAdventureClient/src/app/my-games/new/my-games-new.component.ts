@@ -66,6 +66,7 @@ export class MyGamesNewComponent implements OnInit {
         this.gameService.createGame(game).subscribe( (res: IGameCreationResponse) => {
           if (res.status) {
             this.gameService.addGameIdToCurrentUsersOwnedGameIdsInSessionStorage(res.game.id);
+            this.toastr.success('Game successfully created!');
             this.router.navigate(['my-games/edit', res.game.id]);
           } else {
             this.toastr.error(res.statusText);

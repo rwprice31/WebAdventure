@@ -6,6 +6,7 @@ import { UserService } from './../../user.service';
 import { Observable } from 'rxjs/Rx';
 import { Resolve, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Injectable, Inject } from '@angular/core';
+import { IRoomViewModel } from '../../../../shared/interfaces/view-models/rooms/room-view-model.interface';
 
 /**
  * @class GameRoomResolver
@@ -29,17 +30,16 @@ export class GameRoomResolver implements Resolve<Observable<IRoomResponse>> {
     this.roomService.setCurrentlyEdittingRoomToSessionStorage(this.roomId);
     // it's not a new game
     if (this.roomId !== 0) {
-
+      let room: IRoomViewModel = {
+        roomId: this.roomId
+      };
+      return this.roomService.getRoom(room).map(
+        (res: IRoomResponse) => {
+          // console.log('IRoomsResponse in resolver = ' + JSON.stringify(res));
+          return res;
+        }
+      );
     }
-    // route.params.forEach(element => {
-    //     console.log('Params = ' + element);
-    // });
-    // return this.roomService.getRooms().map(
-    //     (res: IRoomsResponse) => {
-    //         console.log('Rooms response in resolve = ' + res);
-    //         return res;
-    //     }
-    // );
     return null;
   }
 

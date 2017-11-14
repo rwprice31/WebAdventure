@@ -25,7 +25,7 @@ export class GameRoomsResolver implements Resolve<Observable<IRoomsResponse>> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IRoomsResponse> {
     return this.roomService.getRooms().map(
         (res: IRoomsResponse) => {
-            console.log('Rooms response in resolve = ' + res);
+            // console.log('Rooms response in resolve = ' + res);
             return res;
         }
     );
