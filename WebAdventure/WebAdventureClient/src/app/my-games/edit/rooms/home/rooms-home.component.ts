@@ -7,6 +7,9 @@ import { IRoom } from './../../../../shared/interfaces/models/room.interface';
 import { SimpleTableRow, SimpleTableColumn, SimpleTableRowCell } from './../../../../shared/components/simple-table/simple-table.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit, Inject } from '@angular/core';
+import { DialogService } from '../../../../core/services/dialog.service';
+import { IRoomDeletionViewModel } from '../../../../shared/interfaces/view-models/rooms/room-deletion-view-model.interface';
+import { IRoomDeletionResponse } from '../../../../shared/interfaces/responses/rooms/room-deletion-response.interface';
 
 @Component({
   templateUrl: './rooms-home.component.html',
@@ -22,7 +25,8 @@ export class RoomsHomeComponent implements OnInit {
     constructor(private router: Router,
         private route: ActivatedRoute,
         @Inject(TOASTR_TOKEN) private toastr: IToastr,
-        private roomService: RoomService) {
+        private roomService: RoomService,
+        private dialogService: DialogService) {
     }
 
     ngOnInit(): void {
@@ -72,6 +76,28 @@ export class RoomsHomeComponent implements OnInit {
 
     editClicked($event: SimpleTableRow) {
         this.router.navigate([$event.rowID], { relativeTo: this.route});
+    }
+
+    deleteClicked($event: SimpleTableRow) {
+        this.dialogService.confirm('Do you really want to delete this room?').subscribe( 
+            (res: boolean) => {
+                if (res) {
+                    let room: IRoomDeletionViewModel = {
+                        id: $event.rowID
+                    };
+                    this.roomService.deleteRoom(room).subscribe( 
+                        (d_res: IRoomDeletionResponse) => {
+                            if (d_res) {
+                                this.toastr.success(d_res.statusText);
+                            } else {
+                                this.toastr.error(d_res.statusText);
+                            }   
+                        }
+                    );
+                } else {
+
+                }
+        });
     }
 
 }

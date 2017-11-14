@@ -104,4 +104,8 @@ export class SimpleTableComponent implements OnInit {
         this.edit.emit($event);
     }
 
+    private deleteClicked($event: SimpleTableRow) {
+        this.delete.emit($event);
+    }
+
 }
