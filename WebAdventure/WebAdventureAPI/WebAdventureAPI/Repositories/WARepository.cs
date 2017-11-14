@@ -397,5 +397,92 @@ namespace WebAdventureAPI.Repositories
 
             context.Item.Remove(item);
         }
+
+        public List<MonsterDto> GetMonstersForGame(int gameId)
+        {
+            return (from m in context.Monster
+                    where m.GameId == gameId
+                    select new MonsterDto
+                    {
+                        Id = m.Id,
+                        Name = m.Name,
+                        Descr = m.Descr,
+                        Health = m.Health,
+                        MaxDamage = m.MaxDamage,
+                        MinDamage = m.MinDamage,
+                        Speed = m.Speed,
+                        AttackDescr = m.AttackDescr
+                    }).ToList();
+        }
+
+        public MonsterDto UpdateMonster(MonsterCreationDto dto, int monsterId)
+        {
+            var monster = (from m in context.Monster
+                           where m.Id == monsterId
+                           select m).FirstOrDefault();
+
+            monster.Name = dto.Name;
+            monster.Descr = dto.Descr;
+            monster.Health = dto.Health;
+            monster.MaxDamage = dto.MaxDamage;
+            monster.MinDamage = dto.MinDamage;
+            monster.Speed = dto.Speed;
+            monster.AttackDescr = dto.AttackDescr;
+
+            SaveChanges();
+
+            return new MonsterDto
+            {
+                Id = monsterId,
+                Name = dto.Name,
+                Descr = dto.Descr,
+                Health = dto.Health,
+                MaxDamage = dto.MaxDamage,
+                MinDamage = dto.MinDamage,
+                AttackDescr = dto.AttackDescr,
+                Speed = dto.Speed
+            };
+        }
+
+        public MonsterDto CreateMonster(MonsterCreationDto dto, int gameId)
+        {
+            context.Monster.Add(new Monster
+            {
+                Name = dto.Name,
+                Descr = dto.Descr,
+                Health = dto.Health,
+                AttackDescr = dto.AttackDescr,
+                MaxDamage = dto.MaxDamage,
+                MinDamage = dto.MinDamage,
+                GameId = gameId,
+                Speed = dto.Speed
+            });
+
+            SaveChanges();
+
+            return (from m in context.Monster
+                    where m.GameId == gameId && m.Name == dto.Name && m.Descr == dto.Descr && m.Health == dto.Health && m.AttackDescr == dto.AttackDescr
+                    select new MonsterDto
+                    {
+                        Id = m.Id,
+                        Name = m.Name,
+                        Descr = m.Descr,
+                        Health = m.Health,
+                        AttackDescr = m.AttackDescr,
+                        MaxDamage = m.MaxDamage,
+                        MinDamage = m.MinDamage,
+                        Speed = m.Speed
+                    }).FirstOrDefault();
+        }
+
+        public void DeleteMonster(int id)
+        {
+            var monster = (from m in context.Monster
+                           where m.Id == id
+                           select m).FirstOrDefault();
+
+            context.Monster.Remove(monster);
+            SaveChanges();
+        }
     }
 }

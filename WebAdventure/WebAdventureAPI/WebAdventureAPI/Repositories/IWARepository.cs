@@ -51,5 +51,13 @@ namespace WebAdventureAPI.Repositories
         ItemInfoDto UpdateItem(int itemId, UpdateItemDto dto);
 
         void UpdateRoom(Room room);
+
+        List<MonsterDto> GetMonstersForGame(int gameId);
+
+        MonsterDto UpdateMonster(MonsterCreationDto dto, int monsterId);
+
+        MonsterDto CreateMonster(MonsterCreationDto dto, int gameId);
+
+        void DeleteMonster(int id);
     }
 }
