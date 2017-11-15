@@ -114,12 +114,12 @@ namespace WebAdventureAPI.Controllers
             }        
         }
 
-        [HttpDelete]
-        public IActionResult DeleteRoom([FromBody] RoomIdDto roomIdDto)
+        [HttpDelete("{roomId}")]
+        public IActionResult DeleteRoom([FromRoute] int roomId)
         {
             try
             {
-                repo.DeleteRoom(roomIdDto.Id);
+                repo.DeleteRoom(roomId);
                 return StatusCode(201, roomResponses.DeleteRoomResponse());
             }
             catch (Exception)

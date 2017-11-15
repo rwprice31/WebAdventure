@@ -152,15 +152,12 @@ namespace WebAdventureAPI.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("{gameId}")]
-        public IActionResult DeleteGame([FromBody] GameIdDto gameIdDto, [FromRoute] int gameId)
+        public IActionResult DeleteGame([FromRoute] int gameId)
         {
             try
             {
-                // get game
-                // delete everything from every table
-                // delete game
-                // returhn success
-                return null;
+                repo.DeleteGame(gameId);
+                return StatusCode(201, responses.DeletGameResponse());
             }
             catch (Exception)
             {

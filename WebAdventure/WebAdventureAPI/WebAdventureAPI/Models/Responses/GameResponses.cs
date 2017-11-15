@@ -69,5 +69,12 @@ namespace WebAdventureAPI.Models.Responses
                 Games = games
             };
         }
+
+        public GameResponses DeletGameResponse() => new GameResponses
+        {
+            Status = true,
+            StatusCode = 201,
+            StatusText = "Game Deleted"
+        };
     }
 }

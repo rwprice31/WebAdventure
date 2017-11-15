@@ -9,7 +9,7 @@ using WebAdventureAPI.Models.Dtos;
 
 namespace WebAdventureAPI.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/games/{gameId}/monster")]
     public class MonsterController : Controller
     {
@@ -23,7 +23,7 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetItems([FromRoute] int gameId)
+        public IActionResult GetMonsters([FromRoute] int gameId)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateItem([FromBody] MonsterCreationDto dto, [FromRoute] int gameId)
+        public IActionResult CreateMonster([FromBody] MonsterCreationDto dto, [FromRoute] int gameId)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpPut("{monsterId}")]
-        public IActionResult UpdateItem([FromRoute] int monsterId, [FromBody] MonsterCreationDto dto)
+        public IActionResult UpdateMonster([FromRoute] int monsterId, [FromBody] MonsterCreationDto dto)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpDelete("{monsterId}")]
-        public IActionResult DeleteItem([FromRoute] int monsterId)
+        public IActionResult DeleteMonster([FromRoute] int monsterId)
         {
             try
             {
