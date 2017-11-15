@@ -6,6 +6,11 @@ export interface CanComponentDeactivate {
  canDeactivate: () => Observable<boolean> | Promise<boolean> | boolean;
 }
  
+/**
+ * @class CanDeactivateGuard
+ * @description A guard that let's routes only be activated if the implemented canDeactivate method
+ * returns true.
+ */
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
   canDeactivate(component: CanComponentDeactivate) {

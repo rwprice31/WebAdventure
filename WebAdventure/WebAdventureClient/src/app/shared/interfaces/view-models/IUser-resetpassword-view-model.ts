@@ -1,4 +1,4 @@
 export interface IUserResetPasswordViewModel {
   email: string;
-  password: string;
+  newPassword: string;
 }

@@ -6,10 +6,12 @@ import { SimpleModalComponent } from './components/simple-modal/simple-modal.com
 import { ModalTriggerDirective } from './directives/modal-trigger.directive';
 import { GameCardComponent } from './components/game-card/game-card.component';
 import { GameCardGridComponent } from './components/game-card-grid/game-card-grid.component';
+import { SimpleTableComponent, SimpleTableColumn } from './components/simple-table/simple-table.component';
 
 @NgModule({
   declarations: [
     SimpleModalComponent,
+    SimpleTableComponent,
     ModalTriggerDirective,
     GameCardComponent,
     GameCardGridComponent
@@ -24,6 +26,7 @@ import { GameCardGridComponent } from './components/game-card-grid/game-card-gri
     FormsModule,
     ReactiveFormsModule,
     SimpleModalComponent,
+    SimpleTableComponent,
     ModalTriggerDirective,
     GameCardComponent,
     GameCardGridComponent

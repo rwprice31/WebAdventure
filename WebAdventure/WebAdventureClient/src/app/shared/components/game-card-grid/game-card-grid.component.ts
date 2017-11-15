@@ -17,21 +17,22 @@ export class GameCardGridComponent {
     @Input() displaySave: boolean = false;
     @Input() displayEdit: boolean = false;
 
-    @Output() save: EventEmitter<any> = new EventEmitter();
-    @Output() edit: EventEmitter<any> = new EventEmitter();
-    @Output() play: EventEmitter<any> = new EventEmitter();
+    @Output() save: EventEmitter<IGame> = new EventEmitter();
+    @Output() edit: EventEmitter<IGame> = new EventEmitter();
+    @Output() play: EventEmitter<IGame> = new EventEmitter();
+    @Output() delete: EventEmitter<IGame> = new EventEmitter();
 
-    saveClicked($event: any) {
+    saveClicked($event: IGame) {
         // console.log('Save event received in game-grid' + JSON.stringify($event));
         this.save.emit($event);
     }
 
-    editClicked($event: any) {
+    editClicked($event: IGame) {
         // console.log('Edit event received in game-grid' + JSON.stringify($event));
         this.edit.emit($event);
     }
 
-    playClicked($event: any) {
+    playClicked($event: IGame) {
         // console.log('Play event received in game-grid' + JSON.stringify($event));
         this.play.emit($event);
     }
