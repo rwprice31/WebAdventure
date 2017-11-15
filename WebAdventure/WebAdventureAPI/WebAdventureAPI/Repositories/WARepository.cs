@@ -469,5 +469,72 @@ namespace WebAdventureAPI.Repositories
             context.Monster.Remove(monster);
             SaveChanges();
         }
+
+        public PlayerDto GetPlayer(int gameId)
+        {
+            return (from p in context.Player
+                    where p.GameId == gameId
+                    select new PlayerDto
+                    {
+                        Id = p.Id,
+                        Attack = p.Attack,
+                        Speed = p.Speed,
+                        Health = p.Health
+                    }).FirstOrDefault();
+        }
+
+        public PlayerDto CreatePlayer(int gameId, PlayerCreationDto dto)
+        {
+            context.Player.Add(new Player
+            {
+                GameId = gameId,
+                Attack = dto.Attack,
+                Health = dto.Health,
+                Speed = dto.Speed
+            });
+
+            SaveChanges();
+
+            return (from p in context.Player
+                    where p.GameId == gameId
+                    select new PlayerDto
+                    {
+                        Id = p.Id,
+                        Health = p.Health,
+                        Attack = p.Attack,
+                        Speed = p.Speed
+                    }).FirstOrDefault();
+        }
+
+        public PlayerDto UpdatePlayer(int id, PlayerCreationDto dto)
+        {
+            var player = (from p in context.Player
+                          where p.Id == id
+                          select p).FirstOrDefault();
+
+            player.Attack = dto.Attack;
+            player.Health = dto.Health;
+            player.Speed = dto.Speed;
+
+            SaveChanges();
+
+            return new PlayerDto
+            {
+                Id = id,
+                Attack = dto.Attack,
+                Health = dto.Health,
+                Speed = dto.Speed
+            };
+        }
+
+        public void DeletePlayer(int id)
+        {
+            var player = (from p in context.Player
+                          where p.Id == id
+                          select p).FirstOrDefault();
+
+            context.Player.Remove(player);
+            SaveChanges();
+        }
     }
 }

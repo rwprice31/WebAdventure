@@ -37,8 +37,6 @@ namespace WebAdventureAPI.Contexts
 
         public DbSet<Player> Player { get; set; }
 
-        public DbSet<ItemPlayer> ItemPlayer { get; set; }
-
         public DbSet<ItemType> ItemType { get; set; }
 
         public DbSet<Outcome> Outcome { get; set; }
