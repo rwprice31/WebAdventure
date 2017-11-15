@@ -56,7 +56,7 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpPut("{itemId}")]
-        public IActionResult UpdateItem([FromRoute] int itemId, [FromBody] UpdateItemDto dto)
+        public IActionResult UpdateItem([FromRoute] int itemId, [FromBody] ItemCreationDto dto)
         {
             try
             {

@@ -349,7 +349,7 @@ namespace WebAdventureAPI.Repositories
             };
         }
 
-        public ItemInfoDto UpdateItem(int itemId, UpdateItemDto dto)
+        public ItemInfoDto UpdateItem(int itemId, ItemCreationDto dto)
         {
             var oldItem = (from i in context.Item
                            where i.Id == itemId
@@ -534,6 +534,16 @@ namespace WebAdventureAPI.Repositories
                           select p).FirstOrDefault();
 
             context.Player.Remove(player);
+            SaveChanges();
+        }
+
+        public void DeleteGame(int gameId)
+        {
+            var game = (from g in context.Game
+                        where g.Id == gameId
+                        select g).FirstOrDefault();
+
+            context.Game.Remove(game);
             SaveChanges();
         }
     }

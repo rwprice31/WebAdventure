@@ -31,11 +31,11 @@ namespace WebAdventureAPI.Controllers
         [HttpGet]
         public JsonResult GetAllGames()
         {
-            var list = new List<GetGameDto>();
+            var list = new List<GameDto>();
             foreach (var game in repo.GetAllGames())
             {
                 var user = userManager.Users.FirstOrDefault(u => u.Id == game.AuthorId);
-                list.Add(new GetGameDto
+                list.Add(new GameDto
                 {
                     Id = game.Id,
                     Author = new UserDto
@@ -100,15 +100,12 @@ namespace WebAdventureAPI.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("{gameId}")]
-        public IActionResult DeleteGame([FromBody] GameIdDto gameIdDto, [FromRoute] int gameId)
+        public IActionResult DeleteGame([FromRoute] int gameId)
         {
             try
             {
-                // get game
-                // delete everything from every table
-                // delete game
-                // returhn success
-                return null;
+                repo.DeleteGame(gameId);
+                return StatusCode(201, responses.DeletGameResponse());
             }
             catch (Exception)
             {
