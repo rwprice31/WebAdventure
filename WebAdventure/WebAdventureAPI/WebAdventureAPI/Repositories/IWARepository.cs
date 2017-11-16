@@ -44,6 +44,8 @@ namespace WebAdventureAPI.Repositories
 
         Genre GetGenreById(int id);
 
+        List<ItemType> GetItemTypes();
+
         List<ItemInfoDto> GetItemsForGame(int gameId);
 
         List<Room> GetRoomsForGame(int gameId);

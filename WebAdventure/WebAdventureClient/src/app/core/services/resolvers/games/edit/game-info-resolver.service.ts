@@ -38,7 +38,7 @@ export class GameInfoResolver implements Resolve<Observable<IGameResponse>> {
       };
       return this.gameService.getGame(currentGame).map(
         (res: IGameResponse) => {
-          // console.log('IGameResponse in resolve = ' + JSON.stringify(res.game));
+          console.log('IGameResponse in resolve = ' + JSON.stringify(res.game));
           return res;
         }
       );

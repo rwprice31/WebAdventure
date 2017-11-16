@@ -89,6 +89,7 @@ export class RoomsHomeComponent implements OnInit {
                         (d_res: IRoomDeletionResponse) => {
                             if (d_res) {
                                 this.toastr.success(d_res.statusText);
+                                
                             } else {
                                 this.toastr.error(d_res.statusText);
                             }   

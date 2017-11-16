@@ -568,5 +568,12 @@ namespace WebAdventureAPI.Repositories
             context.Game.Remove(game);
             SaveChanges();
         }
+
+        public List<ItemType> GetItemTypes()
+        {
+            var itemTypes = (from i in context.ItemType
+                             select i).ToList();
+            return itemTypes;
+        }
     }
 }

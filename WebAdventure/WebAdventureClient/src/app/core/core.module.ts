@@ -25,6 +25,10 @@ import { IToastr } from '../shared/interfaces/external-libraries/toastr.interfac
 import { EnsureModuleLoadedOnceGuard } from '../shared/ensureModuleLoadedOnceGuard';
 import { UsersCreatedGamesResolver } from './services/resolvers/games/users-created-games-resolver.service';
 import { GameInfoResolver } from './services/resolvers/games/edit/game-info-resolver.service';
+import { ItemTypesResolver } from './services/resolvers/items/item-types-resolver.service';
+import { GameGenresResolver } from './services/resolvers/genres/game-genre.resolver.service';
+import { ItemTypeService } from './services/item-type.service';
+import { ItemService } from './services/item.service';
 
 export declare let toastr: IToastr;
 export declare let jQuery: any;
@@ -47,6 +51,8 @@ export declare let jQuery: any;
         GameService, 
         GenreService,
         RoomService,
+        ItemTypeService,
+        ItemService,
         AuthGuard,
         NotAlreadyLoggedInGuard,
         CanDeactivateGuard,
@@ -56,6 +62,8 @@ export declare let jQuery: any;
         GameInfoResolver,
         GameRoomsResolver,
         GameRoomResolver,
+        ItemTypesResolver,
+        GameGenresResolver,
         { provide: TOASTR_TOKEN, useValue: toastr },
         { provide: JQ_TOKEN, useValue: jQuery },
         {

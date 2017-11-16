@@ -8,45 +8,40 @@ using WebAdventureAPI.Models.DbModels;
 using WebAdventureAPI.Models.Dtos;
 using WebAdventureAPI.Models.Responses;
 using WebAdventureAPI.Models.Responses.Genres;
+using WebAdventureAPI.Models.Responses.Item;
 using WebAdventureAPI.Repositories;
 
 namespace WebAdventureAPI.Controllers
 {
-    [Route("api/genres")]
-    public class GenreController : Controller
+    [Route("api/itemtypes")]
+    public class ItemTypeController : Controller
     {
 
         private IWARepository repo;
+        private ItemTypeResponse response;
 
-        public GenreController(IWARepository repo)
+        public ItemTypeController(IWARepository repo)
         {
             this.repo = repo;
+            response = new ItemTypeResponse();
         }
 
         [HttpGet]
-        public IActionResult GetGenres()
+        public IActionResult GetItemTypes()
         {
-            List<Genre> genres = repo.GetAllGenres();
-            if (genres != null)
+            List<ItemType> itemTypes = repo.GetItemTypes();
+            if (itemTypes != null)
             {
-                List<GenreDto> genresDto = new List<GenreDto>();
-                foreach (Genre g in genres)
+                List<ItemTypeDto> itemTypesDto = new List<ItemTypeDto>();
+                foreach (ItemType i in itemTypes)
                 {
-                    genresDto.Add(
-                        new GenreDto
+                    itemTypesDto.Add(
+                        new ItemTypeDto
                         {
-                            Name = g.Descr
-                        }
-                    );
+                            Type = i.Type
+                        });
                 }
-                GenresResponse successResponse = new GenresResponse
-                {
-                    StatusText = "Genres returned successfully!",
-                    StatusCode = 200,
-                    Status = true,
-                    Genres = genresDto
-                };
-                return StatusCode(200, successResponse);
+                return StatusCode(200, response.AllItemTypeResponse(itemTypesDto));
             }
             else
             {
@@ -59,5 +54,6 @@ namespace WebAdventureAPI.Controllers
                 return StatusCode(500, errorResponse);
             }
         }
+
     }
 }
