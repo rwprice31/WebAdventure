@@ -6,8 +6,6 @@ import { BaseService } from './base.service';
 import { ConfigService } from './utils/config.service';
 
 import { Observable } from 'rxjs/Rx';
-
-
 import { IResponse } from '../../shared/interfaces/responses/response.interface';
 import { IUserRegistrationViewModel } from './../../shared/interfaces/view-models/user-registration-view-model.interface';
 import { IUser } from './../../shared/interfaces/models/user.interface';
@@ -35,9 +33,7 @@ import { IUserForgotPasswordViewModel } from "../../shared/interfaces/view-model
 export class UserService extends BaseService {
 
     private currentUser: IUser;
-
     private userSessionStorage = 'user';
-
     private baseUrl = '';
     private headers: HttpHeaders;
     private redirectUrl: string;
@@ -50,7 +46,7 @@ export class UserService extends BaseService {
     private updateUserRoute: string;
     
     constructor(private http: HttpClient,
-        private configService: ConfigService) {
+      private configService: ConfigService) {
         super();
         this.baseUrl = configService.getApiURI(); 
         this.registrationRoute = this.baseUrl + 'users/new';
@@ -83,6 +79,7 @@ export class UserService extends BaseService {
         let user: IUser = JSON.parse(sessionStorage.getItem(this.userSessionStorage));
         return user;
     }
+
 
     /**
      * @name logout
@@ -131,8 +128,8 @@ export class UserService extends BaseService {
             // console.log('IUserLoginResponse = ', res);
             if (res.status) {
                 // console.log('Setting current user equal to ', res.user);
-                this.setCurrentUserToSessionStorage(res.user);
-            }
+              this.setCurrentUserToSessionStorage(res.user);
+          }
             return res;
         })
         .catch(this.handleError);
