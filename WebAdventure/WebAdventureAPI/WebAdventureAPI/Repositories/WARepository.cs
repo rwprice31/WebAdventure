@@ -291,8 +291,10 @@ namespace WebAdventureAPI.Repositories
 
         public Game GetGame(int gameId)
         {
-            return (from g in context.Game
-                    where g.Id == gameId select g).FirstOrDefault();
+            var game = (from g in context.Game
+                       where g.Id == gameId
+                       select g).FirstOrDefault();
+            return game;
         }
 
         public async Task<WAUser> GetGameAuthor(Game game)
@@ -321,45 +323,49 @@ namespace WebAdventureAPI.Repositories
                     select i.Descr).FirstOrDefault();
         }
 
-        public List<ItemInfoDto> GetItemsForGame(int gameId)
+        public List<ItemDto> GetItemsForGame(int gameId)
         {
             var items = (from i in context.Item
                          where i.GameId == gameId
                          select i).ToList();
 
-            var itemInfoList = new List<ItemInfoDto>();
+            var itemInfoList = new List<ItemDto>();
             foreach (var x in items)
             {
-                itemInfoList.Add(new ItemInfoDto
+                itemInfoList.Add(new ItemDto
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Descr = x.Descr,
                     Points = x.Points,
-                    Type = (from it in context.ItemType
-                            where it.Id == x.ItemTypeId
-                            select it.Type).FirstOrDefault()
+                    Type = new ItemTypeDto
+                    {
+                        Type = (from it in context.ItemType
+                                where it.Id == x.ItemTypeId
+                                select it.Type).FirstOrDefault()
+                    } 
                 });
             }
 
             return itemInfoList;
         }
 
-        public ItemInfoDto CreateItem(ItemCreationDto dto, int gameId)
+        public ItemDto CreateItem(ItemDto dto, int gameId)
         {
+            var itemTypeId = (from it in context.ItemType
+                              where dto.Type.Equals(it.Type)
+                              select it.Id).FirstOrDefault();
             context.Item.Add(new Item
             {
                 Name = dto.Name,
                 Descr = dto.Descr,
                 GameId = gameId,
                 Points = dto.Points,
-                ItemTypeId = (from it in context.ItemType
-                            where dto.Type.Equals(it.Type)
-                            select it.Id).FirstOrDefault()
+                ItemTypeId = itemTypeId
             });
             SaveChanges();
 
-            return new ItemInfoDto
+            return new ItemDto
             {
                 Id = (from i in context.Item
                       where i.Name == dto.Name && i.GameId == gameId && i.Descr == dto.Descr && i.Points == dto.Points
@@ -371,7 +377,7 @@ namespace WebAdventureAPI.Repositories
             };
         }
 
-        public ItemInfoDto UpdateItem(int itemId, ItemCreationDto dto)
+        public ItemDto UpdateItem(int itemId, ItemDto dto)
         {
             var oldItem = (from i in context.Item
                            where i.Id == itemId
@@ -381,12 +387,12 @@ namespace WebAdventureAPI.Repositories
             oldItem.Descr = dto.Descr;
             oldItem.Points = dto.Points;
             oldItem.ItemTypeId = (from it in context.ItemType
-                                where it.Type == dto.Type
+                                where it.Type == dto.Type.Type
                                 select it.Id).FirstOrDefault();
 
             SaveChanges();
 
-            return new ItemInfoDto
+            return new ItemDto
             {
                 Id = itemId,
                 Name = dto.Name,

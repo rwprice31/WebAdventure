@@ -9,9 +9,9 @@ namespace WebAdventureAPI.Models.Responses.Item
 {
     public class ItemResponse : Response
     {
-        public List<ItemInfoDto> Items { get; set; }
+        public List<ItemDto> Items { get; set; }
 
-        public ItemResponse AllItemsResponse(List<ItemInfoDto> list) => new ItemResponse
+        public ItemResponse AllItemsResponse(List<ItemDto> list) => new ItemResponse
         {
             Status = true,
             StatusCode = 201,
@@ -19,23 +19,23 @@ namespace WebAdventureAPI.Models.Responses.Item
             Items = list
         };
 
-        public ItemResponse CreateItemResponse(ItemInfoDto item) => new ItemResponse
+        public ItemResponse CreateItemResponse(ItemDto item) => new ItemResponse
         {
             Status = true,
             StatusText = "Item Created",
             StatusCode = 201,
-            Items = new List<ItemInfoDto>
+            Items = new List<ItemDto>
             {
                 item
             }
         };
 
-        public ItemResponse UpdateItemResponse(ItemInfoDto item) => new ItemResponse
+        public ItemResponse UpdateItemResponse(ItemDto item) => new ItemResponse
         {
             Status = true,
             StatusText = "Item Updated",
             StatusCode = 200,
-            Items = new List<ItemInfoDto>
+            Items = new List<ItemDto>
             {
                 item
             }

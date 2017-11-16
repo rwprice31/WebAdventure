@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebAdventureAPI.Models.Dtos
 {
-    public class ItemInfoDto
+    public class ItemDto
     {
         public int Id { get; set; }
 
@@ -14,7 +14,7 @@ namespace WebAdventureAPI.Models.Dtos
 
         public string Descr { get; set; }
 
-        public string Type { get; set; }
+        public ItemTypeDto Type { get; set; }
 
         public int Points { get; set; }
     }

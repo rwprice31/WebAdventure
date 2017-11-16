@@ -110,8 +110,7 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
       let room: IRoomUpdationViewModel = {
         id: this.roomId,
         name: this.roomInfoForm.controls['name'].value,
-        descr: this.roomInfoForm.controls['description'].value,
-        gameId: this.gameId
+        descr: this.roomInfoForm.controls['description'].value
       };
       this.roomService.updateRoom(room).subscribe(
         (res: IRoomUpdationResponse) => {

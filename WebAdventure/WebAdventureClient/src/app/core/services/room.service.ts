@@ -64,7 +64,7 @@ export class RoomService extends BaseService {
     }
 
     /**
-     * @name setupRoomRoute
+     * @name getRoomsRoute
      * @returns void
      * @description Attempts to retrieve the current editting game id from 
      * session storage, throws an error if not found. Sets up this.roomRoute

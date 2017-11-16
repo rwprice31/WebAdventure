@@ -15,7 +15,7 @@ using WebAdventureAPI.Repositories;
 namespace WebAdventureAPI.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/games/{gameId}/item")]
+    [Route("api/games/{gameId}/items")]
     public class ItemController : Controller
     {
         private IWARepository repo;
@@ -42,7 +42,7 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateItem([FromBody] ItemCreationDto dto, [FromRoute] int gameId)
+        public IActionResult CreateItem([FromBody] ItemDto dto, [FromRoute] int gameId)
         {
             try
             {
@@ -56,12 +56,12 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpPut("{itemId}")]
-        public IActionResult UpdateItem([FromRoute] int itemId, [FromBody] ItemCreationDto dto)
+        public IActionResult UpdateItem([FromRoute] int itemId, [FromBody] ItemDto dto)
         {
             try
             {
                 var item = repo.UpdateItem(itemId, dto);
-                return StatusCode(200, response.UpdateItemResponse(new ItemInfoDto
+                return StatusCode(200, response.UpdateItemResponse(new ItemDto
                 {
                     Id = item.Id,
                     Name = item.Name,
