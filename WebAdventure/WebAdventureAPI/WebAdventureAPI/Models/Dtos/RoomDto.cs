@@ -13,5 +13,7 @@ namespace WebAdventureAPI.Models.Dtos
         public string Name { get; set; }
 
         public string Descr { get; set; }
+
+        public int GameId { get; set; }
     }
 }

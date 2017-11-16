@@ -18,15 +18,23 @@ namespace WebAdventureAPI.Models.Responses.Room
             StatusCode = 201,
             StatusText = "Room deleted",
             Status = true,
-            Room = null,
+            Rooms = null,
         };
 
         public RoomResponses GetAllRoomsResponse(List<RoomDto> roomList) => new RoomResponses
         {
-            StatusText = "All rooms",
-            StatusCode = 201,
+            StatusText = "All room's successfully returned!",
+            StatusCode = 200,
             Status = true,
             Rooms = roomList
+        };
+
+        public RoomResponses GetRoomResponse(RoomDto room) => new RoomResponses
+        {
+            StatusText = "Room successfully found!",
+            StatusCode = 200,
+            Status = true,
+            Room = room
         };
 
         public RoomResponses CreateResponse(RoomDto room) => new RoomResponses
@@ -39,8 +47,8 @@ namespace WebAdventureAPI.Models.Responses.Room
 
         public RoomResponses UpdateResponse(RoomDto room) => new RoomResponses
         {
-            StatusText = "Game successfully updated!",
-            StatusCode = 204,
+            StatusText = "Room successfully updated!",
+            StatusCode = 200,
             Status = true,
             Room = room
         };

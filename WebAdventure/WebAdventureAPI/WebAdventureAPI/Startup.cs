@@ -1,26 +1,21 @@
-﻿using System;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Rewrite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using FluentValidation.AspNetCore;
-using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
-using System.Net;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using WebAdventureAPI.Models.Security;
+using WebAdventureAPI.Contexts;
 using WebAdventureAPI.Models;
-using Microsoft.AspNetCore.Identity;
+using WebAdventureAPI.Models.Security;
 using WebAdventureAPI.Repositories;
 using WebAdventureAPI.Services;
-using Microsoft.AspNetCore.Rewrite;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using WebAdventureAPI.Contexts;
 
 namespace WebAdventureAPI
 {
@@ -145,6 +140,7 @@ namespace WebAdventureAPI
             services.AddTransient<IEmailSender, AuthMessageSender>();
 
             services.Configure<AuthMessageSenderOptions>(config);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

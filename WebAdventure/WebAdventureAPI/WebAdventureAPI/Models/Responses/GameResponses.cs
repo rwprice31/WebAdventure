@@ -9,9 +9,33 @@ namespace WebAdventureAPI.Models.Responses
 {
     public class GameResponses : Response
     {
+
         public GameDto Game { get; set; }
 
-        public GameDto[] Games { get; set; }
+        public List<GameDto> Games { get; set; }
+
+
+        public GameResponses GameFoundResponse(GameDto game)
+        {
+            return new GameResponses
+            {
+                StatusText = "Game successfully found!",
+                StatusCode = 200,
+                Status = true,
+                Game = game
+            };
+        }
+
+        public GameResponses GamesFoundResponse(List<GameDto> games)
+        {
+            return new GameResponses
+            {
+                StatusText = "Game successfully found!",
+                StatusCode = 200,
+                Status = true,
+                Games = games
+            };
+        }
 
         public GameResponses CreateResponse(GameDto game)
         {
@@ -29,21 +53,28 @@ namespace WebAdventureAPI.Models.Responses
             return new GameResponses
             {
                 StatusText = "Game successfully updated!",
-                StatusCode = 204,
+                StatusCode = 200,
                 Status = true,
                 Game = game
             };
         }
 
-        public GameResponses AuthorsGamesFound(GameDto[] usersGames)
+        public GameResponses AuthorsGamesFound(List<GameDto> games)
         {
             return new GameResponses
             {
                 StatusText = "Author's games successfully found!",
                 StatusCode = 200,
                 Status = true,
-                Games = usersGames
+                Games = games
             };
         }
+
+        public GameResponses DeletGameResponse() => new GameResponses
+        {
+            Status = true,
+            StatusCode = 201,
+            StatusText = "Game Deleted"
+        };
     }
 }
