@@ -16,16 +16,10 @@ namespace WebAdventureAPI.Models.DbModels
 
         public int GameId { get; set; }
 
-        public string UserId { get; set; }
-
         public int Health { get; set; }
-
-        public int CurrentRoom { get; set; }
 
         public int Speed { get; set; }
 
-        public int Weapon { get; set; }
-
-        public int Defense { get; set; }
+        public int Attack { get; set; }
     }
 }

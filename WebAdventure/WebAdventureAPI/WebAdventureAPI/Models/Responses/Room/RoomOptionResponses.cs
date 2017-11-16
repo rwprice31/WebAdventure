@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebAdventureAPI.Models.DbModels;
 using WebAdventureAPI.Models.Dtos;
 
 namespace WebAdventureAPI.Models.Responses.Room
 {
     public class RoomOptionResponses : Response
     {
-        public List<RoomActionOutcomeInfoDto> Options { get; set; }
+        public List<ActionOutcomeInfoDto> Options { get; set; }
 
-        public RoomActionOutcomeDto Option { get; set; }
-
-        public RoomOptionResponses GetRoomOptionSuccess(List<RoomActionOutcomeInfoDto> options) => new RoomOptionResponses
+        public RoomOptionResponses GetRoomOptionSuccess(List<ActionOutcomeInfoDto> options) => new RoomOptionResponses
         {
             Status = true,
             StatusCode = 201,
@@ -21,12 +20,15 @@ namespace WebAdventureAPI.Models.Responses.Room
             Options = options
         };
 
-        public RoomOptionResponses GetCreateRoomOptionSuccess(RoomActionOutcomeDto option) => new RoomOptionResponses
+        public RoomOptionResponses GetCreateRoomOptionSuccess(ActionOutcomeInfoDto option) => new RoomOptionResponses
         {
             Status = true,
             StatusCode = 204,
             StatusText = "Option created successfully",
-            Option = option
+            Options = new List<ActionOutcomeInfoDto>
+            {
+                option
+            }
         };
 
         public RoomOptionResponses DeleteRoomOptionSuccess() => new RoomOptionResponses
