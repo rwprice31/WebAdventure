@@ -1,20 +1,16 @@
-using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Server.HttpSys;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.Dtos;
+using WebAdventureAPI.Models.Responses;
 using WebAdventureAPI.Models.Security;
 using WebAdventureAPI.Services;
-using WebAdventureAPI.Models.Responses;
 
 namespace WebAdventureAPI.Controllers
 {
@@ -23,7 +19,7 @@ namespace WebAdventureAPI.Controllers
     {
         private UserManager<WAUser> userManager;
         private SignInManager<WAUser> signInManager;
-        private IEmailSender emailSender;
+        private IEmailSender authMessageSender;
         private readonly IJwtFactory jwtFactory;
         private readonly JsonSerializerSettings serializerSettings;
         private readonly JwtIssuerOptions jwtOptions;
@@ -31,13 +27,13 @@ namespace WebAdventureAPI.Controllers
         public UserController(
             UserManager<WAUser> userManager,
             SignInManager<WAUser> signInManager,
-            IEmailSender emailSender,
+            IEmailSender authMessageSender,
             IJwtFactory jwtFactory,
             IOptions<JwtIssuerOptions> jwtOptions)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.emailSender = emailSender;
+            this.authMessageSender = authMessageSender;
             this.jwtFactory = jwtFactory;
             this.jwtOptions = jwtOptions.Value;
             serializerSettings = new JsonSerializerSettings
@@ -90,11 +86,6 @@ namespace WebAdventureAPI.Controllers
                     }
                 };
 
-                //var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                //var callbackUrl = Url.Action("Confirm Email", "Account",
-                //    new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                //await emailSender.SendEmailAsync(user.Email, "Confirm your account",
-                //$"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
                 return StatusCode(201, response);
             }
             else
@@ -117,6 +108,7 @@ namespace WebAdventureAPI.Controllers
                 var token = await userManager.GeneratePasswordResetTokenAsync(user);
                 var result = await userManager.ResetPasswordAsync(user, token, reset.NewPassword);
                 
+
                 if (result.Succeeded)
                 {
                     return StatusCode(200, new ResetPasswordResponse
@@ -132,6 +124,32 @@ namespace WebAdventureAPI.Controllers
                     return BadRequest("User not updated");
                 }
             }
+        }
+
+        [HttpPost("forgot")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotUserPassword([FromBody]ForgotPasswordDto forgot)
+        {
+            var user = await userManager.FindByEmailAsync(forgot.Email);
+            if (user == null)
+            {
+                return BadRequest("User does not exist");
+            }
+           
+            await authMessageSender.SendEmailAsync(forgot.Email, "Reset Password",
+                       "Please reset your password by <a href='http://localhost:4200/resetpassword'>clicking here</a>.");
+               
+          
+            //return new OkObjectResult(true);
+            return StatusCode(200, new ForgotPasswordResponse
+            {
+                User = new UserDto
+                {
+
+                }
+            });
+
+
         }
 
         [HttpPost("login")]
@@ -156,42 +174,7 @@ namespace WebAdventureAPI.Controllers
             });
         }
 
-        [HttpPut("update")]
-        [AllowAnonymous]
-        public async Task<IActionResult> UpdateUser([FromBody] NewUserDto newUser)
-        {
-            
-            var user = userManager.Users.FirstOrDefault(x => x.Email == newUser.Email);
-            if (user != null)
-            {
-                return StatusCode(400, ErrorResponse.CustomErrorCode(400, "User does not exist."));
-            }
-
-            var result = await userManager.CreateAsync(new WAUser
-            {              
-                Email = newUser.Email
-            },
-            newUser.Password);
-
-            if (result.Succeeded)
-            {
-                user = userManager.Users.FirstOrDefault(x => x.UserName == newUser.Username);
-
-                var response = "Password Update Successfully.";
-
-
-                //var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                //var callbackUrl = Url.Action("Confirm Email", "Account",
-                //    new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                //await emailSender.SendEmailAsync(user.Email, "Confirm your account",
-                //$"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
-                return StatusCode(201, response);
-            }
-            else
-            {
-                return StatusCode(500, ErrorResponse.ServerError);
-            }
-        }
+       
 
         private async Task<(ClaimsIdentity, WAUser)> GetClaimsIdentity(LoginDto loginDto)
         {
