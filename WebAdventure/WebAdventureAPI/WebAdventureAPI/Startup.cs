@@ -26,11 +26,19 @@ namespace WebAdventureAPI
 {
     public class Startup
     {
+        #region --Private Variables--
         private IHostingEnvironment env;
         private IConfigurationRoot config;
         private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
         private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
+        private string _testSecret = null;
+        #endregion
 
+        #region -- Public Properties --
+        public IConfigurationRoot Configuration { get; }
+        #endregion
+
+        #region --Constructor
         public Startup(IHostingEnvironment env)
         {
             this.env = env;
@@ -41,6 +49,7 @@ namespace WebAdventureAPI
                 .AddEnvironmentVariables();
             config = builder.Build();
         }
+        #endregion
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -139,9 +148,12 @@ namespace WebAdventureAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
-            WAContext waContext)
+        public void Configure(IApplicationBuilder app, 
+                              IHostingEnvironment env, 
+                              ILoggerFactory loggerFactory,
+                              WAContext waContext)
         {
+
             loggerFactory.AddConsole();
 
             if (env.IsDevelopment())

@@ -20,6 +20,8 @@ import { IUserLoginResponse } from './../../shared/interfaces/responses/user-log
 import { IUserResetPassword } from "../../shared/interfaces/user-resetPassword.interface";
 import { IUserResetPasswordViewModel } from "../../shared/interfaces/view-models/IUser-resetpassword-view-model";
 import { IUserResetPasswordResponse } from "../../shared/interfaces/responses/reset-password-response";
+import { IUserForgotPasswordResponse } from "../../shared/interfaces/responses/forgot-password-response";
+import { IUserForgotPasswordViewModel } from "../../shared/interfaces/view-models/IUser-forgotpassword-view-model";
 
 @Injectable()
 export class UserService extends BaseService {
@@ -34,6 +36,7 @@ export class UserService extends BaseService {
     private loginRoute: string;
     private logoutRoute: string;
     private resetPasswordRoute: string;
+    private forgotPasswordRoute: string;
     private updateUserRoute: string;
     
     constructor(private http: HttpClient,
@@ -43,6 +46,7 @@ export class UserService extends BaseService {
         this.registrationRoute = this.baseUrl + 'users/new';
         this.loginRoute = this.baseUrl + 'users/login';
         this.logoutRoute = this.baseUrl + 'users/logout';
+        this.forgotPasswordRoute = this.baseUrl + 'users/forgot';
         this.resetPasswordRoute = this.baseUrl + 'users/reset';
         this.updateUserRoute = this.baseUrl + 'users/update';
         this.headers = configService.getHeaders();   
@@ -121,6 +125,22 @@ export class UserService extends BaseService {
             return res;
           }
          
+        })
+        .catch(this.handleError);
+    }
+
+    forgotPassword(user: IUserForgotPasswordViewModel): Observable<IResponse> {
+
+      console.log('Forgot password = ' + JSON.stringify(user));
+      console.log('Sending POST to ' + this.baseUrl + 'users/forgot');
+      let body = JSON.stringify(user);
+      return this.http.post<IUserForgotPasswordResponse>(this.forgotPasswordRoute, user, { headers: this.headers })
+        .map((res: IUserForgotPasswordResponse) => {
+          if (res.status) {
+            console.log('IUserResetPasswordResponse = ', res);
+            return res;
+          }
+
         })
         .catch(this.handleError);
     }

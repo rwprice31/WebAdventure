@@ -11,13 +11,15 @@ import { BrowseGamesComponent } from './browse-games/browse-games.component';
 import { SignupComponent } from './signup/signup.component';
 import { LoginComponent } from './login/login.component';
 import { ResetPasswordComponent } from './resetpassword/resetpassword.component';
+import { ForgotPasswordComponent } from './forgotpassword/forgotpassword.component';
 
 const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'login', canActivate: [NotAlreadyLoggedInGuard], component: LoginComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'games', component: BrowseGamesComponent },
-    { path: 'resetpassword', component: ResetPasswordComponent},
+    { path: 'resetpassword', component: ResetPasswordComponent },
+    { path: 'forgotpassword', component: ForgotPasswordComponent },
     { 
         path: 'my-games',
         canActivate: [AuthGuard],
@@ -35,6 +37,6 @@ const routes: Routes = [
     exports: [ RouterModule ]
 })
 export class AppRoutingModule {
-    static components = [ HomeComponent, LoginComponent, SignupComponent, ResetPasswordComponent,
+  static components = [HomeComponent, LoginComponent, SignupComponent, ResetPasswordComponent, ForgotPasswordComponent,
         BrowseGamesComponent, PageNotFoundComponent ];
  }
