@@ -9,6 +9,9 @@ import { IToastr } from '../../../../shared/interfaces/external-libraries/toastr
 import { TOASTR_TOKEN } from '../../../../core/services/external-libraries/toastr.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IItemTypesResponse } from '../../../../shared/interfaces/responses/items/item-type.response.interface';
+import { IItemCreationViewModel } from '../../../../shared/interfaces/view-models/items/item-creation-view-model.interface';
+import { IItemCreationResponse } from '../../../../shared/interfaces/responses/items/item-creation-response.interface';
+import { IItemResponse } from '../../../../shared/interfaces/responses/items/item-response.interface';
 
 @Component({
   templateUrl: './item.component.html',
@@ -34,6 +37,7 @@ export class ItemComponent implements OnInit {
 
     ngOnInit(): void {
         this.retrieveItemTypes();
+        this.retrieveItem();
     }
 
     private buildForm(): void {
@@ -41,7 +45,7 @@ export class ItemComponent implements OnInit {
             name: ['', Validators.required],
             description: [''],
             type: ['', Validators.required],
-            points: ['']
+            points: ['', Validators.pattern(/^\d+$/)]
           });
     }
 
@@ -54,6 +58,44 @@ export class ItemComponent implements OnInit {
                 this.toastr.error(data.itemTypesResponse.statusText);
             }
           });        
+    }
+
+    private submit(): void {
+        let item: IItemCreationViewModel = {
+            id: 0,
+            name: this.itemInfoForm.controls['name'].value,
+            descr: this.itemInfoForm.controls['description'].value,
+            type: {
+                type: this.itemInfoForm.controls['type'].value
+            },
+            points: this.itemInfoForm.controls['points'].value
+        };
+        this.itemService.createItem(item).subscribe(
+            (res: IItemCreationResponse) => {
+                if (res.status) {
+                    this.toastr.success(res.statusText);
+                    this.router.navigate(['../'], { relativeTo: this.route });
+                } else {
+                    this.toastr.error(res.statusText);
+                }
+            }
+        );
+    }
+
+    private retrieveItem(): void {
+        this.route.data.subscribe( (data: { itemResponse: IItemResponse }) => {
+              if (data.itemResponse.status) {
+                  this.item = data.itemResponse.item;
+                  this.setFormValues();
+                  console.log('This item = ' + JSON.stringify(this.item));
+              } else {
+                  this.toastr.error(data.itemResponse.statusText);
+              }
+            });
+    }
+
+    private setFormValues(): void {
+
     }
 
 }

@@ -352,9 +352,7 @@ namespace WebAdventureAPI.Repositories
 
         public ItemDto CreateItem(ItemDto dto, int gameId)
         {
-            var itemTypeId = (from it in context.ItemType
-                              where dto.Type.Equals(it.Type)
-                              select it.Id).FirstOrDefault();
+            var itemTypeId = context.ItemType.Where(i => i.Type.ToLower().Equals(dto.Type.Type.ToLower())).FirstOrDefault().Id;
             context.Item.Add(new Item
             {
                 Name = dto.Name,

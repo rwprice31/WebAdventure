@@ -21,6 +21,7 @@ import { IItemUpdationViewModel } from '../../shared/interfaces/view-models/item
 import { IItemUpdationResponse } from '../../shared/interfaces/responses/items/item-updation-response.interface';
 import { IItemDeletionViewModel } from '../../shared/interfaces/view-models/items/item-deletion-view-model.interface';
 import { IItemDeletionResponse } from '../../shared/interfaces/responses/items/item-deletion-response.interface';
+import { IItemsResponse } from '../../shared/interfaces/responses/items/items-response.interface';
 
 /**
  * @class ItemService
@@ -53,7 +54,7 @@ export class ItemService extends BaseService {
      * @returns void
      * @description Sets the currently editting item id to session storage.
      */  
-    setCurrentlyEdittingRoomToSessionStorage(itemId: number): void {
+    setCurrentlyEdittingItemToSessionStorage(itemId: number): void {
         sessionStorage.setItem(this.itemIdCurrentlyEdittingInSessionStorageKey, itemId.toString());
     }
 
@@ -154,6 +155,23 @@ export class ItemService extends BaseService {
             console.log('IItemDeletionResponse = ', res);
             return res;
         });
+    }
+
+    /**
+     * @name getItems
+     * @returns Observable<IResponse> - an observable that the caller needs to subscribe. A caller should treat 
+     * a successful response as the type IItemsResponse.
+     * @description Sends a HTTP GET request to the API to retrieve all items
+     */
+    getItems(): Observable<IResponse> {
+        this.getItemsRoute();
+        console.log('Sending GET to ' + this.itemRoute);
+        return this.http.get<IItemsResponse>(this.itemRoute, { headers: this.headers})
+            .map( (res: IItemsResponse ) => {
+                // console.log('IItemsResponse = ', res);
+                return res;
+            })
+            .catch(this.handleError);
     }
 
 

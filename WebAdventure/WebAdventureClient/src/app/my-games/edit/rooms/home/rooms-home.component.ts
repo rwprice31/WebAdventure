@@ -48,13 +48,11 @@ export class RoomsHomeComponent implements OnInit {
 
         this.columns = [
           {
-              name: 'Name',
-              width: 1
+              name: 'Name'
           },
           {
-              name: 'Description',
-              width: 1
-          }  
+              name: 'Description'
+          },  
         ];
 
         this.rooms.forEach(room => {

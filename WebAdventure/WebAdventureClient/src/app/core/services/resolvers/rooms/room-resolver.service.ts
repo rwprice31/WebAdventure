@@ -9,12 +9,12 @@ import { Injectable, Inject } from '@angular/core';
 import { IRoomViewModel } from '../../../../shared/interfaces/view-models/rooms/room-view-model.interface';
 
 /**
- * @class GameRoomResolver
+ * @class RoomResolver
  * @description Resolver that provides a IRoomResponse observable to component's that are set
  * to resolve to this class.
  */
 @Injectable()
-export class GameRoomResolver implements Resolve<Observable<IRoomResponse>> {
+export class RoomResolver implements Resolve<Observable<IRoomResponse>> {
 
   private roomId: number;
 

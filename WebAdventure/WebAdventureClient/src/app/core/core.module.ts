@@ -1,6 +1,6 @@
-import { GameRoomResolver } from './services/resolvers/rooms/game-room-resolver.service';
+import { RoomResolver } from './services/resolvers/rooms/room-resolver.service';
 import { RoomService } from './services/room.service';
-import { GameRoomsResolver } from './services/resolvers/rooms/game-rooms-resolver.service';
+import { RoomsResolver } from './services/resolvers/rooms/rooms-resolver.service';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -29,6 +29,8 @@ import { ItemTypesResolver } from './services/resolvers/items/item-types-resolve
 import { GameGenresResolver } from './services/resolvers/genres/game-genre.resolver.service';
 import { ItemTypeService } from './services/item-type.service';
 import { ItemService } from './services/item.service';
+import { ItemResolver } from './services/resolvers/items/item-resolver.service';
+import { ItemsResolver } from './services/resolvers/items/items-resolver.service';
 
 export declare let toastr: IToastr;
 export declare let jQuery: any;
@@ -60,8 +62,10 @@ export declare let jQuery: any;
         DialogService,
         UsersCreatedGamesResolver,
         GameInfoResolver,
-        GameRoomsResolver,
-        GameRoomResolver,
+        RoomsResolver,
+        RoomResolver,
+        ItemResolver,
+        ItemsResolver,
         ItemTypesResolver,
         GameGenresResolver,
         { provide: TOASTR_TOKEN, useValue: toastr },

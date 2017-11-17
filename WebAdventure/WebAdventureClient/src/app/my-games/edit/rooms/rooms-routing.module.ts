@@ -1,11 +1,12 @@
-import { GameRoomResolver } from './../../../core/services/resolvers/rooms/game-room-resolver.service';
-import { GameRoomsResolver } from './../../../core/services/resolvers/rooms/game-rooms-resolver.service';
+import { RoomResolver } from './../../../core/services/resolvers/rooms/room-resolver.service';
+import { RoomsResolver } from './../../../core/services/resolvers/rooms/rooms-resolver.service';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { RoomsComponent } from './rooms.component';
 import { RoomsHomeComponent } from './home/rooms-home.component';
 import { RoomComponent } from './room/room.component';
+import { CanDeactivateGuard } from '../../../core/services/guards/can-deactivate-guard.service';
 
 // after /my-games/edit/:gameId/rooms/
 const routes: Routes = [
@@ -17,15 +18,16 @@ const routes: Routes = [
                 path: ':id',
                 component: RoomComponent,
                 resolve: {
-                    roomResponse: GameRoomResolver
-                }
+                    roomResponse: RoomResolver
+                },
+                canDeactivate: [ CanDeactivateGuard ]
             },
             {
                 path: '**', 
                 component: RoomsHomeComponent, // redirect all other paths to create info
                 // canDeactivate: [CanDeactivateGuard],
                 resolve: {
-                    roomsResponse: GameRoomsResolver 
+                    roomsResponse: RoomsResolver 
                 }
             }
         ]

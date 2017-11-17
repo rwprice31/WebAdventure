@@ -1,7 +1,9 @@
 import { IItemType } from './item-type.interface';
 
 export interface IItem {
+    id: number;
     name: string;
-    description: string;
-    itemType: IItemType;
+    descr: string;
+    type: IItemType;
+    points: number;
 }

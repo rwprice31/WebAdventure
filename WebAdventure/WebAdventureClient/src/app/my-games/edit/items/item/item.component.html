@@ -45,7 +45,16 @@
         <div class="form-group row">
             <label for="points" class="col-sm-2 col-form-label">Points</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" formControlName="points">
+                <input type="text" class="form-control" formControlName="points"
+                [ngClass]="{'has-error': (itemInfoForm.get('points').touched || 
+                itemInfoForm.get('points').dirty) && !itemInfoForm.get('points').valid }">
+                <span class="error-block" *ngIf="itemInfoForm.get('points').errors">
+                    <span class="error-block-text" *ngIf="(itemInfoForm.get('points').touched || 
+                        itemInfoForm.get('points').dirty) &&
+                        itemInfoForm.get('points').errors.pattern"> 
+                        Points must be a number
+                    </span>
+                </span>
             </div>
         </div>
         <button *ngIf="!this.item" type="submit" class="btn wa-button-dark" [disabled]="!itemInfoForm.valid"

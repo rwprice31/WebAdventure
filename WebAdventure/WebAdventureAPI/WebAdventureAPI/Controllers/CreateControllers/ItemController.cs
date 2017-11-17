@@ -49,7 +49,7 @@ namespace WebAdventureAPI.Controllers
                 var item = repo.CreateItem(dto, gameId);
                 return StatusCode(201, response.CreateItemResponse(item));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return StatusCode(500, ErrorResponse.ServerError);
             }
