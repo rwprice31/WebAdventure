@@ -61,11 +61,4 @@ export class ResetPasswordComponent implements OnInit{
         });
       }
 
-      //resets() {
-      //  let user: IUserUpdateViewModel = {
-      //    email: this.resetForm.controls['email'].value,
-      //    password: this.resetForm.controls['thisPassword'].value
-      //  };
-      //  this.userService.updatePassword(user);
-      //}
 }
