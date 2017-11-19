@@ -9,6 +9,8 @@ import { IItemTypesResponse } from '../../../../shared/interfaces/responses/item
 import { IItemsResponse } from '../../../../shared/interfaces/responses/items/items-response.interface';
 import { IItem } from '../../../../shared/interfaces/models/item.interface';
 import { SimpleTableColumn, SimpleTableRow } from '../../../../shared/components/simple-table/simple-table.component';
+import { IItemDeletionViewModel } from '../../../../shared/interfaces/view-models/items/item-deletion-view-model.interface';
+import { IItemDeletionResponse } from '../../../../shared/interfaces/responses/items/item-deletion-response.interface';
 
 @Component({
   templateUrl: './items-home.component.html',
@@ -38,7 +40,7 @@ export class ItemsHomeComponent implements OnInit {
         this.route.data.subscribe( (data: { itemsResponse: IItemsResponse }) => {
             if (data.itemsResponse.status) {
                 this.items = data.itemsResponse.items;
-                console.log('This items = ' + JSON.stringify(this.items));
+                // console.log('This items = ' + JSON.stringify(this.items));
             } else {
                 this.toastr.error(data.itemsResponse.statusText);
             }
@@ -46,6 +48,11 @@ export class ItemsHomeComponent implements OnInit {
     }
 
     private buildTableData(): void {
+
+        this.rows = [
+            
+        ];
+
         this.columns = [
             {
                 name: 'Name',
@@ -83,6 +90,36 @@ export class ItemsHomeComponent implements OnInit {
                     }
                 ]
             });
+        });
+    }
+
+    editClicked($event: SimpleTableRow) {
+        this.router.navigate([$event.rowID], { relativeTo: this.route});
+    }
+
+    deleteClicked($event: SimpleTableRow) {
+        this.dialogService.confirm('Do you really want to delete this item?').subscribe( 
+            (res: boolean) => {
+                if (res) {
+                    let room: IItemDeletionViewModel = {
+                        id: $event.rowID
+                    };
+                    this.itemService.deleteItem(room).subscribe( 
+                        (d_res: IItemDeletionResponse) => {
+                            if (d_res) {
+                                console.log('Items now equal = ' + d_res.items);
+                                this.items = d_res.items;
+                                this.buildTableData();
+                                this.toastr.success(d_res.statusText);
+                                
+                            } else {
+                                this.toastr.error(d_res.statusText);
+                            }   
+                        }
+                    );
+                } else {
+
+                }
         });
     }
 

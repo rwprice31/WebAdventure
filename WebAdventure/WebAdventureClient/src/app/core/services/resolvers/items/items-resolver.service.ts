@@ -20,7 +20,7 @@ export class ItemsResolver implements Resolve<Observable<IItemsResponse>> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IItemsResponse> {
       return this.itemService.getItems().map(
           (res: IItemsResponse) => {
-            console.log('IItemsResponse in resolver = ' + JSON.stringify(res));  
+            // console.log('IItemsResponse in resolver = ' + JSON.stringify(res));  
             return res;
           }
       );

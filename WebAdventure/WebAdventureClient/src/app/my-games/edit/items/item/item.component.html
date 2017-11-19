@@ -33,13 +33,13 @@
                     itemInfoForm.get('type').dirty) && !itemInfoForm.get('type').valid }">
                     <option *ngFor="let itemType of itemTypes" value="{{itemType.type}}">{{itemType.type}}</option>
                 </select>
-                <span class="error-block" *ngIf="itemInfoForm.get('type').errors">
+                <div class="error-block" *ngIf="itemInfoForm.get('type').errors">
                     <span class="error-block-text" *ngIf="(itemInfoForm.get('type').touched || 
                         itemInfoForm.get('type').dirty) &&
                         itemInfoForm.get('type').errors.required"> 
                         An item type selection is required.
                     </span>
-                </span>
+                </div>
             </div>
         </div>        
         <div class="form-group row">

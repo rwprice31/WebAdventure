@@ -8,6 +8,7 @@ import { ItemsHomeComponent } from './home/items-home.component';
 import { ItemTypesResolver } from '../../../core/services/resolvers/items/item-types-resolver.service';
 import { ItemResolver } from '../../../core/services/resolvers/items/item-resolver.service';
 import { ItemsResolver } from '../../../core/services/resolvers/items/items-resolver.service';
+import { CanDeactivateGuard } from '../../../core/services/guards/can-deactivate-guard.service';
 
 
 
@@ -23,14 +24,15 @@ const routes: Routes = [
                 resolve: {
                     itemTypesResponse: ItemTypesResolver,
                     itemResponse: ItemResolver 
-                }
+                },
+                canDeactivate: [CanDeactivateGuard],
             },
             {
                 path: '**', 
                 component: ItemsHomeComponent,
                 resolve: {
                     itemsResponse: ItemsResolver
-                } 
+                },
             }
         ]
     }

@@ -33,7 +33,21 @@ namespace WebAdventureAPI.Controllers
             try
             {
                 var items = repo.GetItemsForGame(gameId);
-                return StatusCode(201, response.AllItemsResponse(items));
+                return StatusCode(200, response.AllItemsResponse(items));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [HttpGet("{itemId}")]
+        public IActionResult GetItem([FromRoute] int itemId)
+        {
+            try
+            {
+                var item = repo.GetItemForGame(itemId);
+                return StatusCode(200, response.SingleItemResponse(item));
             }
             catch (Exception)
             {
@@ -75,12 +89,13 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpDelete("{itemId}")]
-        public IActionResult DeleteItem([FromRoute] int itemId)
+        public IActionResult DeleteItem([FromRoute] int gameId, [FromRoute] int itemId)
         {
             try
             {
                 repo.DeleteItem(itemId);
-                return StatusCode(201, response.DeleteItemResponse());
+                var items = repo.GetItemsForGame(gameId);
+                return StatusCode(201, response.DeleteItemResponse(items));
             }
             catch (Exception ex)
             {

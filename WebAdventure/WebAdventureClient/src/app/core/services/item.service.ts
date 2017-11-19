@@ -17,7 +17,7 @@ import { IItemViewModel } from '../../shared/interfaces/view-models/items/item-v
 import { IItemResponse } from '../../shared/interfaces/responses/items/item-response.interface';
 import { IItemCreationViewModel } from '../../shared/interfaces/view-models/items/item-creation-view-model.interface';
 import { IItemCreationResponse } from '../../shared/interfaces/responses/items/item-creation-response.interface';
-import { IItemUpdationViewModel } from '../../shared/interfaces/view-models/items/item-updation-view-mode.interface';
+import { IItemUpdationViewModel } from '../../shared/interfaces/view-models/items/item-updation-view-model.interface';
 import { IItemUpdationResponse } from '../../shared/interfaces/responses/items/item-updation-response.interface';
 import { IItemDeletionViewModel } from '../../shared/interfaces/view-models/items/item-deletion-view-model.interface';
 import { IItemDeletionResponse } from '../../shared/interfaces/responses/items/item-deletion-response.interface';
@@ -111,12 +111,12 @@ export class ItemService extends BaseService {
      */
     createItem(item: IItemCreationViewModel): Observable<IResponse> {
         this.getItemsRoute();
-        console.log('Body entering createItem = ' + JSON.stringify(item));
-        console.log('Sending POST to ' + this.itemRoute);
+        // console.log('Body entering createItem = ' + JSON.stringify(item));
+        // console.log('Sending POST to ' + this.itemRoute);
         let body = JSON.stringify(item);
         return this.http.post<IItemCreationResponse>(this.itemRoute, body, { headers: this.headers})
         .map( (res: IItemCreationResponse) => {
-            console.log('IItemCreationResponse ' + res);
+            // console.log('IItemCreationResponse ' + res);
             return res;
         });
     }
@@ -128,13 +128,13 @@ export class ItemService extends BaseService {
      * a successful response as the type IItemUpdationResponse.
      * @description Sends a HTTP PUT request to the API to update an item
      */
-    updateRoom(item: IItemUpdationViewModel): Observable<IResponse> {
+    updateItem(item: IItemUpdationViewModel): Observable<IResponse> {
         this.getItemsRoute();
         let route: string = this.itemRoute + '/' + item.id;
         let body = JSON.stringify(item);
         return this.http.put<IItemUpdationResponse>(route, body, { headers: this.headers })
         .map( (res: IItemUpdationResponse) => {
-            console.log('IItemUpdationResponse = ', res);
+            // console.log('IItemUpdationResponse = ', res);
             return res;
         });
     }
@@ -152,7 +152,7 @@ export class ItemService extends BaseService {
         let body = JSON.stringify(item);
         return this.http.delete<IItemDeletionResponse>(route, { headers: this.headers })
         .map( (res: IItemDeletionResponse) => {
-            console.log('IItemDeletionResponse = ', res);
+            // console.log('IItemDeletionResponse = ', res);
             return res;
         });
     }
@@ -165,7 +165,7 @@ export class ItemService extends BaseService {
      */
     getItems(): Observable<IResponse> {
         this.getItemsRoute();
-        console.log('Sending GET to ' + this.itemRoute);
+        // console.log('Sending GET to ' + this.itemRoute);
         return this.http.get<IItemsResponse>(this.itemRoute, { headers: this.headers})
             .map( (res: IItemsResponse ) => {
                 // console.log('IItemsResponse = ', res);

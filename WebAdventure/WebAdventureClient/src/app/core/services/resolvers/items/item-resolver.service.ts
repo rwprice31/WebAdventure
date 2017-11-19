@@ -31,7 +31,7 @@ export class ItemResolver implements Resolve<Observable<IItemResponse>> {
         };
         return this.itemService.getItem(item).map(
             (res: IItemResponse) => {
-            console.log('IItemResponse in resolver = ' + JSON.stringify(res));
+            // console.log('IItemResponse in resolver = ' + JSON.stringify(res));
             return res;
             }
         );

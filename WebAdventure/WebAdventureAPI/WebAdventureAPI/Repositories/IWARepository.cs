@@ -48,6 +48,8 @@ namespace WebAdventureAPI.Repositories
 
         List<ItemDto> GetItemsForGame(int gameId);
 
+        ItemDto GetItemForGame(int itemId);
+
         List<Room> GetRoomsForGame(int gameId);
 
         void SaveChanges();

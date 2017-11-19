@@ -45,10 +45,10 @@ export class EditGuard implements CanActivate {
             this.gameService.getGame(game).subscribe( 
                 (res: IGameResponse) => {
                    if (res.status) {
-                       console.log(res);
+                    //    console.log(res);
                        this.gameService.storeGameUsersCurrentlyEdittingInSessionStorage(res.game);
                    } else {
-                       this.toastr.error('Your game cannot be retrieved at the moment.');
+                       this.toastr.error(res.statusText);
                    }
             });
             return true;

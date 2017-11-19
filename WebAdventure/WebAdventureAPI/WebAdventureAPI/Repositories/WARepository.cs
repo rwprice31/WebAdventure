@@ -350,6 +350,22 @@ namespace WebAdventureAPI.Repositories
             return itemInfoList;
         }
 
+        public ItemDto GetItemForGame(int itemId)
+        {
+            var item = context.Item.Where(i => i.Id == itemId).First();
+            return new ItemDto
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Descr = item.Descr,
+                Points = item.Points,
+                Type = new ItemTypeDto
+                {
+                    Type = context.ItemType.Where(it => item.ItemTypeId == it.Id).First().Type
+                }
+            };
+        }
+
         public ItemDto CreateItem(ItemDto dto, int gameId)
         {
             var itemTypeId = context.ItemType.Where(i => i.Type.ToLower().Equals(dto.Type.Type.ToLower())).FirstOrDefault().Id;
@@ -407,6 +423,7 @@ namespace WebAdventureAPI.Repositories
                         select i).FirstOrDefault();
 
             context.Item.Remove(item);
+            context.SaveChanges();
         }
 
         public List<MonsterDto> GetMonstersForGame(int gameId)
