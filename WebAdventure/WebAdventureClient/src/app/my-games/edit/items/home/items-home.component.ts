@@ -50,7 +50,7 @@ export class ItemsHomeComponent implements OnInit {
     private buildTableData(): void {
 
         this.rows = [
-            
+
         ];
 
         this.columns = [
@@ -107,7 +107,7 @@ export class ItemsHomeComponent implements OnInit {
                     this.itemService.deleteItem(room).subscribe( 
                         (d_res: IItemDeletionResponse) => {
                             if (d_res) {
-                                console.log('Items now equal = ' + d_res.items);
+                                // console.log('Items now equal = ' + d_res.items);
                                 this.items = d_res.items;
                                 this.buildTableData();
                                 this.toastr.success(d_res.statusText);

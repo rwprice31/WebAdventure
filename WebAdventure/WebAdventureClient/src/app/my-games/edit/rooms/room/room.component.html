@@ -25,8 +25,8 @@
                 <input type="text" class="form-control" formControlName="description">
             </div>
         </div>
-        <button *ngIf="!this.room" type="submit" class="btn wa-button-dark" [disabled]="!roomInfoForm.valid"
+        <button *ngIf="!isUpdating" type="submit" class="btn wa-button-dark" [disabled]="!roomInfoForm.valid"
              [ngClass]="{'invalid-button': !roomInfoForm.valid }">Create</button>
-        <button *ngIf="this.room" type="submit" class="btn wa-button-dark" [disabled]="!roomInfoForm.valid"
+        <button *ngIf="isUpdating" type="submit" class="btn wa-button-dark" [disabled]="!roomInfoForm.valid"
              [ngClass]="{'invalid-button': !roomInfoForm.valid }">Update</button>
     </form>

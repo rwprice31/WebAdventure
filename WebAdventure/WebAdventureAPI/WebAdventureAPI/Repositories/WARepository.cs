@@ -154,25 +154,8 @@ namespace WebAdventureAPI.Repositories
 
         public void DeleteRoom(int id)
         {
-            var actionOutcome = (from ro in context.ActionOutcome
-                                 join a in context.Action on ro.ActionId equals a.Id
-                                 join o in context.Outcome on ro.OutcomeId equals o.Id
-                                 where a.RoomId == id && o.RoomId == id
-                                 select ro).ToList();
-
-            foreach (var x in actionOutcome)
-            {
-                context.ActionOutcome.Remove(x);
-                context.Action.Remove((from a in context.Action
-                                       where a.Id == x.ActionId
-                                       select a).FirstOrDefault());
-                context.Outcome.Remove((from o in context.Outcome
-                                        where o.Id == x.OutcomeId
-                                        select o).FirstOrDefault());
-                context.Room.Remove((from r in context.Room
-                                     where r.Id == id
-                                     select r).FirstOrDefault());
-            }
+            var room = context.Room.Where(r => r.Id == id).First();
+            context.Room.Remove(room);
             SaveChanges();
         }
 

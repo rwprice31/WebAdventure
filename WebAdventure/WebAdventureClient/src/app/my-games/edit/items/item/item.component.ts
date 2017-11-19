@@ -26,10 +26,12 @@ import { IItemUpdationResponse } from '../../../../shared/interfaces/responses/i
 export class ItemComponent implements OnInit, CanComponentDeactivate {
 
     private item: IItem;
+    private itemId: number;
     private itemInfoForm: FormGroup;
     private originalItemInfoForm: FormGroup;
     private itemTypes: IItemType[];
     private gameId: number;
+    private isUpdating: boolean;
 
     constructor(private formBuilder: FormBuilder,
         private itemService: ItemService,
@@ -43,7 +45,13 @@ export class ItemComponent implements OnInit, CanComponentDeactivate {
 
     ngOnInit(): void {
         this.retrieveItemTypes();
-        this.retrieveItem();
+        this.itemId = this.itemService.getCurrentEdittingItemFromSessionStorage();
+        if (this.itemId === 0) {
+            this.isUpdating = false;
+        } else {
+            this.isUpdating = true;
+            this.retrieveItem();
+        }
     }
 
     private buildForm(): void {
@@ -112,6 +120,8 @@ export class ItemComponent implements OnInit, CanComponentDeactivate {
         this.itemService.updateItem(item).subscribe(
             (res: IItemUpdationResponse) => {
                 if (res.status) {
+                    this.item = res.item;
+                    this.setFormValues();
                     this.toastr.success(res.statusText);
                     this.router.navigate(['../'], { relativeTo: this.route });
                 } else {
