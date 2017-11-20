@@ -46,15 +46,17 @@ export class RoomsHomeComponent implements OnInit {
 
     buildTableData() {
 
+        this.rows = [
+
+        ];
+
         this.columns = [
           {
-              name: 'Name',
-              width: 1
+              name: 'Name'
           },
           {
-              name: 'Description',
-              width: 1
-          }  
+              name: 'Description'
+          },  
         ];
 
         this.rooms.forEach(room => {
@@ -89,6 +91,8 @@ export class RoomsHomeComponent implements OnInit {
                         (d_res: IRoomDeletionResponse) => {
                             if (d_res) {
                                 this.toastr.success(d_res.statusText);
+                                this.rooms = d_res.rooms;
+                                this.buildTableData();
                             } else {
                                 this.toastr.error(d_res.statusText);
                             }   

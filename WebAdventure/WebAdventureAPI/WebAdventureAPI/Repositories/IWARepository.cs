@@ -20,7 +20,7 @@ namespace WebAdventureAPI.Repositories
 
         ActionOutcomeInfoDto CreateActionOutcome(int roomId, ActionOutcomeInfoDto dto, int gameId);
 
-        ItemInfoDto CreateItem(ItemCreationDto dto, int gameId);
+        ItemDto CreateItem(ItemDto dto, int gameId);
 
         void DeleteActionOutcome(ActionOutcomeDeleteDto dto);
 
@@ -44,7 +44,11 @@ namespace WebAdventureAPI.Repositories
 
         Genre GetGenreById(int id);
 
-        List<ItemInfoDto> GetItemsForGame(int gameId);
+        List<ItemType> GetItemTypes();
+
+        List<ItemDto> GetItemsForGame(int gameId);
+
+        ItemDto GetItemForGame(int itemId);
 
         List<Room> GetRoomsForGame(int gameId);
 
@@ -52,7 +56,7 @@ namespace WebAdventureAPI.Repositories
 
         GameDto UpdateGame(GameDto game, int gameId);
 
-        ItemInfoDto UpdateItem(int itemId, ItemCreationDto dto);
+        ItemDto UpdateItem(int itemId, ItemDto dto);
 
         void UpdateRoom(Room room);
 

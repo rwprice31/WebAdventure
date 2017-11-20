@@ -8,12 +8,12 @@ import { Resolve, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@a
 import { Injectable, Inject } from '@angular/core';
 
 /**
- * @class GameRoomsResolver
+ * @class RoomsResolver
  * @description Resolver that provides a IRoomsResponse observable to component's that are set
  * to resolve to this class.
  */
 @Injectable()
-export class GameRoomsResolver implements Resolve<Observable<IRoomsResponse>> {
+export class RoomsResolver implements Resolve<Observable<IRoomsResponse>> {
 
   constructor(private userService: UserService,
     private roomService: RoomService, 

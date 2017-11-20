@@ -4,7 +4,7 @@
 </div>
 
 <!-- Create a new room -->
-<button type="button" class="btn wa-button-dark" id="newRoomButton" [routerLink]="['0']">Create a new room</button>
+<button type="button" class="btn wa-button-dark editCreateButton" [routerLink]="['0']">Create a new room</button>
 
       
 <simple-table (edit)="editClicked($event)" (delete)="deleteClicked($event)" [columns]="columns" [rows]="rows"

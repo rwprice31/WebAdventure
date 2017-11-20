@@ -15,7 +15,7 @@ using WebAdventureAPI.Repositories;
 namespace WebAdventureAPI.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/games/{gameId}/item")]
+    [Route("api/games/{gameId}/items")]
     public class ItemController : Controller
     {
         private IWARepository repo;
@@ -33,7 +33,21 @@ namespace WebAdventureAPI.Controllers
             try
             {
                 var items = repo.GetItemsForGame(gameId);
-                return StatusCode(201, response.AllItemsResponse(items));
+                return StatusCode(200, response.AllItemsResponse(items));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [HttpGet("{itemId}")]
+        public IActionResult GetItem([FromRoute] int itemId)
+        {
+            try
+            {
+                var item = repo.GetItemForGame(itemId);
+                return StatusCode(200, response.SingleItemResponse(item));
             }
             catch (Exception)
             {
@@ -42,26 +56,26 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateItem([FromBody] ItemCreationDto dto, [FromRoute] int gameId)
+        public IActionResult CreateItem([FromBody] ItemDto dto, [FromRoute] int gameId)
         {
             try
             {
                 var item = repo.CreateItem(dto, gameId);
                 return StatusCode(201, response.CreateItemResponse(item));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return StatusCode(500, ErrorResponse.ServerError);
             }
         }
 
         [HttpPut("{itemId}")]
-        public IActionResult UpdateItem([FromRoute] int itemId, [FromBody] ItemCreationDto dto)
+        public IActionResult UpdateItem([FromRoute] int itemId, [FromBody] ItemDto dto)
         {
             try
             {
                 var item = repo.UpdateItem(itemId, dto);
-                return StatusCode(200, response.UpdateItemResponse(new ItemInfoDto
+                return StatusCode(200, response.UpdateItemResponse(new ItemDto
                 {
                     Id = item.Id,
                     Name = item.Name,
@@ -75,12 +89,13 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpDelete("{itemId}")]
-        public IActionResult DeleteItem([FromRoute] int itemId)
+        public IActionResult DeleteItem([FromRoute] int gameId, [FromRoute] int itemId)
         {
             try
             {
                 repo.DeleteItem(itemId);
-                return StatusCode(201, response.DeleteItemResponse());
+                var items = repo.GetItemsForGame(gameId);
+                return StatusCode(201, response.DeleteItemResponse(items));
             }
             catch (Exception ex)
             {

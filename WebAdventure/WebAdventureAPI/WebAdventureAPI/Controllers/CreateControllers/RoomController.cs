@@ -115,12 +115,25 @@ namespace WebAdventureAPI.Controllers
         }
 
         [HttpDelete("{roomId}")]
-        public IActionResult DeleteRoom([FromRoute] int roomId)
+        public IActionResult DeleteRoom([FromRoute] int gameId, [FromRoute] int roomId)
         {
             try
             {
                 repo.DeleteRoom(roomId);
-                return StatusCode(201, roomResponses.DeleteRoomResponse());
+                var rooms = repo.GetRoomsForGame(gameId);
+                var roomsDto = new List<RoomDto>();
+                foreach (var room in rooms)
+                {
+                    roomsDto.Add(
+                        new RoomDto
+                        {
+                            Id = room.Id,
+                            Name = room.Name,
+                            Descr = room.Name,
+                            GameId = room.GameId
+                        });
+                }
+                return StatusCode(201, roomResponses.DeleteRoomResponse(roomsDto));
             }
             catch (Exception)
             {

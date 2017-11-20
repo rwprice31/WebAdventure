@@ -46,7 +46,7 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
   }
 
   ngOnInit() {
-    this.getGenres();
+    this.retrieveGenreInfo();
     this.retrieveGameInfo();
   }
 
@@ -75,6 +75,16 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
         this.buildForm();
       } else {
         this.toastr.error(data.gameResponse.statusText);
+      }
+    });
+  }
+
+  retrieveGenreInfo() {
+    this.route.data.subscribe( (data: { genresResponse: IGenresResponse }) => {
+      if (data.genresResponse.status) {
+        this.genres = data.genresResponse.genres;
+      } else {
+        this.toastr.error(data.genresResponse.statusText);
       }
     });
   }

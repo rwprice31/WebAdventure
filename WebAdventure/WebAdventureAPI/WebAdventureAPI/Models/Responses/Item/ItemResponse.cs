@@ -9,43 +9,51 @@ namespace WebAdventureAPI.Models.Responses.Item
 {
     public class ItemResponse : Response
     {
-        public List<ItemInfoDto> Items { get; set; }
+        public List<ItemDto> Items { get; set; }
 
-        public ItemResponse AllItemsResponse(List<ItemInfoDto> list) => new ItemResponse
+        public ItemDto Item { get; set; }
+
+        public ItemResponse AllItemsResponse(List<ItemDto> list) => new ItemResponse
         {
             Status = true,
-            StatusCode = 201,
-            StatusText = "Got all items",
+            StatusCode = 200,
+            StatusText = "Successfully retrieved items!",
             Items = list
         };
 
-        public ItemResponse CreateItemResponse(ItemInfoDto item) => new ItemResponse
+        public ItemResponse SingleItemResponse(ItemDto item) => new ItemResponse
         {
             Status = true,
-            StatusText = "Item Created",
-            StatusCode = 201,
-            Items = new List<ItemInfoDto>
-            {
-                item
-            }
-        };
-
-        public ItemResponse UpdateItemResponse(ItemInfoDto item) => new ItemResponse
-        {
-            Status = true,
-            StatusText = "Item Updated",
             StatusCode = 200,
-            Items = new List<ItemInfoDto>
+            StatusText = "Successfully retrieved item!",
+            Item = item
+        };
+
+        public ItemResponse CreateItemResponse(ItemDto item) => new ItemResponse
+        {
+            Status = true,
+            StatusText = "Item successfully created!",
+            StatusCode = 201,
+            Item = item
+        };
+
+        public ItemResponse UpdateItemResponse(ItemDto item) => new ItemResponse
+        {
+            Status = true,
+            StatusText = "Item successfully updated!",
+            StatusCode = 200,
+            Items = new List<ItemDto>
             {
                 item
             }
         };
 
-        public ItemResponse DeleteItemResponse() => new ItemResponse
+        public ItemResponse DeleteItemResponse(List<ItemDto> items) => new ItemResponse
         {
             Status = true,
-            StatusCode = 201,
-            StatusText = "Item Deleted"
+            StatusCode = 200,
+            StatusText = "Item successfully deleted!",
+            Items = items
         };
     }
 }

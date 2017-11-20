@@ -154,25 +154,8 @@ namespace WebAdventureAPI.Repositories
 
         public void DeleteRoom(int id)
         {
-            var actionOutcome = (from ro in context.ActionOutcome
-                                 join a in context.Action on ro.ActionId equals a.Id
-                                 join o in context.Outcome on ro.OutcomeId equals o.Id
-                                 where a.RoomId == id && o.RoomId == id
-                                 select ro).ToList();
-
-            foreach (var x in actionOutcome)
-            {
-                context.ActionOutcome.Remove(x);
-                context.Action.Remove((from a in context.Action
-                                       where a.Id == x.ActionId
-                                       select a).FirstOrDefault());
-                context.Outcome.Remove((from o in context.Outcome
-                                        where o.Id == x.OutcomeId
-                                        select o).FirstOrDefault());
-                context.Room.Remove((from r in context.Room
-                                     where r.Id == id
-                                     select r).FirstOrDefault());
-            }
+            var room = context.Room.Where(r => r.Id == id).First();
+            context.Room.Remove(room);
             SaveChanges();
         }
 
@@ -291,8 +274,10 @@ namespace WebAdventureAPI.Repositories
 
         public Game GetGame(int gameId)
         {
-            return (from g in context.Game
-                    where g.Id == gameId select g).FirstOrDefault();
+            var game = (from g in context.Game
+                       where g.Id == gameId
+                       select g).FirstOrDefault();
+            return game;
         }
 
         public async Task<WAUser> GetGameAuthor(Game game)
@@ -321,45 +306,63 @@ namespace WebAdventureAPI.Repositories
                     select i.Descr).FirstOrDefault();
         }
 
-        public List<ItemInfoDto> GetItemsForGame(int gameId)
+        public List<ItemDto> GetItemsForGame(int gameId)
         {
             var items = (from i in context.Item
                          where i.GameId == gameId
                          select i).ToList();
 
-            var itemInfoList = new List<ItemInfoDto>();
+            var itemInfoList = new List<ItemDto>();
             foreach (var x in items)
             {
-                itemInfoList.Add(new ItemInfoDto
+                itemInfoList.Add(new ItemDto
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Descr = x.Descr,
                     Points = x.Points,
-                    Type = (from it in context.ItemType
-                            where it.Id == x.ItemTypeId
-                            select it.Type).FirstOrDefault()
+                    Type = new ItemTypeDto
+                    {
+                        Type = (from it in context.ItemType
+                                where it.Id == x.ItemTypeId
+                                select it.Type).FirstOrDefault()
+                    } 
                 });
             }
 
             return itemInfoList;
         }
 
-        public ItemInfoDto CreateItem(ItemCreationDto dto, int gameId)
+        public ItemDto GetItemForGame(int itemId)
         {
+            var item = context.Item.Where(i => i.Id == itemId).First();
+            return new ItemDto
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Descr = item.Descr,
+                Points = item.Points,
+                Type = new ItemTypeDto
+                {
+                    Type = context.ItemType.Where(it => item.ItemTypeId == it.Id).First().Type
+                }
+            };
+        }
+
+        public ItemDto CreateItem(ItemDto dto, int gameId)
+        {
+            var itemTypeId = context.ItemType.Where(i => i.Type.ToLower().Equals(dto.Type.Type.ToLower())).FirstOrDefault().Id;
             context.Item.Add(new Item
             {
                 Name = dto.Name,
                 Descr = dto.Descr,
                 GameId = gameId,
                 Points = dto.Points,
-                ItemTypeId = (from it in context.ItemType
-                            where dto.Type.Equals(it.Type)
-                            select it.Id).FirstOrDefault()
+                ItemTypeId = itemTypeId
             });
             SaveChanges();
 
-            return new ItemInfoDto
+            return new ItemDto
             {
                 Id = (from i in context.Item
                       where i.Name == dto.Name && i.GameId == gameId && i.Descr == dto.Descr && i.Points == dto.Points
@@ -371,7 +374,7 @@ namespace WebAdventureAPI.Repositories
             };
         }
 
-        public ItemInfoDto UpdateItem(int itemId, ItemCreationDto dto)
+        public ItemDto UpdateItem(int itemId, ItemDto dto)
         {
             var oldItem = (from i in context.Item
                            where i.Id == itemId
@@ -381,12 +384,12 @@ namespace WebAdventureAPI.Repositories
             oldItem.Descr = dto.Descr;
             oldItem.Points = dto.Points;
             oldItem.ItemTypeId = (from it in context.ItemType
-                                where it.Type == dto.Type
+                                where it.Type == dto.Type.Type
                                 select it.Id).FirstOrDefault();
 
             SaveChanges();
 
-            return new ItemInfoDto
+            return new ItemDto
             {
                 Id = itemId,
                 Name = dto.Name,
@@ -403,6 +406,7 @@ namespace WebAdventureAPI.Repositories
                         select i).FirstOrDefault();
 
             context.Item.Remove(item);
+            context.SaveChanges();
         }
 
         public List<MonsterDto> GetMonstersForGame(int gameId)
@@ -567,6 +571,13 @@ namespace WebAdventureAPI.Repositories
 
             context.Game.Remove(game);
             SaveChanges();
+        }
+
+        public List<ItemType> GetItemTypes()
+        {
+            var itemTypes = (from i in context.ItemType
+                             select i).ToList();
+            return itemTypes;
         }
     }
 }

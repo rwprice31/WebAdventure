@@ -13,12 +13,12 @@ namespace WebAdventureAPI.Models.Responses.Room
 
         public List<RoomDto> Rooms { get; set; }
 
-        public RoomResponses DeleteRoomResponse() => new RoomResponses
+        public RoomResponses DeleteRoomResponse(List<RoomDto> roomList) => new RoomResponses
         {
             StatusCode = 201,
-            StatusText = "Room deleted",
+            StatusText = "Room successfully deleted!",
             Status = true,
-            Rooms = null,
+            Rooms = roomList,
         };
 
         public RoomResponses GetAllRoomsResponse(List<RoomDto> roomList) => new RoomResponses

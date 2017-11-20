@@ -30,6 +30,7 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
     private confirmNavigation: boolean;
     private roomId: number;
     private gameId: number;
+    private isUpdating: boolean;
   
     constructor(private formBuilder: FormBuilder,
       private roomService: RoomService,
@@ -44,8 +45,10 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
     ngOnInit() {
       this.roomId = this.roomService.getCurrentEdittingRoomFromSessionStorage();
       if (this.roomId === 0) {
-        this.room = null;
+        // this.room = null;
+        this.isUpdating = false;
       } else {
+        this.isUpdating = true;
         this.retrieveRoom();
       }
       this.gameId = this.gameService.getGameIdUsersCurrentlyEdittingFromSessionStorage();
@@ -98,6 +101,8 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
         (res: IRoomCreationResponse) => {
           if (res.status) {
             // console.log('Success! res = ' + res);
+            this.room = res.room;
+            this.setFormValues();
             this.toastr.success(res.statusText);
             this.router.navigate(['../'], { relativeTo: this.route});
           } else {
@@ -110,8 +115,7 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
       let room: IRoomUpdationViewModel = {
         id: this.roomId,
         name: this.roomInfoForm.controls['name'].value,
-        descr: this.roomInfoForm.controls['description'].value,
-        gameId: this.gameId
+        descr: this.roomInfoForm.controls['description'].value
       };
       this.roomService.updateRoom(room).subscribe(
         (res: IRoomUpdationResponse) => {
@@ -119,6 +123,7 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
             this.room = res.room;
             this.setFormValues();
             this.toastr.success(res.statusText);
+            this.router.navigate(['../'], { relativeTo: this.route });
           } else {
             this.toastr.error(res.statusText);
           }

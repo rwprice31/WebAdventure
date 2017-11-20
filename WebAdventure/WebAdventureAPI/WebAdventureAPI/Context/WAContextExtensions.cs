@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebAdventureAPI.Models;
+using WebAdventureAPI.Models.DbModels;
 
 namespace WebAdventureAPI.Contexts
 {
@@ -15,8 +16,33 @@ namespace WebAdventureAPI.Contexts
                 context.Genre.AddRange(genres);
             }
 
+            if (!context.ItemType.Any())
+            {
+                var itemTypes = SeedDataForItemTypes();
+                context.ItemType.AddRange(itemTypes);
+            }
+
             context.SaveChanges();
 
+        }
+
+        private static List<ItemType> SeedDataForItemTypes()
+        {
+            return new List<ItemType>()
+            {
+                new ItemType
+                {
+                    Type = "Health"
+                },
+                new ItemType
+                {
+                    Type = "Defense"
+                },
+                new ItemType
+                {
+                    Type="Weapon"
+                }
+            };
         }
 
         private static List<Genre> SeedDataForGenres()
@@ -41,6 +67,6 @@ namespace WebAdventureAPI.Contexts
                 }
             };
         }
-
+ 
     }
 }
