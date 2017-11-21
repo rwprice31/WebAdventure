@@ -8,6 +8,7 @@ import { EditComponent } from './edit.component';
 import { GameInfoComponent } from './game-info/game-info.component';
 import { GameInfoResolver } from '../../core/services/resolvers/games/edit/game-info-resolver.service';
 import { GameGenresResolver } from '../../core/services/resolvers/genres/game-genre.resolver.service';
+import { PlayerOptionsComponent } from './player-info/player-options.component';
 
 // path's after /create/
 const routes: Routes = [
@@ -23,6 +24,10 @@ const routes: Routes = [
             {
                 path: 'items',
                 loadChildren: 'app/my-games/edit/items/items.module#ItemsModule'
+            },
+            {
+                path: 'player-options',
+                component: PlayerOptionsComponent
             },
             {
                 path: '**', 
@@ -45,5 +50,5 @@ const routes: Routes = [
     exports: [ RouterModule ]
 })
 export class EditRoutingModule {
-    static components = [ EditComponent, GameInfoComponent ];
+    static components = [ EditComponent, GameInfoComponent, PlayerOptionsComponent ];
  }
