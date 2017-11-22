@@ -31,6 +31,7 @@ import { ItemTypeService } from './services/item-type.service';
 import { ItemService } from './services/item.service';
 import { ItemResolver } from './services/resolvers/items/item-resolver.service';
 import { ItemsResolver } from './services/resolvers/items/items-resolver.service';
+import { PlayerOptionsService } from './services/player-options.service';
 
 export declare let toastr: IToastr;
 export declare let jQuery: any;
@@ -55,6 +56,7 @@ export declare let jQuery: any;
         RoomService,
         ItemTypeService,
         ItemService,
+        PlayerOptionsService,
         AuthGuard,
         NotAlreadyLoggedInGuard,
         CanDeactivateGuard,

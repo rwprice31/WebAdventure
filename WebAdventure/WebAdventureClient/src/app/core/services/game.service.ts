@@ -144,7 +144,7 @@ export class GameService extends BaseService {
      */
     getGame(game: IGameViewModel): Observable<IResponse> {
         let route: string = this.gameRoute + '/' + game.gameId;
-        console.log('Sending GET to ' + route);
+        // console.log('Sending GET to ' + route);
         return this.http.get<IGameResponse>(route, { headers: this.headers})
         .map( (res: IGameResponse ) => {
             return res;
@@ -197,7 +197,7 @@ export class GameService extends BaseService {
      * @description Sends a HTTP POST request to the API to create a game
      */
     createGame(game: IGameCreationViewModel): Observable<IResponse> {
-        // console.log('Body entering saveGame = ' + JSON.stringify(game));
+        // console.log('Body entering createGame = ' + JSON.stringify(game));
         // console.log('Sending POST to ' + this.gameRoute);
         let body = JSON.stringify(game);
         return this.http.post<IGameCreationResponse>(this.gameRoute, body, { headers: this.headers })

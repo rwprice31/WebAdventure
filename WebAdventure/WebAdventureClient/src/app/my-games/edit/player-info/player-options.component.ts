@@ -30,14 +30,14 @@ export class PlayerOptionsComponent implements OnInit, CanComponentDeactivate  {
     }
 
     private retrievePlayerOptionsInfo() {
-        
+        this.buildForm();
     }
 
     private buildForm() {
         this.playerInfoForm = this.formBuilder.group({
-            health: ['', Validators.required],
-            speed: ['', Validators.required],
-            attack: ['', Validators.required]
+            health: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+            speed: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+            attack: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
         });
         this.setFormValues();
     }
