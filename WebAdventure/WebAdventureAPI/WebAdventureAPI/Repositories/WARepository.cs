@@ -581,5 +581,115 @@ namespace WebAdventureAPI.Repositories
                              select i).ToList();
             return itemTypes;
         }
+
+        public List<ItemDto> GetItemsForRoom(int roomId)
+        {
+            return (from ri in context.RoomItem
+                    join i in context.Item on ri.ItemId equals i.Id
+                    where ri.RoomId == roomId
+                    select new ItemDto
+                    {
+                        Id = i.Id,
+                        Name = i.Name,
+                        Descr = i.Descr,
+                        Points = i.Points,
+                        Type = (from it in context.ItemType
+                                where it.Id == i.ItemTypeId
+                                select new ItemTypeDto
+                                {
+                                    Type = it.Type
+                                }).FirstOrDefault()
+                    }).ToList();
+        }
+
+        public void AddItemToRoom(int roomId, int itemId)
+        {
+            context.RoomItem.Add(new RoomItem
+            {
+                ItemId = itemId,
+                RoomId = roomId
+            });
+            context.SaveChanges();
+        }
+
+        public void DeleteItemFromRoom(int roomId, int itemId)
+        {
+            context.RoomItem.Remove(new RoomItem
+            {
+                RoomId = roomId,
+                ItemId = itemId
+            });
+            context.SaveChanges();
+        }
+
+        public List<MonsterDto> GetMonstersForRoom(int roomId)
+        {
+            return (from rm in context.RoomMonster
+                    join m in context.Monster on rm.MonsterId equals m.Id
+                    where rm.RoomId == roomId
+                    select new MonsterDto
+                    {
+                        Id = m.Id,
+                        Name = m.Name,
+                        Descr = m.Descr,
+                        MaxDamage = m.MaxDamage,
+                        MinDamage = m.MinDamage,
+                        AttackDescr = m.AttackDescr,
+                        Health = m.Health,
+                        Speed = m.Speed
+                    }).ToList();
+        }
+
+        public void AddMonsterToRoom(int roomId, int monsterId)
+        {
+            context.RoomMonster.Add(new RoomMonster
+            {
+                RoomId = roomId,
+                MonsterId = monsterId
+            });
+            SaveChanges();
+        }
+
+        public void DeleteMonsterFromRoom(int roomId, int monsterId)
+        {
+            context.RoomMonster.Remove(new RoomMonster
+            {
+                RoomId = roomId,
+                MonsterId = monsterId
+            });
+            SaveChanges();
+        }
+
+        public List<ExitDto> GetExitsForRoom(int roomId)
+        {
+            return (from e in context.Exits
+                    join r in context.Room on e.NextRoomId equals r.Id
+                    where e.CurrentRoomId == roomId
+                    select new ExitDto
+                    {
+                        RoomId = e.CurrentRoomId,
+                        Name = r.Name
+                    }).ToList();
+        }
+
+        public void AddExitToRoom(int roomId, int exitRoomId)
+        {
+            context.Exits.Add(new Exits
+            {
+                CurrentRoomId = roomId,
+                NextRoomId = exitRoomId
+            });
+            SaveChanges();
+        }
+
+        public void DeleteExitFromRoom(int roomId, int exitRoomId)
+        {
+            context.Exits.Remove(new Exits
+            {
+                CurrentRoomId = roomId,
+                NextRoomId = exitRoomId
+            });
+            SaveChanges();
+        }
     }
 }

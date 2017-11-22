@@ -43,6 +43,12 @@ namespace WebAdventureAPI.Contexts
 
         public DbSet<ActionOutcome> ActionOutcome { get; set; }
 
+        public DbSet<RoomItem> RoomItem { get; set; }
+
+        public DbSet<RoomMonster> RoomMonster { get; set; }
+
+        public DbSet<Exits> Exits { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connectionString = config["ConnectionString:WAConnectionString"];

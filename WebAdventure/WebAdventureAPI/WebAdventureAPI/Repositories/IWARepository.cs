@@ -75,5 +75,23 @@ namespace WebAdventureAPI.Repositories
         PlayerDto UpdatePlayer(int id, PlayerCreationDto dto);
 
         void DeletePlayer(int id);
+
+        List<ItemDto> GetItemsForRoom(int roomId);
+
+        void AddItemToRoom(int roomId, int itemId);
+
+        void DeleteItemFromRoom(int roomId, int itemId);
+
+        List<MonsterDto> GetMonstersForRoom(int roomId);
+
+        void AddMonsterToRoom(int roomId, int monsterId);
+
+        void DeleteMonsterFromRoom(int roomId, int monsterId);
+
+        List<ExitDto> GetExitsForRoom(int roomId);
+
+        void AddExitToRoom(int roomId, int exitRoomId);
+
+        void DeleteExitFromRoom(int roomId, int exitRoomId);
     }
 }
