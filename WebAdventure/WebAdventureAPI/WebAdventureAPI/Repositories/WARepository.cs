@@ -43,7 +43,8 @@ namespace WebAdventureAPI.Repositories
                                  where ge.Id == g.GenreId
                                  select ge.Descr).FirstOrDefault(),
                         Name = g.Name,
-                        Descr = g.Descr
+                        Descr = g.Descr,
+                        IsPublic = g.IsPublic
                     }).FirstOrDefault();
         }
 
@@ -101,6 +102,7 @@ namespace WebAdventureAPI.Repositories
             old.Descr = game.Descr;
             old.GenreId = GetGenreByDescr(game.Genre).Id;
             old.Name = game.Name;
+            old.IsPublic = game.IsPublic;
 
             SaveChanges();
 
