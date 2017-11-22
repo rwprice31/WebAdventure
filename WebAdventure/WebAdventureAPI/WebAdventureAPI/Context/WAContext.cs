@@ -39,10 +39,6 @@ namespace WebAdventureAPI.Contexts
 
         public DbSet<ItemType> ItemType { get; set; }
 
-        public DbSet<Outcome> Outcome { get; set; }
-
-        public DbSet<ActionOutcome> ActionOutcome { get; set; }
-
         public DbSet<RoomItem> RoomItem { get; set; }
 
         public DbSet<RoomMonster> RoomMonster { get; set; }

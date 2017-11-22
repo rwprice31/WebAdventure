@@ -11,5 +11,9 @@ namespace WebAdventureAPI.Models.Dtos
         public int RoomId { get; set; }
 
         public string Name { get; set; }
+
+        public string Descr { get; set; }
+
+        public string Commands { get; set; }
     }
 }

@@ -161,119 +161,6 @@ namespace WebAdventureAPI.Repositories
             SaveChanges();
         }
 
-        public ActionOutcomeInfoDto CreateActionOutcome(int roomId, ActionOutcomeInfoDto dto, int gameId)
-        {
-            context.Action.Add(new Models.DbModels.Action
-            {
-                Descr = dto.Action.Descr,
-                GameId = gameId,
-                RoomId = roomId
-            });
-
-            context.Outcome.Add(new Outcome
-            {
-                RoomId = roomId,
-                GameId = gameId,
-                ItemId = dto.Outcome.ItemId,
-                MonsterId = dto.Outcome.MonsterId,
-                NextRoomId = dto.Outcome.NextRoomId
-            });
-
-            SaveChanges();
-
-            var action = (from a in context.Action
-                          where a.Descr == dto.Action.Descr && a.RoomId == roomId
-                          select a).FirstOrDefault();
-
-            var outcome = (from o in context.Outcome
-                           where o.RoomId == roomId && o.MonsterId == dto.Outcome.MonsterId && o.ItemId == dto.Outcome.ItemId && o.NextRoomId == dto.Outcome.NextRoomId
-                           select o).FirstOrDefault();
-
-            context.ActionOutcome.Add(new ActionOutcome
-            {
-                ActionId = action.Id,
-                OutcomeId = outcome.Id
-            });
-
-            SaveChanges();
-            return new ActionOutcomeInfoDto
-            {
-                Id = (from ao in context.ActionOutcome
-                      where ao.ActionId == action.Id && ao.OutcomeId == outcome.Id
-                      select ao.Id).FirstOrDefault(),
-                Action = action,
-                Outcome = new OutcomeInfoDto
-                {
-                    Id = outcome.Id,
-                    MonsterId = outcome.MonsterId,
-                    MonsterName = (from m in context.Monster
-                                   where m.Id == outcome.MonsterId
-                                   select m.Name).FirstOrDefault(),
-                    ItemId = outcome.ItemId,
-                    ItemName = (from i in context.Item
-                                where i.Id == outcome.ItemId
-                                select i.Name).FirstOrDefault(),
-                    NextRoomId = outcome.NextRoomId,
-                    NextRoomName = (from r in context.Room
-                                    where r.Id == outcome.NextRoomId
-                                    select r.Name).FirstOrDefault()
-                }
-            };
-        }
-
-        public List<ActionOutcomeInfoDto> GetActionOutcomeByRoom(int id)
-        {
-            return (from ao in context.ActionOutcome
-                    join a in context.Action on ao.ActionId equals a.Id
-                    join o in context.Outcome on ao.OutcomeId equals o.Id
-                    join i in context.Item on o.ItemId equals i.Id
-                    join m in context.Monster on o.MonsterId equals m.Id
-                    join nr in context.Room on o.NextRoomId equals nr.Id
-                    where a.RoomId == id && o.RoomId == id
-                    select new ActionOutcomeInfoDto
-                    {
-                        Id = ao.Id,
-                        Action = a,
-                        Outcome = new OutcomeInfoDto
-                        {
-                            Id = o.Id,
-                            MonsterId = m.Id,
-                            MonsterName = m.Name,
-                            ItemId = i.Id,
-                            ItemName = i.Name,
-                            NextRoomId = nr.Id,
-                            NextRoomName = nr.Name
-                        }
-                    }).ToList();
-        }
-
-        public void DeleteActionOutcome(ActionOutcomeDeleteDto dto)
-        {
-            var actionOutcome = (from ao in context.ActionOutcome
-                                 where ao.ActionId == dto.ActionId && ao.OutcomeId == dto.OutcomeId
-                                 select ao).FirstOrDefault();
-
-            context.ActionOutcome.Remove(actionOutcome);
-            SaveChanges();
-
-            context.Action.Remove((from a in context.Action
-                                   where a.Id == actionOutcome.ActionId
-                                   select a).FirstOrDefault());
-
-            context.Outcome.Remove((from o in context.Outcome
-                                    where o.Id == actionOutcome.OutcomeId
-                                    select o).FirstOrDefault());
-
-            SaveChanges();
-        }
-
-        private Outcome GetOutcome(Outcome outcome, int gameId)
-        {
-            return (from o in context.Outcome
-                    where o.ItemId == outcome.ItemId || o.MonsterId == outcome.MonsterId || o.NextRoomId == outcome.NextRoomId && o.GameId == gameId
-                    select o).FirstOrDefault();
-        }
-
         public Game GetGame(int gameId)
         {
             var game = (from g in context.Game
@@ -668,26 +555,34 @@ namespace WebAdventureAPI.Repositories
                     select new ExitDto
                     {
                         RoomId = e.CurrentRoomId,
-                        Name = r.Name
+                        Name = r.Name,
+                        Descr = e.Descr,
+                        Commands = e.Commands
+                        
                     }).ToList();
         }
 
-        public void AddExitToRoom(int roomId, int exitRoomId)
+        public void AddExitToRoom(int roomId, ExitCreationDto dto)
         {
             context.Exits.Add(new Exits
             {
                 CurrentRoomId = roomId,
-                NextRoomId = exitRoomId
+                NextRoomId = dto.NextRoomId,
+                Descr = dto.Descr,
+                Commands = dto.Commands
+
             });
             SaveChanges();
         }
 
-        public void DeleteExitFromRoom(int roomId, int exitRoomId)
+        public void DeleteExitFromRoom(int roomId, ExitCreationDto dto)
         {
             context.Exits.Remove(new Exits
             {
                 CurrentRoomId = roomId,
-                NextRoomId = exitRoomId
+                NextRoomId = dto.NextRoomId,
+                Commands = dto.Commands,
+                Descr = dto.Descr
             });
             SaveChanges();
         }

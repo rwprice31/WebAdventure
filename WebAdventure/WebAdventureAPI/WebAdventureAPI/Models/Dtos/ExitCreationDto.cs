@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace WebAdventureAPI.Models.Dtos
 {
-    public class OutcomeDto
+    public class ExitCreationDto
     {
-        public int MonsterId { get; set; }
-
-        public int ItemId { get; set; }
-
         public int NextRoomId { get; set; }
+
+        public string Descr { get; set; }
+
+        public string Commands { get; set; }
     }
 }

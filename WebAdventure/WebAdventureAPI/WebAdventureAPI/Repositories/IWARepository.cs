@@ -18,11 +18,7 @@ namespace WebAdventureAPI.Repositories
 
         List<Game> GetAllGames();
 
-        ActionOutcomeInfoDto CreateActionOutcome(int roomId, ActionOutcomeInfoDto dto, int gameId);
-
         ItemDto CreateItem(ItemDto dto, int gameId);
-
-        void DeleteActionOutcome(ActionOutcomeDeleteDto dto);
 
         void DeleteGame(int gameId);
 
@@ -31,8 +27,6 @@ namespace WebAdventureAPI.Repositories
         void DeleteRoom(int id);
 
         Room GetRoomForGame(int gameId, int roomId);
-
-        List<ActionOutcomeInfoDto> GetActionOutcomeByRoom(int id);
 
         List<Genre> GetAllGenres();
 
@@ -90,8 +84,8 @@ namespace WebAdventureAPI.Repositories
 
         List<ExitDto> GetExitsForRoom(int roomId);
 
-        void AddExitToRoom(int roomId, int exitRoomId);
+        void AddExitToRoom(int roomId, ExitCreationDto dto);
 
-        void DeleteExitFromRoom(int roomId, int exitRoomId);
+        void DeleteExitFromRoom(int roomId, ExitCreationDto dto);
     }
 }
