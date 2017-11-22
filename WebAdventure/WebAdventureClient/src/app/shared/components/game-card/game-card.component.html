@@ -1,0 +1,39 @@
+<div class="card game-card bg-dark">
+        <div class="container-fluid">
+            <!-- Game Name, Author -->
+            <div class="row top-row">
+                <div class="col-6 text-left game-name">
+                    {{ game.name }}
+                </div>
+                <div class="col-6 text-right game-author">
+                    {{ game.author.username }}
+                </div>
+            </div>
+
+            <!-- Game Description, Genre -->
+            <div class="row middle-row">
+                    <div class="col-9 text-left game-description">
+                        {{ game.descr }}
+                    </div>
+                    <div class="col-3 text-right game-genre">
+                        {{ game.genre }}
+                    </div>
+            </div>            
+
+            <!-- Play, Edit, Delete, Save buttons -->
+            <div class="row bottom-row">
+                    <div class="col-3" *ngIf="displaySave">
+                        <button type="button" class="btn btn-light" (click)="saveClicked()">Save</button>
+                    </div>
+                    <div class="col-3" *ngIf="displayPlay">
+                        <button type="button" class="btn btn-light" (click)="playClicked()">Play</button>        
+                    </div>
+                    <div class="col-3" *ngIf="displayEdit">
+                        <button type="button" class="btn btn-light" (click)="editClicked()">Edit</button>          
+                    </div> 
+                    <div class="col-3" *ngIf="displayDelete">
+                        <button type="button" class="btn btn-light" (click)="deleteClicked()">Delete</button>             
+                    </div>                                                    
+            </div>
+        </div>
+</div>

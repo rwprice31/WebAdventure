@@ -20,16 +20,25 @@ using WebAdventureAPI.Repositories;
 using WebAdventureAPI.Services;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using WebAdventureAPI.Contexts;
 
 namespace WebAdventureAPI
 {
     public class Startup
     {
+        #region --Private Variables--
         private IHostingEnvironment env;
         private IConfigurationRoot config;
         private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
         private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
+        private string _testSecret = null;
+        #endregion
 
+        #region -- Public Properties --
+        public IConfigurationRoot Configuration { get; }
+        #endregion
+
+        #region --Constructor
         public Startup(IHostingEnvironment env)
         {
             this.env = env;
@@ -40,6 +49,7 @@ namespace WebAdventureAPI
                 .AddEnvironmentVariables();
             config = builder.Build();
         }
+        #endregion
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -135,12 +145,16 @@ namespace WebAdventureAPI
             services.AddTransient<IEmailSender, AuthMessageSender>();
 
             services.Configure<AuthMessageSenderOptions>(config);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
-            WAContext waContext)
+        public void Configure(IApplicationBuilder app, 
+                              IHostingEnvironment env, 
+                              ILoggerFactory loggerFactory,
+                              WAContext waContext)
         {
+
             loggerFactory.AddConsole();
 
             if (env.IsDevelopment())
@@ -153,8 +167,6 @@ namespace WebAdventureAPI
                 loggerFactory.AddDebug(LogLevel.Error);
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            waContext.Database.Migrate();
 
             var options = new RewriteOptions()
                 .AddRedirectToHttps();
@@ -176,6 +188,9 @@ namespace WebAdventureAPI
                     defaults: new { controller = "Home", action = "Index" }
                     );
             });
+
+            waContext.Database.Migrate();
+            waContext.EnsureSeedDataForContext();
         }
     }
 }

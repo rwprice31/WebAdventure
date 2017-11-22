@@ -8,9 +8,9 @@ namespace WebAdventureAPI.Models.Dtos
 {
     public class GameDto
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
-        public string Author { get; set; }
+        public UserDto Author { get; set; }
 
         public string Genre { get; set; }
 

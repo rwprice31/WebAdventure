@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebAdventureAPI.Models
+namespace WebAdventureAPI.Models.DbModels
 {
     public class Genre
     {

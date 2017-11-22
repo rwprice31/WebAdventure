@@ -1,0 +1,15 @@
+<table class="table table-hover table-dark">
+  <thead>
+    <tr>
+      <th *ngFor="let column of columns" scope="col">{{column.name}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of rows">       
+        <td *ngFor="let rowData of row.rowData">{{rowData.data}}
+        </td>
+        <td class="action" (click)="editClicked(row)" *ngIf="editAbility">Edit</td>
+        <td class="action" (click)="deleteClicked(row)" *ngIf="deleteAbility">Delete</td>
+    </tr>
+  </tbody>
+</table>

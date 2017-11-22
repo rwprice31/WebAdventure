@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <UserSecretsId>ffd09911-be1d-4634-951e-4bc8015ff007</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +31,9 @@
     <PackageReference Include="Sendgrid" Version="9.9.0" />
     <PackageReference Include="System.IdentityModel.Tokens" Version="5.0.0-rc1-211161024" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.0-preview1-408290725" />
+  </ItemGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
   </ItemGroup>
 
 </Project>

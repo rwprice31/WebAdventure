@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.DbModels;
 
-namespace WebAdventureAPI
+namespace WebAdventureAPI.Contexts
 {
     public class WAContext : IdentityDbContext<WAUser>
     {
@@ -31,25 +31,17 @@ namespace WebAdventureAPI
 
         public DbSet<Models.DbModels.Action> Action { get; set; }
 
-        public DbSet<RoomAction> RoomAction { get; set; }
-
         public DbSet<Monster> Monster { get; set; }
 
         public DbSet<Item> Item { get; set; }
 
         public DbSet<Player> Player { get; set; }
 
-        public DbSet<ItemPlayer> ItemPlayer { get; set; }
-
-        public DbSet<Weapon> Weapon { get; set; }
-
-        public DbSet<Health> Health { get; set; }
-
-        public DbSet<Defense> Defense { get; set; }
+        public DbSet<ItemType> ItemType { get; set; }
 
         public DbSet<Outcome> Outcome { get; set; }
 
-        public DbSet<RoomActionOutcome> RoomActionOutcome { get; set; }
+        public DbSet<ActionOutcome> ActionOutcome { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

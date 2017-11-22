@@ -25,9 +25,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-
     console.log('Current user = ' + this.userService.getCurrentUser());
-
     this.buildForm();
   }
 
