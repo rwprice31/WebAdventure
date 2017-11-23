@@ -521,15 +521,15 @@ namespace WebAdventureAPI.Repositories
 
             SaveChanges();
 
-            return (from p in context.Player
-                    where p.GameId == gameId
-                    select new PlayerDto
-                    {
-                        Id = p.Id,
-                        Health = p.Health,
-                        Attack = p.Attack,
-                        Speed = p.Speed
-                    }).FirstOrDefault();
+            var player = context.Player.Where(p => p.GameId == gameId).First();
+            var playerDto = new PlayerDto
+            {
+                Id = player.Id,
+                Attack = player.Attack,
+                Health = player.Health,
+                Speed = player.Speed
+            };
+            return playerDto;
         }
 
         public PlayerDto UpdatePlayer(int id, PlayerCreationDto dto)

@@ -1,5 +1,5 @@
 import { BaseService } from './base.service';
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from './utils/config.service';
@@ -12,6 +12,9 @@ import { IPlayerOptionsResponse } from '../../shared/interfaces/responses/player
 import { IGameResponse } from '../../shared/interfaces/responses/games/game-response.interface';
 import { IPlayerOptionsCreationResponse } from '../../shared/interfaces/responses/player-options/player-options-creation-response.interface';
 import { IPlayerOptionsUpdationResponse } from '../../shared/interfaces/responses/player-options/player-options-updation-response.interface';
+import { GameService } from './game.service';
+import { IToastr } from '../../shared/interfaces/external-libraries/toastr.interface';
+import { TOASTR_TOKEN } from './external-libraries/toastr.service';
 
 /**
  * @class PlayerOptionsService
@@ -26,11 +29,30 @@ export class PlayerOptionsService extends BaseService {
     private playerOptionsRoute: string;
 
     constructor(private http: HttpClient,
-        private configService: ConfigService) {
+        private configService: ConfigService,
+        private gameService: GameService,
+        @Inject(TOASTR_TOKEN) private toastr: IToastr) {
         super();
         this.baseUrl = configService.getApiURI();
         this.headers = configService.getHeaders();
         this.playerOptionsRoute = this.baseUrl + 'players';
+    }
+
+    /**
+     * @name getPlayerOptionsRoute
+     * @returns void
+     * @description Attempts to retrieve the current editting game id from 
+     * session storage, throws an error if not found. Sets up this.playerOptionsRoute
+     * variable if successfull.
+     */
+    getPlayerOptionsRoute(): void {
+        let gameId = this.gameService.getGameIdUsersCurrentlyEdittingFromSessionStorage();
+        if (!gameId) {
+            this.toastr.error('No game id found');
+            throw new Error('No game id found in player options service.');
+        } else {
+            this.playerOptionsRoute = this.baseUrl + 'games/' + gameId + '/players';
+        }
     }
 
     /**
@@ -40,10 +62,10 @@ export class PlayerOptionsService extends BaseService {
      * a successful response as the type IPlayerOptionsResponse.
      * @description Sends a HTTP GET request to the API to retrieve an individual player option and some response info
      */
-    getPlayerOptions(playerOptions: IPlayerOptionsViewModel): Observable<IResponse> {
-        let route: string = this.playerOptionsRoute + '/' + playerOptions.id;
-        console.log('Sending GET to ' + route);
-        return this.http.get<IPlayerOptionsResponse>(route, { headers: this.headers})
+    getPlayerOptions(): Observable<IResponse> {
+        this.getPlayerOptionsRoute();
+        // console.log('Sending GET to ' + this.playerOptionsRoute);
+        return this.http.get<IPlayerOptionsResponse>(this.playerOptionsRoute, { headers: this.headers})
         .map( (res: IPlayerOptionsResponse ) => {
             return res;
         })
@@ -59,11 +81,11 @@ export class PlayerOptionsService extends BaseService {
      */
     createPlayerOptions(playerOptions: IPlayerOptionsCreationViewModel): Observable<IResponse> {
         // console.log('Body entering createPlayerOptions = ' + JSON.stringify(playerOptions));
-        console.log('Sending POST to ' + this.playerOptionsRoute);
+        // console.log('Sending POST to ' + this.playerOptionsRoute);
         let body = JSON.stringify(playerOptions);
         return this.http.post<IPlayerOptionsCreationResponse>(this.playerOptionsRoute, body, { headers: this.headers })
         .map( (res: IPlayerOptionsCreationResponse) => {
-            console.log('IPlayerOptionsCreationResponse = ', res);
+            // console.log('IPlayerOptionsCreationResponse = ', res);
             if (res.status) {
                 // console.log('Successfully created game! ' + res);
             }
@@ -83,7 +105,7 @@ export class PlayerOptionsService extends BaseService {
         let body = JSON.stringify(playerOptions);
         return this.http.put<IPlayerOptionsUpdationResponse>(this.playerOptionsRoute + '/' + playerOptions.id, body, { headers: this.headers})
         .map( (res: IPlayerOptionsUpdationResponse) => {
-            console.log('IPlayerOptionsUpdationResponse = ', res);
+            // console.log('IPlayerOptionsUpdationResponse = ', res);
             return res;
         })
         .catch(this.handleError);

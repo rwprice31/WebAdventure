@@ -1,3 +1,3 @@
 export interface IPlayerOptionsViewModel {
-    id: string;
+    gameId: number;
 }

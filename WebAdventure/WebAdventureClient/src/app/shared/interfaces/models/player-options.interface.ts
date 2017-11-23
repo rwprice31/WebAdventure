@@ -1,5 +1,5 @@
 export interface IPlayerOptions {
-    id: string;
+    id: number;
     health: number;
     speed: number;
     attack: number;

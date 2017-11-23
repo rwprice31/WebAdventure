@@ -64,6 +64,8 @@
         </div>
     </div>
 </div>
-<button type="submit" class="btn wa-button-dark" [disabled]="!playerInfoForm.valid"
-     [ngClass]="{'invalid-button': !playerInfoForm.valid }">Create</button>
+    <button *ngIf="!playerOptions" type="submit" class="btn wa-button-dark" [disabled]="!playerInfoForm.valid"
+    [ngClass]="{'invalid-button': !playerInfoForm.valid }">Create</button>
+    <button *ngIf="playerOptions" type="submit" class="btn wa-button-dark" [disabled]="!playerInfoForm.valid"
+    [ngClass]="{'invalid-button': !playerInfoForm.valid }">Update</button>
 </form>
