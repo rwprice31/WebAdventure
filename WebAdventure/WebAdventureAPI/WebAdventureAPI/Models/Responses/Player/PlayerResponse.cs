@@ -15,7 +15,7 @@ namespace WebAdventureAPI.Models.Responses.Player
         {
             Status = true,
             StatusCode = 201,
-            StatusText = "Player Created",
+            StatusText = "Player options successfully saved!",
             Player = player
         };
 
@@ -23,7 +23,7 @@ namespace WebAdventureAPI.Models.Responses.Player
         {
             Status = true,
             StatusCode = 201,
-            StatusText = "Player Updated",
+            StatusText = "Player options successfully updated!",
             Player = player
         };
 

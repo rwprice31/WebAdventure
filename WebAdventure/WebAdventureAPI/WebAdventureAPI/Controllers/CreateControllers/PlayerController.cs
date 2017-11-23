@@ -9,7 +9,7 @@ using WebAdventureAPI.Models.Dtos;
 
 namespace WebAdventureAPI.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/games/{gameId}/players")]
     public class PlayerController : Controller
     {
@@ -44,7 +44,7 @@ namespace WebAdventureAPI.Controllers
                 var player = repo.CreatePlayer(gameId, dto);
                 return StatusCode(201, response.CreatePlayerResponse(player));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return StatusCode(500, ErrorResponse.ServerError);
             }

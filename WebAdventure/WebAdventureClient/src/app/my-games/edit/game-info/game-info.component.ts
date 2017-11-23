@@ -34,7 +34,6 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
   createInfoForm: FormGroup;
   genres: IGenre[];
   confirmNavigation: boolean;
-  gameId: number;
 
   constructor(private formBuilder: FormBuilder,
     private genreService: GenreService,
