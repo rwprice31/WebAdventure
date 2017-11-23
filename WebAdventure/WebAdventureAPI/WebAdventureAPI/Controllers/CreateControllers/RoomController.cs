@@ -64,7 +64,8 @@ namespace WebAdventureAPI.Controllers
                 Id = roomId,
                 Name = roomDto.Name,
                 Descr = roomDto.Descr,
-                GameId = gameId
+                GameId = gameId,
+                IsStarting = roomDto.IsStarting
             };
             repo.UpdateRoom(room);
             return StatusCode(200, roomResponses.UpdateResponse(roomDto));
@@ -85,7 +86,8 @@ namespace WebAdventureAPI.Controllers
                         Id = x.Id,
                         Descr = x.Descr,
                         Name = x.Name,
-                        GameId = x.GameId
+                        GameId = x.GameId,
+                        IsStarting = x.IsStarting
                     });
                 }
 
@@ -108,7 +110,8 @@ namespace WebAdventureAPI.Controllers
                     Id = room.Id,
                     Name = room.Name,
                     Descr = room.Descr,
-                    GameId = room.GameId
+                    GameId = room.GameId,
+                    IsStarting = room.IsStarting
                 };
                 return StatusCode(200, roomResponses.GetRoomResponse(roomDto));
             }
@@ -134,7 +137,8 @@ namespace WebAdventureAPI.Controllers
                             Id = room.Id,
                             Name = room.Name,
                             Descr = room.Name,
-                            GameId = room.GameId
+                            GameId = room.GameId,
+                            IsStarting = room.IsStarting
                         });
                 }
                 return StatusCode(201, roomResponses.DeleteRoomResponse(roomsDto));

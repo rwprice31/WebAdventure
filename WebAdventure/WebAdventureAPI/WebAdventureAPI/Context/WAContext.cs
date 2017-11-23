@@ -45,6 +45,10 @@ namespace WebAdventureAPI.Contexts
 
         public DbSet<Exits> Exits { get; set; }
 
+        public DbSet<Backpack> Backpack { get; set; }
+
+        public DbSet<PlayerGame> PlayerGame { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connectionString = config["ConnectionString:WAConnectionString"];

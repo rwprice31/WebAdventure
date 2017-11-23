@@ -87,5 +87,13 @@ namespace WebAdventureAPI.Repositories
         void AddExitToRoom(int roomId, ExitCreationDto dto);
 
         void DeleteExitFromRoom(int roomId, ExitCreationDto dto);
+
+        CompleteRoomInfoDto GetInformationForRoom(int roomId);
+
+        GameDto GetGameInformation(int gameId);
+
+        PlayerGameDto InitializePlayerGame(int gameId, UserDto user);
+
+        void UpdatePlayerRoom(int roomId, int gamePlayId);
     }
 }

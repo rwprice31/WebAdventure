@@ -116,7 +116,8 @@ namespace WebAdventureAPI.Repositories
             {
                 Name = room.Name,
                 Descr = room.Descr,
-                GameId = gameId
+                GameId = gameId,
+                IsStarting = room.IsStarting
             };
 
             context.Room.Add(newRoom);
@@ -558,7 +559,6 @@ namespace WebAdventureAPI.Repositories
                         Name = r.Name,
                         Descr = e.Descr,
                         Commands = e.Commands
-                        
                     }).ToList();
         }
 
@@ -584,6 +584,143 @@ namespace WebAdventureAPI.Repositories
                 Commands = dto.Commands,
                 Descr = dto.Descr
             });
+            SaveChanges();
+        }
+
+        public CompleteRoomInfoDto GetInformationForRoom(int roomId)
+        {
+            var room = (from r in context.Room
+                        where r.Id == roomId
+                        select new RoomDto
+                        {
+                            Id = roomId,
+                            Name = r.Name,
+                            GameId = r.GameId,
+                            Descr = r.Descr,
+                            IsStarting = r.IsStarting
+                        }).FirstOrDefault();
+
+            var monster = (from rm in context.RoomMonster
+                           join m in context.Monster on rm.MonsterId equals m.Id
+                           where rm.RoomId == room.Id
+                           select new MonsterDto
+                           {
+                               Id = m.Id,
+                               Name = m.Name,
+                               Descr = m.Descr,
+                               MaxDamage = m.MaxDamage,
+                               MinDamage = m.MinDamage,
+                               Health = m.Health,
+                               AttackDescr = m.AttackDescr,
+                               Speed = m.Speed
+                           }).FirstOrDefault();
+
+            var item = (from ri in context.RoomItem
+                        join i in context.Item on ri.ItemId equals i.Id
+                        where ri.RoomId == room.Id
+                        select new ItemDto
+                        {
+                            Id = i.Id,
+                            Name = i.Name,
+                            Descr = i.Descr,
+                            Points = i.Points,
+                            Type = (from it in context.ItemType
+                                    where it.Id == i.ItemTypeId
+                                    select new ItemTypeDto
+                                    {
+                                        Type = it.Type
+                                    }).FirstOrDefault()
+                        }).FirstOrDefault();
+
+            var exits = (from e in context.Exits
+                         join r in context.Room on e.CurrentRoomId equals r.Id
+                         where e.CurrentRoomId == room.Id
+                         select new ExitDto
+                         {
+                             RoomId = e.CurrentRoomId,
+                             Name = r.Name,
+                             Descr = e.Descr,
+                             Commands = e.Commands
+                         }).ToList();
+
+            return new CompleteRoomInfoDto
+            {
+                Room = room,
+                Exits = exits,
+                Item = item,
+                Monster = monster
+            };
+        }
+
+        public GameDto GetGameInformation(int gameId)
+        {
+            return (from g in context.Game
+                    where g.Id == gameId
+                    select new GameDto
+                    {
+                        Id = g.Id,
+                        Name = g.Name,
+                        Descr = g.Descr,
+                        Genre = (from ge in context.Genre
+                                 where ge.Id == g.GenreId
+                                 select ge.Descr).FirstOrDefault(),
+                        Author = (from a in context.Users
+                                  where a.Id == g.AuthorId
+                                  select new UserDto
+                                  {
+                                      Username = a.UserName
+                                  }).FirstOrDefault(),
+                        IsPublic = g.IsPublic
+                    }).FirstOrDefault();
+        }
+
+        public PlayerGameDto InitializePlayerGame(int gameId, UserDto user)
+        {
+            var player = (from p in context.Player
+                          where p.GameId == gameId
+                          select p).FirstOrDefault();
+
+            context.PlayerGame.Add(new PlayerGame
+            {
+                PlayerId = player.Id,
+                Health = player.Health,
+                RoomId = (from r in context.Room
+                          where r.GameId == gameId && r.IsStarting == true
+                          select r.Id).FirstOrDefault(),
+                UserId = user.Id
+            });
+
+            SaveChanges();
+
+            var playerGame = (from pg in context.PlayerGame
+                              where pg.UserId == user.Id && pg.GameId == gameId
+                              select pg).FirstOrDefault();
+
+            context.Backpack.Add(new Backpack
+            {
+                PlayerGameId = playerGame.Id,
+            });
+
+            SaveChanges();
+
+            return new PlayerGameDto
+            {
+                Id = playerGame.Id,
+                GameId = playerGame.GameId,
+                Health = playerGame.Health,
+                PlayerId = playerGame.PlayerId,
+                RoomId = playerGame.RoomId,
+                UserId = playerGame.UserId
+            };
+        }
+
+        public void UpdatePlayerRoom(int roomId, int gamePlayId)
+        {
+            var gamePlay = (from gp in context.PlayerGame
+                            where gp.Id == gamePlayId
+                            select gp).FirstOrDefault();
+
+            gamePlay.RoomId = roomId;
             SaveChanges();
         }
     }
