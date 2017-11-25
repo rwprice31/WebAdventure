@@ -1,3 +1,13 @@
-<div>
-    Hello from games
+<div class="solo-content">
+    
+    <div class="page-header">
+        <h1>Browse and Play Games!</h1>
+    </div>
+
+    <!-- Created Games -->
+    <div class="page-section">
+        <game-card-grid [games]="games" [columnWidth]=12 [displayPlay]=true
+            (play)="playClicked($event)"></game-card-grid>
+    </div>
+
 </div>
