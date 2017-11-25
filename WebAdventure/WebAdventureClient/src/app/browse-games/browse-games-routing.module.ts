@@ -26,5 +26,5 @@ const routes: Routes = [
 })
 
 export class BrowseGamesRoutingModule {
-    static components = [ PlayGameComponent ];
+    static components = [ PlayGameComponent, BrowseGamesComponent ];
 }

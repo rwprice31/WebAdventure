@@ -5,7 +5,7 @@ import { SharedModule } from '../../shared/shared.module';
   declarations: [
   ],
   imports: [
-    SharedModule,
+    SharedModule
   ],
   providers: []
 })
