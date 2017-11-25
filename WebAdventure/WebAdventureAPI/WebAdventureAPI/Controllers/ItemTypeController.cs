@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebAdventureAPI.Models;
 using WebAdventureAPI.Models.DbModels;
 using WebAdventureAPI.Models.Dtos;
 using WebAdventureAPI.Models.Responses;
-using WebAdventureAPI.Models.Responses.Genres;
 using WebAdventureAPI.Models.Responses.Item;
 using WebAdventureAPI.Repositories;
 

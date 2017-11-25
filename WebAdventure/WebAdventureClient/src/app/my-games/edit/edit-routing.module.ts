@@ -27,6 +27,10 @@ const routes: Routes = [
                 loadChildren: 'app/my-games/edit/items/items.module#ItemsModule'
             },
             {
+                path: 'monsters',
+                loadChildren: 'app/my-games/edit/monsters/monsters.module#MonstersModule'
+            },
+            {
                 path: 'player-options',
                 component: PlayerOptionsComponent,
                 resolve: {
