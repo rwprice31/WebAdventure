@@ -4,18 +4,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { BrowseGamesComponent } from './browse-games.component';
 import { PlayGameComponent } from './play/play.component';
 
+// path's after /games/
 const routes: Routes = [
     {
         path: '',
         component: BrowseGamesComponent,
-        children: [
-            {
-                path: 'play/:id',
-                loadChildren: 'app/browse-games/play/play.module#PlayModule'
-            }
-        ]
+    },
+    {
+        path: 'play/:id',
+        loadChildren: 'app/browse-games/play/play.module#PlayModule'
     }
-]
+];
 
 @NgModule({
     imports: [
@@ -26,5 +25,5 @@ const routes: Routes = [
 })
 
 export class BrowseGamesRoutingModule {
-    static components = [ PlayGameComponent, BrowseGamesComponent ];
+    static components = [ BrowseGamesComponent ];
 }

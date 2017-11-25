@@ -12,4 +12,4 @@ import { SharedModule } from '../shared/shared.module';
     ],
     providers: []
 })
-export class BrowseGamesModule {}
+export class BrowseGamesModule { }
