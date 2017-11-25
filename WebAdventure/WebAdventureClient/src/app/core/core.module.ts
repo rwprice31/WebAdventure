@@ -33,6 +33,9 @@ import { ItemResolver } from './services/resolvers/items/item-resolver.service';
 import { ItemsResolver } from './services/resolvers/items/items-resolver.service';
 import { PlayerOptionsService } from './services/player-options.service';
 import { PlayerOptionsResolver } from './services/resolvers/player-options/player-options-resolver.service';
+import { MonstersResolver } from './services/resolvers/monsters/monsters-resolver.service';
+import { MonsterService } from './services/monster.service';
+import { MonsterResolver } from './services/resolvers/monsters/monster-resolver.service';
 
 export declare let toastr: IToastr;
 export declare let jQuery: any;
@@ -58,6 +61,7 @@ export declare let jQuery: any;
         ItemTypeService,
         ItemService,
         PlayerOptionsService,
+        MonsterService,
         AuthGuard,
         NotAlreadyLoggedInGuard,
         CanDeactivateGuard,
@@ -72,6 +76,8 @@ export declare let jQuery: any;
         ItemTypesResolver,
         GameGenresResolver,
         PlayerOptionsResolver,
+        MonstersResolver,
+        MonsterResolver,
         { provide: TOASTR_TOKEN, useValue: toastr },
         { provide: JQ_TOKEN, useValue: jQuery },
         {
