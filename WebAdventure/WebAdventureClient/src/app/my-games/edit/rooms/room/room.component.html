@@ -25,6 +25,10 @@
                 <input type="text" class="form-control" formControlName="description">
             </div>
         </div>
+        <div class="from-group row">
+            <!-- Table of actions -->
+            <router-outlet></router-outlet>
+        </div>
         <button *ngIf="!isUpdating" type="submit" class="btn wa-button-dark" [disabled]="!roomInfoForm.valid"
              [ngClass]="{'invalid-button': !roomInfoForm.valid }">Create</button>
         <button *ngIf="isUpdating" type="submit" class="btn wa-button-dark" [disabled]="!roomInfoForm.valid"
