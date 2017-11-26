@@ -94,3 +94,24 @@ form {
 .editCreateButton {
     margin-bottom: 15px;
 }
+
+.dropdown-menu {
+    background: $background-dark;
+    color: $text-light;
+    .dropdown-item:hover {
+        background: $background-light;
+        color: $text-dark !important;
+    }
+    .dropdown-item:active {
+        font-weight: bold;
+    }
+}
+
+.center-element {
+    display: flex;
+    justify-content: center;
+}
+
+.slight-bottom-margin {
+    margin-bottom: 5%;
+}

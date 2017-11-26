@@ -1,3 +1,8 @@
-<a routerLinkActive="active" [routerLink]="['monster-option']" class="nav-link">Monster</a>
-<a routerLinkActive="active" [routerLink]="['item-option']" class="nav-link">Item</a>
-<a routerLinkActive="active" [routerLink]="['room-option']" class="nav-link">Room</a>
+<button id="actionDropdown" type="button" class="btn wa-button-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Select the action you wish to create
+</button>
+<div class="dropdown-menu" aria-labelledby="actionDropdown">
+    <a class="dropdown-item" (click)="monsterSelected()">Monster</a>
+    <a class="dropdown-item" (click)="itemSelected()">Item</a>
+    <a class="dropdown-item" (click)="roomSelected()">Room</a>
+</div>

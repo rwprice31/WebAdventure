@@ -78,7 +78,6 @@ export class UserService extends BaseService {
         return user;
     }
 
-
     /**
      * @name logout
      * @returns void

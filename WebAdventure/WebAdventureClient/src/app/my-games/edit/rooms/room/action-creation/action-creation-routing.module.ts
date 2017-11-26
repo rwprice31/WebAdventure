@@ -7,6 +7,8 @@ import { OptionSelectorComponent } from './option-selector/option-selector.compo
 import { ItemOptionComponent } from './item-option/item-option.component';
 import { MonsterOptionComponent } from './monster-option/monster-option.component';
 import { RoomOptionComponent } from './room-option/room-option.component';
+import { NewActionComponent } from './new-action/new-action.component';
+import { OptionsContainerComponent } from './options-container/options-container.component';
 
 // after /my-games/edit/:gameId/rooms/:roomId/
 const routes: Routes = [
@@ -16,29 +18,64 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                component: OptionSelectorComponent
+                component: NewActionComponent
             },
             {
-                path: 'item-option',
-                component: ItemOptionComponent,
-                resolve: {
-                    itemsResponse: ItemsResolver
-                }
+                path: 'options',
+                component: OptionsContainerComponent,
+                children: [
+                    {
+                        path: '',
+                        component: OptionSelectorComponent
+                    },
+                    {
+                        path: 'item-option',
+                        component: ItemOptionComponent,
+                        resolve: {
+                            itemsResponse: ItemsResolver
+                        }
+                    },
+                    {
+                        path: 'monster-option',
+                        component: MonsterOptionComponent,
+                        resolve: {
+                            // monstersResponse: MonstersResolver
+                        }
+                    },
+                    {
+                        path: 'room-option',
+                        component: RoomOptionComponent,
+                        resolve: {
+                            roomsResponse: RoomsResolver
+                        }
+                    },
+                ]
             },
-            {
-                path: 'monster-option',
-                component: MonsterOptionComponent,
-                resolve: {
-                    // monstersResponse: MonstersResolver
-                }
-            },
-            {
-                path: 'room-option',
-                component: RoomOptionComponent,
-                resolve: {
-                    roomsResponse: RoomsResolver
-                }
-            },
+            // {
+            //     path: 'option-selector',
+            //     component: OptionSelectorComponent
+            // },
+            // {
+            //     path: 'item-option',
+            //     component: ItemOptionComponent,
+            //     resolve: {
+            //         itemsResponse: ItemsResolver
+            //     }
+            // },
+            // {
+            //     path: 'monster-option',
+            //     component: MonsterOptionComponent,
+            //     resolve: {
+            //         // monstersResponse: MonstersResolver
+            //     }
+            // },
+            // {
+            //     path: 'room-option',
+            //     component: RoomOptionComponent,
+            //     resolve: {
+            //         roomsResponse: RoomsResolver
+            //     }
+            // },
             {
                 path: '**',
                 redirectTo: ''
@@ -55,5 +92,5 @@ const routes: Routes = [
     exports: [ RouterModule ]
 })
 export class ActionCreationRoutingModule {
-    static components = [ ActionCreationComponent, ItemOptionComponent, MonsterOptionComponent, RoomOptionComponent, OptionSelectorComponent ];
+    static components = [ ActionCreationComponent, NewActionComponent, ItemOptionComponent, MonsterOptionComponent, RoomOptionComponent, OptionSelectorComponent, OptionsContainerComponent ];
  }

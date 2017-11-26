@@ -5,10 +5,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './action-creation.component.html',
   styleUrls: ['./action-creation.component.scss']
 })
-export class ActionCreationComponent implements OnInit {
+export class ActionCreationComponent {
   
-    ngOnInit(): void {
-        console.log('In action creation component');
-    }
-
 }
