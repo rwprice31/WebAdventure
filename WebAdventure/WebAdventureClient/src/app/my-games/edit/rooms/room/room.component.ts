@@ -17,6 +17,7 @@ import { Observable } from 'rxjs/Observable';
 import { compareFormGroupValues } from '../../../../shared/functions/copy-form-group';
 import { IRoomUpdationViewModel } from '../../../../shared/interfaces/view-models/rooms/room-updation-view-model.interface';
 import { IRoomUpdationResponse } from '../../../../shared/interfaces/responses/rooms/room-updation-response.interface';
+import { SimpleTableColumn, SimpleTableRow } from '../../../../shared/components/simple-table/simple-table.component';
 
 @Component({
   templateUrl: './room.component.html',
@@ -31,6 +32,9 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
     private roomId: number;
     private gameId: number;
     private isUpdating: boolean;
+
+    private columns: SimpleTableColumn[] = [];
+    private rows: SimpleTableRow[] = [];
   
     constructor(private formBuilder: FormBuilder,
       private roomService: RoomService,
@@ -52,6 +56,26 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
         this.retrieveRoom();
       }
       this.gameId = this.gameService.getGameIdUsersCurrentlyEdittingFromSessionStorage();
+      this.buildTableData();
+    }
+
+    private buildTableData(): void {
+      this.rows = [
+
+      ];
+
+      this.columns = [
+        {
+          name: 'User input'
+        },
+        {
+          name: 'Action Type'
+        },
+        {
+          name: 'Action Name'
+        }
+      ];
+
     }
 
     private retrieveRoom(): void {
@@ -94,7 +118,7 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
         id: 0,
         name: this.roomInfoForm.controls['name'].value,
         descr: this.roomInfoForm.controls['description'].value,
-        actions: null,
+        actionOutcomes: null,
         gameId:  this.gameId
       };
       this.roomService.createRoom(room).subscribe( 

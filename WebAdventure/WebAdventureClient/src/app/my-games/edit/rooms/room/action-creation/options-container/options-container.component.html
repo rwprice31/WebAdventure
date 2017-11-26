@@ -7,6 +7,26 @@
 </div>
 
 <div class="center-element">
+    <form [formGroup]="actionForm" novalidate autocomplete="off">
+        <div class="form-group row">
+            <label for="userInput" class="col-sm-4 col-form-label">User input</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="userInput"
+                [ngClass]="{'has-error': (actionForm.get('userInput').touched || 
+                actionForm.get('userInput').dirty) && !actionForm.get('userInput').valid }">
+                <div class="error-block" *ngIf="actionForm.get('userInput').errors">
+                    <span class="error-block-text" *ngIf="(actionForm.get('userInput').touched || 
+                    actionForm.get('userInput').dirty) &&
+                    actionForm.get('userInput').errors.required"> 
+                        A user input is required.
+                    </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="center-element">
     <router-outlet></router-outlet>
 </div>
 

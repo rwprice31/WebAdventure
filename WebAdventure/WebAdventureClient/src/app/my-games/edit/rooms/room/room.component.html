@@ -25,10 +25,24 @@
                 <input type="text" class="form-control" formControlName="description">
             </div>
         </div>
-        <div class="from-group row" class="center-element">
+        <div class="from-group row center-element">
             <!-- Table of actions -->
-            <router-outlet></router-outlet>
+            <div class="page-section">
+                <h1>Actions</h1>
+                <h2>View your actions for this room below</h2>
+            
+
+         
+
+                        <simple-table (edit)="editClicked($event)" (delete)="deleteClicked($event)" [columns]="columns" [rows]="rows"
+                [editAbility]="true" [deleteAbility]="true"></simple-table>
+            
+            </div>
+           
         </div>
+        <div class="form-group row center-element">
+            <router-outlet></router-outlet>    
+        </div>    
         <button *ngIf="!isUpdating" type="submit" class="btn wa-button-dark" [disabled]="!roomInfoForm.valid"
              [ngClass]="{'invalid-button': !roomInfoForm.valid }">Create</button>
         <button *ngIf="isUpdating" type="submit" class="btn wa-button-dark" [disabled]="!roomInfoForm.valid"
