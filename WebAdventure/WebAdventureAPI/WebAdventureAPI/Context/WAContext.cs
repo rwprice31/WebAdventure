@@ -39,9 +39,15 @@ namespace WebAdventureAPI.Contexts
 
         public DbSet<ItemType> ItemType { get; set; }
 
-        public DbSet<Outcome> Outcome { get; set; }
+        public DbSet<RoomItem> RoomItem { get; set; }
 
-        public DbSet<ActionOutcome> ActionOutcome { get; set; }
+        public DbSet<RoomMonster> RoomMonster { get; set; }
+
+        public DbSet<Exits> Exits { get; set; }
+
+        public DbSet<Backpack> Backpack { get; set; }
+
+        public DbSet<PlayerGame> PlayerGame { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -17,7 +17,10 @@ const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'login', canActivate: [NotAlreadyLoggedInGuard], component: LoginComponent },
     { path: 'signup', component: SignupComponent },
-    { path: 'games', component: BrowseGamesComponent },
+    { 
+        path: 'games', 
+        loadChildren: 'app/browse-games/browse-games.module#BrowseGamesModule' 
+    },
     { path: 'resetpassword', component: ResetPasswordComponent },
     { path: 'forgotpassword', component: ForgotPasswordComponent },
     { 
@@ -38,5 +41,5 @@ const routes: Routes = [
 })
 export class AppRoutingModule {
   static components = [HomeComponent, LoginComponent, SignupComponent, ResetPasswordComponent, ForgotPasswordComponent,
-        BrowseGamesComponent, PageNotFoundComponent ];
+    PageNotFoundComponent ];
  }

@@ -6,6 +6,7 @@ import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angu
 
 import { AuthInterceptor } from './services/auth-interceptor.service';
 
+import { GamePlayService } from './services/gameplay.service';
 import { GameService } from './services/game.service';
 import { GenreService } from './services/genre.service';
 import { UserService } from './services/user.service';
@@ -53,6 +54,7 @@ export declare let jQuery: any;
         ConfigService,
         UserService,
         GameService, 
+        GamePlayService,
         GenreService,
         RoomService,
         ItemTypeService,

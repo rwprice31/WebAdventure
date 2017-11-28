@@ -6,5 +6,6 @@ export interface IRoom {
     name: string;
     descr: string;
     gameId: number;
+    isStarting?: boolean,
     actions?: IRoomAction[];
 }

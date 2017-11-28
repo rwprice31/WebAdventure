@@ -24,13 +24,17 @@ namespace WebAdventureAPI.Controllers
     {
         private IWARepository repo;
         private RoomResponses roomResponses;
-        private RoomOptionResponses roomOptionResponses;
+        private RoomItemResponse roomItemResponses;
+        private RoomMonsterResponses roomMonsterResponses;
+        private RoomExitResponse roomExitResponses;
 
         public RoomController(IWARepository repo)
         {
             this.repo = repo;
             roomResponses = new RoomResponses();
-            roomOptionResponses = new RoomOptionResponses();
+            roomItemResponses = new RoomItemResponse();
+            roomMonsterResponses = new RoomMonsterResponses();
+            roomExitResponses = new RoomExitResponse();
         }
 
         [HttpPost]
@@ -60,7 +64,8 @@ namespace WebAdventureAPI.Controllers
                 Id = roomId,
                 Name = roomDto.Name,
                 Descr = roomDto.Descr,
-                GameId = gameId
+                GameId = gameId,
+                IsStarting = roomDto.IsStarting
             };
             repo.UpdateRoom(room);
             return StatusCode(200, roomResponses.UpdateResponse(roomDto));
@@ -81,7 +86,8 @@ namespace WebAdventureAPI.Controllers
                         Id = x.Id,
                         Descr = x.Descr,
                         Name = x.Name,
-                        GameId = x.GameId
+                        GameId = x.GameId,
+                        IsStarting = x.IsStarting
                     });
                 }
 
@@ -104,7 +110,8 @@ namespace WebAdventureAPI.Controllers
                     Id = room.Id,
                     Name = room.Name,
                     Descr = room.Descr,
-                    GameId = room.GameId
+                    GameId = room.GameId,
+                    IsStarting = room.IsStarting
                 };
                 return StatusCode(200, roomResponses.GetRoomResponse(roomDto));
             }
@@ -130,7 +137,8 @@ namespace WebAdventureAPI.Controllers
                             Id = room.Id,
                             Name = room.Name,
                             Descr = room.Name,
-                            GameId = room.GameId
+                            GameId = room.GameId,
+                            IsStarting = room.IsStarting
                         });
                 }
                 return StatusCode(201, roomResponses.DeleteRoomResponse(roomsDto));
@@ -141,14 +149,13 @@ namespace WebAdventureAPI.Controllers
             }
         }
 
-        [HttpGet("{roomId}/options")]
-        public IActionResult GetRoomOptions([FromHeader] int roomId)
+        [HttpGet("{roomId}/items")]
+        public IActionResult GetItemsForRoom([FromRoute] int roomId)
         {
             try
             {
-                var list = repo.GetActionOutcomeByRoom(roomId);
-
-                return StatusCode(200, roomOptionResponses.GetRoomOptionSuccess(list));
+                var items = repo.GetItemsForRoom(roomId);
+                return StatusCode(201, roomItemResponses.GetRoomItemResponse(items));
             }
             catch (Exception)
             {
@@ -156,13 +163,13 @@ namespace WebAdventureAPI.Controllers
             }
         }
 
-        [HttpPost("{roomId}/options")]
-        public IActionResult CreateOptionForRoom([FromRoute] int roomId, [FromBody] ActionOutcomeInfoDto dto, [FromRoute] int gameId)
+        [HttpPost("{roomId}/items")]
+        public IActionResult AddItemToRoom([FromRoute] int roomId, [FromBody] int itemId)
         {
             try
             {
-                var actionOutcome = repo.CreateActionOutcome(roomId, dto, gameId);
-                return StatusCode(204, roomOptionResponses.GetCreateRoomOptionSuccess(actionOutcome));
+                repo.AddItemToRoom(roomId, itemId);
+                return StatusCode(201, roomItemResponses.AddRoomItemResponse());
             }
             catch (Exception)
             {
@@ -170,13 +177,97 @@ namespace WebAdventureAPI.Controllers
             }
         }
 
-        [HttpDelete("options")]
-        public IActionResult DeleteOptionFromRoom([FromBody] ActionOutcomeDeleteDto dto)
+        [HttpDelete("{roomId}/items")]
+        public IActionResult DeleteItemFromRoom([FromRoute] int roomId, [FromBody] int itemId)
         {
             try
             {
-                repo.DeleteActionOutcome(dto);
-                return StatusCode(201, roomOptionResponses.DeleteRoomOptionSuccess());
+                repo.DeleteItemFromRoom(roomId, itemId);
+                return StatusCode(201, roomItemResponses.DeleteRoomItem());
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [HttpGet("{roomId}/monsters")]
+        public IActionResult GetMonstersForRoom([FromRoute] int roomId)
+        {
+            try
+            {
+                var monsters = repo.GetMonstersForRoom(roomId);
+                return StatusCode(201, roomMonsterResponses.GetMonstersForGameResponse(monsters));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [HttpPost("{roomId}/monsters")]
+        public IActionResult AddMonsterToRoom([FromRoute] int roomId, [FromBody] int monsterId)
+        {
+            try
+            {
+                repo.AddMonsterToRoom(roomId, monsterId);
+                return StatusCode(201, roomMonsterResponses.AddMonsterToRoomResponse());
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [HttpDelete("{roomId}/monsters")]
+        public IActionResult DeleteMonsterFromRoom([FromRoute] int roomId, [FromBody] int monsterId)
+        {
+            try
+            {
+                repo.DeleteMonsterFromRoom(roomId, monsterId);
+                return StatusCode(201, roomMonsterResponses.RemoveMonsterFromRoom());
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [HttpGet("{roomId}/exits")]
+        public IActionResult GetExitsForRoom([FromRoute] int roomId)
+        {
+            try
+            {
+                var exits = repo.GetExitsForRoom(roomId);
+                return StatusCode(201, roomExitResponses.GetRoomExitResponse(exits));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [HttpPost("{roomId}/exits")]
+        public IActionResult AddExitToRoom([FromRoute] int roomId, [FromBody] ExitCreationDto dto)
+        {
+            try
+            {
+                repo.AddExitToRoom(roomId, dto);
+                return StatusCode(201, roomExitResponses.AddExitResponse());
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [HttpPost("{roomId}/exits")]
+        public IActionResult DeleteExitFromRoom([FromRoute] int roomId, [FromBody] ExitCreationDto dto)
+        {
+            try
+            {
+                repo.DeleteExitFromRoom(roomId, dto);
+                return StatusCode(201, roomExitResponses.RemoveExitResponse());
             }
             catch (Exception)
             {

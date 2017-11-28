@@ -179,7 +179,7 @@ export class GameService extends BaseService {
      * a successful response as the type IGamesResponse.
      * @description Sends a HTTP GET request to the API to retrieve all games
      */
-    getGames(): Observable<IResponse> {
+    getGames(): Observable<IGamesResponse> {
         // console.log('Sending GET to ' + this.gameRoute);
         return this.http.get<IGamesResponse>(this.gameRoute, { headers: this.headers})
             .map( (res: IGamesResponse ) => {

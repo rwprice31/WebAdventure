@@ -43,7 +43,8 @@ namespace WebAdventureAPI.Repositories
                                  where ge.Id == g.GenreId
                                  select ge.Descr).FirstOrDefault(),
                         Name = g.Name,
-                        Descr = g.Descr
+                        Descr = g.Descr,
+                        IsPublic = g.IsPublic
                     }).FirstOrDefault();
         }
 
@@ -101,6 +102,7 @@ namespace WebAdventureAPI.Repositories
             old.Descr = game.Descr;
             old.GenreId = GetGenreByDescr(game.Genre).Id;
             old.Name = game.Name;
+            old.IsPublic = game.IsPublic;
 
             SaveChanges();
 
@@ -114,7 +116,8 @@ namespace WebAdventureAPI.Repositories
             {
                 Name = room.Name,
                 Descr = room.Descr,
-                GameId = gameId
+                GameId = gameId,
+                IsStarting = room.IsStarting
             };
 
             context.Room.Add(newRoom);
@@ -157,119 +160,6 @@ namespace WebAdventureAPI.Repositories
             var room = context.Room.Where(r => r.Id == id).First();
             context.Room.Remove(room);
             SaveChanges();
-        }
-
-        public ActionOutcomeInfoDto CreateActionOutcome(int roomId, ActionOutcomeInfoDto dto, int gameId)
-        {
-            context.Action.Add(new Models.DbModels.Action
-            {
-                Descr = dto.Action.Descr,
-                GameId = gameId,
-                RoomId = roomId
-            });
-
-            context.Outcome.Add(new Outcome
-            {
-                RoomId = roomId,
-                GameId = gameId,
-                ItemId = dto.Outcome.ItemId,
-                MonsterId = dto.Outcome.MonsterId,
-                NextRoomId = dto.Outcome.NextRoomId
-            });
-
-            SaveChanges();
-
-            var action = (from a in context.Action
-                          where a.Descr == dto.Action.Descr && a.RoomId == roomId
-                          select a).FirstOrDefault();
-
-            var outcome = (from o in context.Outcome
-                           where o.RoomId == roomId && o.MonsterId == dto.Outcome.MonsterId && o.ItemId == dto.Outcome.ItemId && o.NextRoomId == dto.Outcome.NextRoomId
-                           select o).FirstOrDefault();
-
-            context.ActionOutcome.Add(new ActionOutcome
-            {
-                ActionId = action.Id,
-                OutcomeId = outcome.Id
-            });
-
-            SaveChanges();
-            return new ActionOutcomeInfoDto
-            {
-                Id = (from ao in context.ActionOutcome
-                      where ao.ActionId == action.Id && ao.OutcomeId == outcome.Id
-                      select ao.Id).FirstOrDefault(),
-                Action = action,
-                Outcome = new OutcomeInfoDto
-                {
-                    Id = outcome.Id,
-                    MonsterId = outcome.MonsterId,
-                    MonsterName = (from m in context.Monster
-                                   where m.Id == outcome.MonsterId
-                                   select m.Name).FirstOrDefault(),
-                    ItemId = outcome.ItemId,
-                    ItemName = (from i in context.Item
-                                where i.Id == outcome.ItemId
-                                select i.Name).FirstOrDefault(),
-                    NextRoomId = outcome.NextRoomId,
-                    NextRoomName = (from r in context.Room
-                                    where r.Id == outcome.NextRoomId
-                                    select r.Name).FirstOrDefault()
-                }
-            };
-        }
-
-        public List<ActionOutcomeInfoDto> GetActionOutcomeByRoom(int id)
-        {
-            return (from ao in context.ActionOutcome
-                    join a in context.Action on ao.ActionId equals a.Id
-                    join o in context.Outcome on ao.OutcomeId equals o.Id
-                    join i in context.Item on o.ItemId equals i.Id
-                    join m in context.Monster on o.MonsterId equals m.Id
-                    join nr in context.Room on o.NextRoomId equals nr.Id
-                    where a.RoomId == id && o.RoomId == id
-                    select new ActionOutcomeInfoDto
-                    {
-                        Id = ao.Id,
-                        Action = a,
-                        Outcome = new OutcomeInfoDto
-                        {
-                            Id = o.Id,
-                            MonsterId = m.Id,
-                            MonsterName = m.Name,
-                            ItemId = i.Id,
-                            ItemName = i.Name,
-                            NextRoomId = nr.Id,
-                            NextRoomName = nr.Name
-                        }
-                    }).ToList();
-        }
-
-        public void DeleteActionOutcome(ActionOutcomeDeleteDto dto)
-        {
-            var actionOutcome = (from ao in context.ActionOutcome
-                                 where ao.ActionId == dto.ActionId && ao.OutcomeId == dto.OutcomeId
-                                 select ao).FirstOrDefault();
-
-            context.ActionOutcome.Remove(actionOutcome);
-            SaveChanges();
-
-            context.Action.Remove((from a in context.Action
-                                   where a.Id == actionOutcome.ActionId
-                                   select a).FirstOrDefault());
-
-            context.Outcome.Remove((from o in context.Outcome
-                                    where o.Id == actionOutcome.OutcomeId
-                                    select o).FirstOrDefault());
-
-            SaveChanges();
-        }
-
-        private Outcome GetOutcome(Outcome outcome, int gameId)
-        {
-            return (from o in context.Outcome
-                    where o.ItemId == outcome.ItemId || o.MonsterId == outcome.MonsterId || o.NextRoomId == outcome.NextRoomId && o.GameId == gameId
-                    select o).FirstOrDefault();
         }
 
         public Game GetGame(int gameId)
@@ -578,6 +468,266 @@ namespace WebAdventureAPI.Repositories
             var itemTypes = (from i in context.ItemType
                              select i).ToList();
             return itemTypes;
+        }
+
+        public List<ItemDto> GetItemsForRoom(int roomId)
+        {
+            return (from ri in context.RoomItem
+                    join i in context.Item on ri.ItemId equals i.Id
+                    where ri.RoomId == roomId
+                    select new ItemDto
+                    {
+                        Id = i.Id,
+                        Name = i.Name,
+                        Descr = i.Descr,
+                        Points = i.Points,
+                        Type = (from it in context.ItemType
+                                where it.Id == i.ItemTypeId
+                                select new ItemTypeDto
+                                {
+                                    Type = it.Type
+                                }).FirstOrDefault()
+                    }).ToList();
+        }
+
+        public void AddItemToRoom(int roomId, int itemId)
+        {
+            context.RoomItem.Add(new RoomItem
+            {
+                ItemId = itemId,
+                RoomId = roomId
+            });
+            context.SaveChanges();
+        }
+
+        public void DeleteItemFromRoom(int roomId, int itemId)
+        {
+            context.RoomItem.Remove(new RoomItem
+            {
+                RoomId = roomId,
+                ItemId = itemId
+            });
+            context.SaveChanges();
+        }
+
+        public List<MonsterDto> GetMonstersForRoom(int roomId)
+        {
+            return (from rm in context.RoomMonster
+                    join m in context.Monster on rm.MonsterId equals m.Id
+                    where rm.RoomId == roomId
+                    select new MonsterDto
+                    {
+                        Id = m.Id,
+                        Name = m.Name,
+                        Descr = m.Descr,
+                        MaxDamage = m.MaxDamage,
+                        MinDamage = m.MinDamage,
+                        AttackDescr = m.AttackDescr,
+                        Health = m.Health,
+                        Speed = m.Speed
+                    }).ToList();
+        }
+
+        public void AddMonsterToRoom(int roomId, int monsterId)
+        {
+            context.RoomMonster.Add(new RoomMonster
+            {
+                RoomId = roomId,
+                MonsterId = monsterId
+            });
+            SaveChanges();
+        }
+
+        public void DeleteMonsterFromRoom(int roomId, int monsterId)
+        {
+            context.RoomMonster.Remove(new RoomMonster
+            {
+                RoomId = roomId,
+                MonsterId = monsterId
+            });
+            SaveChanges();
+        }
+
+        public List<ExitDto> GetExitsForRoom(int roomId)
+        {
+            return (from e in context.Exits
+                    join r in context.Room on e.NextRoomId equals r.Id
+                    where e.CurrentRoomId == roomId
+                    select new ExitDto
+                    {
+                        NextRoomId = e.NextRoomId,
+                        Name = r.Name,
+                        Descr = e.Descr,
+                        Commands = e.Commands
+                    }).ToList();
+        }
+
+        public void AddExitToRoom(int roomId, ExitCreationDto dto)
+        {
+            context.Exits.Add(new Exits
+            {
+                CurrentRoomId = roomId,
+                NextRoomId = dto.NextRoomId,
+                Descr = dto.Descr,
+                Commands = dto.Commands
+
+            });
+            SaveChanges();
+        }
+
+        public void DeleteExitFromRoom(int roomId, ExitCreationDto dto)
+        {
+            context.Exits.Remove(new Exits
+            {
+                CurrentRoomId = roomId,
+                NextRoomId = dto.NextRoomId,
+                Commands = dto.Commands,
+                Descr = dto.Descr
+            });
+            SaveChanges();
+        }
+
+        public CompleteRoomInfoDto GetInformationForRoom(int roomId)
+        {
+            var room = (from r in context.Room
+                        where r.Id == roomId
+                        select new RoomDto
+                        {
+                            Id = roomId,
+                            Name = r.Name,
+                            GameId = r.GameId,
+                            Descr = r.Descr,
+                            IsStarting = r.IsStarting
+                        }).FirstOrDefault();
+
+            var monster = (from rm in context.RoomMonster
+                           join m in context.Monster on rm.MonsterId equals m.Id
+                           where rm.RoomId == room.Id
+                           select new MonsterDto
+                           {
+                               Id = m.Id,
+                               Name = m.Name,
+                               Descr = m.Descr,
+                               MaxDamage = m.MaxDamage,
+                               MinDamage = m.MinDamage,
+                               Health = m.Health,
+                               AttackDescr = m.AttackDescr,
+                               Speed = m.Speed
+                           }).FirstOrDefault();
+
+            var item = (from ri in context.RoomItem
+                        join i in context.Item on ri.ItemId equals i.Id
+                        where ri.RoomId == room.Id
+                        select new ItemDto
+                        {
+                            Id = i.Id,
+                            Name = i.Name,
+                            Descr = i.Descr,
+                            Points = i.Points,
+                            Type = (from it in context.ItemType
+                                    where it.Id == i.ItemTypeId
+                                    select new ItemTypeDto
+                                    {
+                                        Type = it.Type
+                                    }).FirstOrDefault()
+                        }).FirstOrDefault();
+
+            var exits = (from e in context.Exits
+                         join r in context.Room on e.CurrentRoomId equals r.Id
+                         where e.CurrentRoomId == room.Id
+                         select new ExitDto
+                         {
+                             NextRoomId = e.NextRoomId,
+                             Name = r.Name,
+                             Descr = e.Descr,
+                             Commands = e.Commands
+                         }).ToList();
+
+            return new CompleteRoomInfoDto
+            {
+                Room = room,
+                Exits = exits,
+                Item = item,
+                Monster = monster
+            };
+        }
+
+        public GameDto GetGameInformation(int gameId)
+        {
+            return (from g in context.Game
+                    where g.Id == gameId
+                    select new GameDto
+                    {
+                        Id = g.Id,
+                        Name = g.Name,
+                        Descr = g.Descr,
+                        Genre = (from ge in context.Genre
+                                 where ge.Id == g.GenreId
+                                 select ge.Descr).FirstOrDefault(),
+                        Author = (from a in context.Users
+                                  where a.Id == g.AuthorId
+                                  select new UserDto
+                                  {
+                                      Username = a.UserName
+                                  }).FirstOrDefault(),
+                        IsPublic = g.IsPublic
+                    }).FirstOrDefault();
+        }
+
+        public PlayerGameDto InitializePlayerGame(int gameId, UserDto user)
+        {
+            var player = (from p in context.Player
+                          where p.GameId == gameId
+                          select p).FirstOrDefault();
+
+            var room = (from r in context.Room
+                        where r.Id == 22
+                        select r).FirstOrDefault();
+            Console.WriteLine(room);
+
+            context.PlayerGame.Add(new PlayerGame
+            {
+                PlayerId = player.Id,
+                Health = player.Health,
+                RoomId = (from r in context.Room
+                          where r.GameId == gameId && r.IsStarting
+                          select r.Id).FirstOrDefault(),
+                UserId = user.Id,
+                GameId = gameId
+            });
+
+            SaveChanges();
+
+            var playerGame = (from pg in context.PlayerGame
+                              where pg.UserId == user.Id && pg.GameId == gameId
+                              select pg).LastOrDefault();
+
+            context.Backpack.Add(new Backpack
+            {
+                PlayerGameId = playerGame.Id,
+                Equipped = null,
+                ItemId = null
+            });
+
+            SaveChanges();
+
+            return new PlayerGameDto
+            {
+                Id = playerGame.Id,
+                Health = playerGame.Health,
+                PlayerId = playerGame.PlayerId,
+                RoomId = playerGame.RoomId
+            };
+        }
+
+        public void UpdatePlayerRoom(int roomId, int gamePlayId)
+        {
+            var gamePlay = (from gp in context.PlayerGame
+                            where gp.Id == gamePlayId
+                            select gp).FirstOrDefault();
+
+            gamePlay.RoomId = roomId;
+            SaveChanges();
         }
     }
 }

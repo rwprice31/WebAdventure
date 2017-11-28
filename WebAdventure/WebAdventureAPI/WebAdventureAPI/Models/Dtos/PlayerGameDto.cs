@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace WebAdventureAPI.Models.Dtos
 {
-    public class RoomDto
+    public class PlayerGameDto
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public int PlayerId { get; set; }
 
-        public string Descr { get; set; }
+        public int RoomId { get; set; }
 
-        public int GameId { get; set; }
-
-        public bool IsStarting { get; set; }
+        public int Health { get; set; }
     }
 }

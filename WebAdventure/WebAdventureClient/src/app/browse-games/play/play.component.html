@@ -1,0 +1,12 @@
+<div>
+    <h1>{{game.name}}</h1>
+    <h2>{{game.descr}}</h2>
+    <h2>Created By: {{game.author.username}}</h2>
+    <div *ngIf="clicked" class="buttonDiv">
+        <button class="btn wa-button-dark" (click)="startGame()">Start</button>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <router-outlet></router-outlet>
+</div>

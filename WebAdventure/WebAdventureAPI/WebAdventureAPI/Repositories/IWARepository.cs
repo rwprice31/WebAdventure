@@ -18,11 +18,7 @@ namespace WebAdventureAPI.Repositories
 
         List<Game> GetAllGames();
 
-        ActionOutcomeInfoDto CreateActionOutcome(int roomId, ActionOutcomeInfoDto dto, int gameId);
-
         ItemDto CreateItem(ItemDto dto, int gameId);
-
-        void DeleteActionOutcome(ActionOutcomeDeleteDto dto);
 
         void DeleteGame(int gameId);
 
@@ -31,8 +27,6 @@ namespace WebAdventureAPI.Repositories
         void DeleteRoom(int id);
 
         Room GetRoomForGame(int gameId, int roomId);
-
-        List<ActionOutcomeInfoDto> GetActionOutcomeByRoom(int id);
 
         List<Genre> GetAllGenres();
 
@@ -75,5 +69,31 @@ namespace WebAdventureAPI.Repositories
         PlayerDto UpdatePlayer(int id, PlayerCreationDto dto);
 
         void DeletePlayer(int id);
+
+        List<ItemDto> GetItemsForRoom(int roomId);
+
+        void AddItemToRoom(int roomId, int itemId);
+
+        void DeleteItemFromRoom(int roomId, int itemId);
+
+        List<MonsterDto> GetMonstersForRoom(int roomId);
+
+        void AddMonsterToRoom(int roomId, int monsterId);
+
+        void DeleteMonsterFromRoom(int roomId, int monsterId);
+
+        List<ExitDto> GetExitsForRoom(int roomId);
+
+        void AddExitToRoom(int roomId, ExitCreationDto dto);
+
+        void DeleteExitFromRoom(int roomId, ExitCreationDto dto);
+
+        CompleteRoomInfoDto GetInformationForRoom(int roomId);
+
+        GameDto GetGameInformation(int gameId);
+
+        PlayerGameDto InitializePlayerGame(int gameId, UserDto user);
+
+        void UpdatePlayerRoom(int roomId, int gamePlayId);
     }
 }

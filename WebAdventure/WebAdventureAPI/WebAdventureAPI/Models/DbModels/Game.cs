@@ -21,5 +21,7 @@ namespace WebAdventureAPI.Models
         public string Name { get; set; }
 
         public string Descr { get; set; }
+
+        public bool IsPublic { get; set; }
     }
 }

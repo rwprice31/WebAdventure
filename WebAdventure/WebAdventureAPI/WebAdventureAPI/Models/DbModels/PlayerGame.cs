@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 
 namespace WebAdventureAPI.Models.DbModels
 {
-    public class Outcome
+    public class PlayerGame
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int MonsterId { get; set; }
-
-        public int ItemId { get; set; }
-
-        public int NextRoomId { get; set; }
-
-        public int GameId { get; set; }
+        public int PlayerId { get; set; }
 
         public int RoomId { get; set; }
+
+        public int Health { get; set; }
+
+        public string UserId { get; set; }
+
+        public int GameId { get; set; }
     }
 }

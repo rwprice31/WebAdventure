@@ -54,7 +54,8 @@ namespace WebAdventureAPI.Controllers
                             },
                             Genre = repo.GetGenreById(game.GenreId).Descr,
                             Name = game.Name,
-                            Descr = game.Descr
+                            Descr = game.Descr,
+                            IsPublic = game.IsPublic
                         });
                     }
                     return StatusCode(200, responses.GamesFoundResponse(games));
@@ -81,7 +82,8 @@ namespace WebAdventureAPI.Controllers
                 Author = new UserDto()
                 {
                     Username = gameAuthor.UserName
-                }
+                },
+                IsPublic = game.IsPublic
             };
             if (gameDto != null)
             {
@@ -104,7 +106,8 @@ namespace WebAdventureAPI.Controllers
                     Name = gameDto.Name,
                     Descr = gameDto.Descr,
                     AuthorId = gameDto.Author.Id,
-                    GenreId = repo.GetGenreByDescr(gameDto.Genre).Id
+                    GenreId = repo.GetGenreByDescr(gameDto.Genre).Id,
+                    IsPublic = gameDto.IsPublic
                 };
                 var game = repo.AddGameToDb(newGame);
 
@@ -139,7 +142,8 @@ namespace WebAdventureAPI.Controllers
                     Author = gameDto.Author,
                     Descr = gameDto.Descr,
                     Genre = gameDto.Genre,
-                    Name = gameDto.Name
+                    Name = gameDto.Name,
+                    IsPublic = gameDto.IsPublic
                 };
                 var successResponse = responses.UpdateResponse(updatedGameDto);
                 return StatusCode(200, successResponse);
@@ -182,7 +186,8 @@ namespace WebAdventureAPI.Controllers
                         },
                         Genre = repo.GetGenreById(game.GenreId).Descr,
                         Name = game.Name,
-                        Descr = game.Descr
+                        Descr = game.Descr,
+                        IsPublic = game.IsPublic
                     });
                 }
                 return StatusCode(200, responses.AuthorsGamesFound(usersGames));
