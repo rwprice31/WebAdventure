@@ -23,7 +23,7 @@ export class PlayGameComponent {
   private game: IGame;
   public gameId: number;
   private playerGame: IPlayerGame;
-  private clicked: boolean;
+  public clicked: boolean;
 
   constructor(private gamePlayService: GamePlayService,
     private router: Router,
@@ -33,7 +33,10 @@ export class PlayGameComponent {
   }
 
   ngOnInit(): void {
-    this.clicked = true;
+      if (this.clicked == null) {
+          this.clicked = true;
+      }
+
     this.getGame();
   }
 

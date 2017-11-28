@@ -36,34 +36,35 @@ export class PlayRoomComponent {
   }
 
   ngOnInit(): void {
+      this.playGameComponent.clicked = false;
       this.sub = this.route.params.subscribe(params => {
-          this.roomId = params.roomId as number;
+          if (this.roomId != params.roomId as number)
+            {
+                this.roomId = params.roomId as number;
+                this.getCurrentRoomInfo();
+            }
       })
       this.gamePlayId = this.route.params['_value'].playerGameId as number;
       this.gameId = this.playGameComponent.gameId as number;
-    console.log(this.roomId);
-    console.log(this.gamePlayId);
-      this.getCurrentRoomInfo();
   }
 
   getCurrentRoomInfo() {
-      console.log('roomId ' + this.roomId);
       this.gamePlayService.getCurrentRoomInfo(this.gameId, this.gamePlayId, this.roomId).subscribe( (res) => {
         if (res.status) {
             this.roomInfo = res.responseObject as IRoomInfo;
+            console.log(this.roomInfo);
         } else {
             this.toastr.error(res.statusText);
         }
     })
   }
 
-  goToNextRoom(){
-     this.router.navigate(['../../', this.gamePlayId, '21'], { relativeTo: this.route });
-     this.ngOnDestroy();
-     this.ngOnInit();
+  getUsersInput(input: string) {
+      console.log(input);
   }
 
-  ngOnDestroy(){
-      this.sub.unsubscribe();
+  goToNextRoom(id: number) {
+     this.router.navigate(['../../', this.gamePlayId, this.roomInfo.exits[0].nextRoomId], { relativeTo: this.route });
+     this.ngOnInit();
   }
 }
