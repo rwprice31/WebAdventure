@@ -555,7 +555,7 @@ namespace WebAdventureAPI.Repositories
                     where e.CurrentRoomId == roomId
                     select new ExitDto
                     {
-                        RoomId = e.CurrentRoomId,
+                        NextRoomId = e.NextRoomId,
                         Name = r.Name,
                         Descr = e.Descr,
                         Commands = e.Commands
@@ -637,7 +637,7 @@ namespace WebAdventureAPI.Repositories
                          where e.CurrentRoomId == room.Id
                          select new ExitDto
                          {
-                             RoomId = e.CurrentRoomId,
+                             NextRoomId = e.NextRoomId,
                              Name = r.Name,
                              Descr = e.Descr,
                              Commands = e.Commands
@@ -680,25 +680,33 @@ namespace WebAdventureAPI.Repositories
                           where p.GameId == gameId
                           select p).FirstOrDefault();
 
+            var room = (from r in context.Room
+                        where r.Id == 22
+                        select r).FirstOrDefault();
+            Console.WriteLine(room);
+
             context.PlayerGame.Add(new PlayerGame
             {
                 PlayerId = player.Id,
                 Health = player.Health,
                 RoomId = (from r in context.Room
-                          where r.GameId == gameId && r.IsStarting == true
+                          where r.GameId == gameId && r.IsStarting
                           select r.Id).FirstOrDefault(),
-                UserId = user.Id
+                UserId = user.Id,
+                GameId = gameId
             });
 
             SaveChanges();
 
             var playerGame = (from pg in context.PlayerGame
                               where pg.UserId == user.Id && pg.GameId == gameId
-                              select pg).FirstOrDefault();
+                              select pg).LastOrDefault();
 
             context.Backpack.Add(new Backpack
             {
                 PlayerGameId = playerGame.Id,
+                Equipped = null,
+                ItemId = null
             });
 
             SaveChanges();
@@ -706,11 +714,9 @@ namespace WebAdventureAPI.Repositories
             return new PlayerGameDto
             {
                 Id = playerGame.Id,
-                GameId = playerGame.GameId,
                 Health = playerGame.Health,
                 PlayerId = playerGame.PlayerId,
-                RoomId = playerGame.RoomId,
-                UserId = playerGame.UserId
+                RoomId = playerGame.RoomId
             };
         }
 

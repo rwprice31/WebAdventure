@@ -10,7 +10,7 @@ using WebAdventureAPI.Repositories;
 
 namespace WebAdventureAPI.Controllers
 {
-    [Route("api/gameplay/{gameId}")]
+    [Route("api/games/play/{gameId}")]
     public class GameplayController : Controller
     {
         private GameplayResponses responses;
@@ -28,7 +28,7 @@ namespace WebAdventureAPI.Controllers
             try
             {
                 var game = repo.GetGameInformation(gameId);
-                return StatusCode(291, responses.GameInfoResponse(game));
+                return StatusCode(201, responses.GameInfoResponse(game));
             }
             catch (Exception)
             {
@@ -41,12 +41,12 @@ namespace WebAdventureAPI.Controllers
         {
             try
             {
-
                 var playerGame = repo.InitializePlayerGame(gameId, userDto);
                 return StatusCode(291, responses.StartGameResponse(playerGame));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 return StatusCode(500, ErrorResponse.ServerError);
             }
         }
@@ -59,8 +59,9 @@ namespace WebAdventureAPI.Controllers
                 var roomInfo = repo.GetInformationForRoom(roomId);
                 return StatusCode(291, responses.RoomInfoResponse(roomInfo));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 return StatusCode(500, ErrorResponse.ServerError);
             }
         }

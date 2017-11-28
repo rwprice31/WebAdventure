@@ -8,7 +8,7 @@ namespace WebAdventureAPI.Models.Dtos
 {
     public class ExitDto
     {
-        public int RoomId { get; set; }
+        public int NextRoomId { get; set; }
 
         public string Name { get; set; }
 
