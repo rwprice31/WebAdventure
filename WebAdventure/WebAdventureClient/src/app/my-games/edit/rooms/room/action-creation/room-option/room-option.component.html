@@ -1,1 +1,19 @@
-Hi from roo option
+<form [formGroup]="roomSelectionForm" novalidate autocomplete="off">
+    <div class="form-group row">
+        <label for="room" class="col-sm-4 col-form-label">Select your room: </label>
+        <div class="col-sm-8">
+            <select class="form-control" formControlName="room" (change)="roomSelected($event.target.value)"
+            [ngClass]="{'has-error': (roomSelectionForm.get('room').touched || 
+            roomSelectionForm.get('room').dirty) && !roomSelectionForm.get('room').valid }">
+                <option *ngFor="let room of rooms" value="{{room.id}}">{{room.name}}</option>
+            </select>
+            <span class="error-block" *ngIf="roomSelectionForm.get('room').errors">
+                <span class="error-block-text" *ngIf="(roomSelectionForm.get('room').touched || 
+                roomSelectionForm.get('room').dirty) &&
+                roomSelectionForm.get('room').errors.required"> 
+                    A room selection is required.
+                </span>
+            </span>
+        </div>
+    </div>
+</form>
