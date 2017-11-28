@@ -104,7 +104,8 @@ export class GameInfoComponent implements OnInit, CanComponentDeactivate  {
       name: this.createInfoForm.controls['name'].value,
       descr: this.createInfoForm.controls['description'].value,
       genre: this.createInfoForm.controls['genre'].value,
-      author: this.userService.getCurrentUser()
+      author: this.userService.getCurrentUser(),
+      isPublic: this.game.isPublic
     };
     console.log('Passing this updated game into updateGame ' + JSON.stringify(this.game));
     this.gameService.updateGame(this.game).subscribe( (res: IGameUpdationResponse) => {

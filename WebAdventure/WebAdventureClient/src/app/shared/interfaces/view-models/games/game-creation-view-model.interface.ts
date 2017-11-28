@@ -6,4 +6,5 @@ export interface IGameCreationViewModel {
     genre: string;
     name: string;
     descr: string;
+    isPublic: boolean;
 }

@@ -6,4 +6,5 @@ export interface IGame {
     genre: string;
     descr: string;
     author: IUser;
+    isPublic: boolean;
 }

@@ -31,7 +31,7 @@ export class BrowseGamesComponent implements OnInit{
   }
 
   getCreatedGames() {
-    this.gameService.getGames().subscribe( (res) => {
+    this.gameService.getGames().subscribe( (res: IGamesResponse) => {
       if (res.status) {
         this.games = res.games;
       } else {

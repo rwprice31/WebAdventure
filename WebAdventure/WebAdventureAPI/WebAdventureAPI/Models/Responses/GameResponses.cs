@@ -11,6 +11,7 @@ namespace WebAdventureAPI.Models.Responses
     {
         public List<GameDto> Games { get; set; }
 
+        public GameDto Game { get; set; }
 
         public GameResponses GameFoundResponse(GameDto game)
         {
@@ -19,10 +20,7 @@ namespace WebAdventureAPI.Models.Responses
                 StatusText = "Game successfully found!",
                 StatusCode = 200,
                 Status = true,
-                Games = new List<GameDto>
-                {
-                    game
-                }
+                Game = game
             };
         }
 
@@ -44,10 +42,7 @@ namespace WebAdventureAPI.Models.Responses
                 StatusText = "New game successfully created!",
                 StatusCode = 201,
                 Status = true,
-                Games = new List<GameDto>
-                {
-                    game
-                }
+                Game = game
             };
         }
 
@@ -58,10 +53,7 @@ namespace WebAdventureAPI.Models.Responses
                 StatusText = "Game successfully updated!",
                 StatusCode = 200,
                 Status = true,
-                Games = new List<GameDto>
-                {
-                    game
-                }
+                Game = game
             };
         }
 

@@ -61,10 +61,12 @@ export class MyGamesNewComponent implements OnInit {
             author: this.userService.getCurrentUser(),
             descr: this.createInfoForm.controls['description'].value,
             genre: this.createInfoForm.controls['genre'].value,
-            name: this.createInfoForm.controls['name'].value
+            name: this.createInfoForm.controls['name'].value,
+            isPublic: true
         };
         this.gameService.createGame(game).subscribe( (res: IGameCreationResponse) => {
           if (res.status) {
+            console.log('Game creation response = ' + JSON.stringify(res));
             this.gameService.addGameIdToCurrentUsersOwnedGameIdsInSessionStorage(res.game.id);
             this.toastr.success('Game successfully created!');
             this.router.navigate(['my-games/edit', res.game.id]);
