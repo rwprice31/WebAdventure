@@ -1,4 +1,4 @@
-import { IMonsterCreationResponse } from './../../../../shared/interfaces/responses/monsters/monster-creation-response.interface';
+
 import { IGame } from './../../../../shared/interfaces/models/game.interface';
 import { GameService } from './../../../../core/services/game.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,13 +17,16 @@ import { Observable } from 'rxjs/Observable';
 import { compareFormGroupValues } from '../../../../shared/functions/copy-form-group';
 import { IMonsterUpdatingViewModel } from '../../../../shared/interfaces/view-models/monsters/monster-updating-view-model.interface';
 import { IMonsterUpdatingResponse } from '../../../../shared/interfaces/responses/monsters/monster-updating-response.interface';
+import { IMonsterCreationResponse } from './../../../../shared/interfaces/responses/monsters/monster-creation-response.interface';
+import { IMonsterCreationViewModel } from "../../../../shared/interfaces/view-models/monsters/monster-creation-view-model.interface";
 
 @Component({
   templateUrl: './monster.component.html',
   styleUrls: ['./monster.component.scss']
 })
-export class MonsterComponent implements OnInit, CanComponentDeactivate {
+export class MonsterComponent implements OnInit {
 
+  //CanComponentDeactivate
     private monster: IMonsters;
     private monsterInfoForm: FormGroup;
     private originalMonsterInfoForm: FormGroup;
@@ -66,15 +69,25 @@ export class MonsterComponent implements OnInit, CanComponentDeactivate {
   
     private buildForm(): void {
       this.monsterInfoForm = this.formBuilder.group({
-        name: ['', Validators.required],
-        description: ['']
+        Name: ['', Validators.required],
+        Description: ['', Validators.required],
+        Health: [''],
+        MinDamage: [''],
+        MaxDamage: [''],
+        Speed: [''],
+        AttackDescr: ['']
       });
     }
 
     private setFormValues(): void {
       this.monsterInfoForm.setValue({
-        name: this.monster.name,
-        description: this.monster.descr
+        Name: this.monster.name,
+        Description: this.monster.descr,
+        Health: this.monster.health,
+        MinDamage: this.monster.minDamage,
+        MaxDamage: this.monster.maxDamage,
+        Speed: this.monster.speed,
+        AttackDescr: this.monster.attackDescr
       });
       this.originalMonsterInfoForm = _.cloneDeep(this.monsterInfoForm);
     }
@@ -88,23 +101,23 @@ export class MonsterComponent implements OnInit, CanComponentDeactivate {
     }
 
     private createMonster() {
-      let monster: IMonsters = {
-        id: 0,
-        name: this.monsterInfoForm.controls['name'].value,
-        descr: this.monsterInfoForm.controls['description'].value,
-        health: this.monsterInfoForm.controls['health'].value,
+      let monster: IMonsterCreationViewModel = {
+        Id: 0,
+        Name: this.monsterInfoForm.controls['Name'].value,
+        Descr: this.monsterInfoForm.controls['Description'].value,
+        Health: this.monsterInfoForm.controls['Health'].value,
         MinDamage: this.monsterInfoForm.controls['MinDamage'].value,
         MaxDamage: this.monsterInfoForm.controls['MaxDamage'].value,
         Speed: this.monsterInfoForm.controls['Speed'].value,
-        AttackDescr: this.monsterInfoForm.controls['AttackDescription'].value,
+        AttackDescr: this.monsterInfoForm.controls['AttackDescr'].value,
         //actions: null,
-        gameId:  this.gameId
+        //gameId:  this.gameId
       };
       this.monsterService.createMonster(monster).subscribe( 
         (res: IMonsterCreationResponse) => {
           if (res.status) {
             this.monster = res.monster;
-            this.setFormValues();
+            //this.setFormValues();
             this.toastr.success(res.statusText);
             this.router.navigate(['../'], { relativeTo: this.route});
           } else {
@@ -139,13 +152,13 @@ export class MonsterComponent implements OnInit, CanComponentDeactivate {
       );
     }
 
-    canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {
-      // only prompt for message if values have changed
-      if (!compareFormGroupValues(this.originalMonsterInfoForm, this.monsterInfoForm)) {
-        return this.dialogService.confirm('Leave and lose unsaved changes?');
-      } else {
-        return true;
-      }
-    }
+    //canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {
+    //  // only prompt for message if values have changed
+    //  if (!compareFormGroupValues(this.originalMonsterInfoForm, this.monsterInfoForm)) {
+    //    return this.dialogService.confirm('Leave and lose unsaved changes?');
+    //  } else {
+    //    return true;
+    //  }
+    //}
 
 }

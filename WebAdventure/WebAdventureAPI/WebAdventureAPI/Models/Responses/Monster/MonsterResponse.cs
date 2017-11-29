@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebAdventureAPI.Models.Dtos;
 
 namespace WebAdventureAPI.Models.Responses.Monster
@@ -14,7 +10,7 @@ namespace WebAdventureAPI.Models.Responses.Monster
         public MonsterResponse AllMonstersResponse(List<MonsterDto> list) => new MonsterResponse
         {
             Status = true,
-            StatusCode = 201,
+            StatusCode = 200,
             StatusText = "Got all monsters",
             Monsters = list
         };
@@ -44,7 +40,7 @@ namespace WebAdventureAPI.Models.Responses.Monster
         public MonsterResponse DeleteMonsterResponse() => new MonsterResponse
         {
             Status = true,
-            StatusCode = 201,
+            StatusCode = 200,
             StatusText = "Monster Deleted"
         };
     }

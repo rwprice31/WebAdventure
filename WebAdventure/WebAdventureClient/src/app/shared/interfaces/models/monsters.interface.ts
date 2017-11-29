@@ -1,15 +1,15 @@
 import { IGame } from './game.interface';
-//import { IMonsterAction } from "./monster-action.interface";
+import { IMonsterAction } from "./monster-action.interface";
 
 export interface IMonsters {
     id: number;
-    descr: string;
     name: string;
+    descr: string;  
     health: number;
-    MinDamage: number;
-    MaxDamage: number;
-    Speed: number;
-    AttackDescr: string;
+    minDamage: number;
+    maxDamage: number;
+    speed: number;
+    attackDescr: string;
     gameId: number;
-    //actions?: IMonsterAction[]; 
+   // actions?: IMonsterAction[]; 
 }

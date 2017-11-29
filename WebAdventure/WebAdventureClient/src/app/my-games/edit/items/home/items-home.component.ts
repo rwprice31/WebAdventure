@@ -37,10 +37,11 @@ export class ItemsHomeComponent implements OnInit {
     }
 
     private retrieveItems(): void {
-        this.route.data.subscribe( (data: { itemsResponse: IItemsResponse }) => {
+      this.route.data.subscribe((data: { itemsResponse: IItemsResponse }) => {
+        console.log("data: " + data + "items response: " + data.itemsResponse);
             if (data.itemsResponse.status) {
                 this.items = data.itemsResponse.items;
-                // console.log('This items = ' + JSON.stringify(this.items));
+                 //console.log('This items = ' + JSON.stringify(this.items));
             } else {
                 this.toastr.error(data.itemsResponse.statusText);
             }

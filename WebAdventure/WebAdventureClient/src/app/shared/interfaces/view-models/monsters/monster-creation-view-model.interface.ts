@@ -1,11 +1,11 @@
 export interface IMonsterCreationViewModel {
-    id: number;
-    descr: string;
-    name: string;
-    health: number;
-    MinDamage: number;
-    MaxDamage: number;
-    Speed: number;
-    AttackDescr: string;
-    gameId: number;
+  Id: number;
+  Name: string;
+  Descr: string;
+  Health: number;
+  MinDamage: number;
+  MaxDamage: number;
+  Speed: number;
+  AttackDescr: string;
+  //gameId: number;
 }

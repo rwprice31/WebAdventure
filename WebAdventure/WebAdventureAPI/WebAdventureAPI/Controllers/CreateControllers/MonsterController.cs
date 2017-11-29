@@ -10,7 +10,7 @@ using WebAdventureAPI.Models.Dtos;
 namespace WebAdventureAPI.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/games/{gameId}/monster")]
+    [Route("api/games/{gameId}/monsters")]
     public class MonsterController : Controller
     {
         private IWARepository repo;
