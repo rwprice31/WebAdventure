@@ -16,11 +16,11 @@ const routes: Routes = [
         children: [
             { 
                 path: ':id',
-                component: RoomComponent,
+                loadChildren: 'app/my-games/edit/rooms/room/room.module#RoomModule',
                 resolve: {
                     roomResponse: RoomResolver
-                },
-                canDeactivate: [ CanDeactivateGuard ]
+                }
+                //canDeactivate: [ CanDeactivateGuard ]
             },
             {
                 path: '**', 
@@ -42,5 +42,5 @@ const routes: Routes = [
     exports: [ RouterModule ]
 })
 export class RoomsRoutingModule {
-    static components = [ RoomComponent, RoomsHomeComponent, RoomsComponent ];
+    static components = [ RoomsHomeComponent, RoomsComponent ];
  }

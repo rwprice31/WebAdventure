@@ -19,11 +19,12 @@ namespace WebAdventureAPI.Models.Responses.Room
             Exits = exits
         };
 
-        public Response AddExitResponse() => new Response
+        public RoomExitResponse AddExitResponse(List<ExitDto> exit) => new RoomExitResponse
         {
             Status = true,
             StatusText = "Exit added",
-            StatusCode = 201
+            StatusCode = 201,
+            Exits = exit
         };
 
         public Response RemoveExitResponse() => new Response
@@ -32,5 +33,13 @@ namespace WebAdventureAPI.Models.Responses.Room
             StatusCode = 201,
             StatusText = "Exit removed"
         };
+
+        public Response DuplicateExitResponse => new Response
+        {
+            Status = false,
+            StatusCode = 400,
+            StatusText = "You cannot add duplicate exits."
+        };
+
     }
 }

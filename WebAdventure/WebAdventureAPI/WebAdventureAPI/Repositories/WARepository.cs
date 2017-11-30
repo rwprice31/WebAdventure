@@ -556,13 +556,12 @@ namespace WebAdventureAPI.Repositories
                     select new ExitDto
                     {
                         NextRoomId = e.NextRoomId,
-                        Name = r.Name,
                         Descr = e.Descr,
                         Commands = e.Commands
                     }).ToList();
         }
 
-        public void AddExitToRoom(int roomId, ExitCreationDto dto)
+        public ExitDto AddExitToRoom(int roomId, ExitCreationDto dto)
         {
             context.Exits.Add(new Exits
             {
@@ -570,9 +569,17 @@ namespace WebAdventureAPI.Repositories
                 NextRoomId = dto.NextRoomId,
                 Descr = dto.Descr,
                 Commands = dto.Commands
-
             });
             SaveChanges();
+            var exit = context.Exits.Where(e => e.CurrentRoomId == roomId && e.NextRoomId == dto.NextRoomId).First();
+            return new ExitDto
+            {
+                Commands = exit.Commands,
+                Descr = exit.Descr,
+                CurrentRoomId = roomId,
+                NextRoomId = exit.NextRoomId,
+                Id = exit.Id
+            };
         }
 
         public void DeleteExitFromRoom(int roomId, ExitCreationDto dto)
@@ -638,7 +645,6 @@ namespace WebAdventureAPI.Repositories
                          select new ExitDto
                          {
                              NextRoomId = e.NextRoomId,
-                             Name = r.Name,
                              Descr = e.Descr,
                              Commands = e.Commands
                          }).ToList();
@@ -728,6 +734,18 @@ namespace WebAdventureAPI.Repositories
 
             gamePlay.RoomId = roomId;
             SaveChanges();
+        }
+
+        public bool IsDuplicateRoomExit(int roomId, ExitCreationDto dto)
+        {
+            var exit = context.Exits.Where(e => e.CurrentRoomId == roomId && e.NextRoomId == dto.NextRoomId).ToList();
+            if (exit.Count() != 0)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
         }
     }
 }

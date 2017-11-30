@@ -31,7 +31,11 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
     private roomId: number;
     private gameId: number;
     private isUpdating: boolean;
-  
+
+    private createMonsterButtonVisible = true;
+    private createItemButtonVisible = true;
+    private createExitButtonVisible = true;
+
     constructor(private formBuilder: FormBuilder,
       private roomService: RoomService,
       private gameService: GameService,
@@ -138,6 +142,16 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
       } else {
         return true;
       }
+    }
+
+    createNewExit() {
+      this.createExitButtonVisible = false;
+      this.router.navigate([{ outlets: {'exit': ['0']} }], { relativeTo: this.route });
+    }
+
+    createNewItem() {
+      this.createItemButtonVisible = false;
+      this.router.navigate([{ outlets: {'item': ['0']} }], { relativeTo: this.route });
     }
 
 }

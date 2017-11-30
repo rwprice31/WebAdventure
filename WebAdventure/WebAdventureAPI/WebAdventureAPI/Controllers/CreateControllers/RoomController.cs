@@ -18,7 +18,7 @@ using WebAdventureAPI.Models.Responses.Room;
 
 namespace WebAdventureAPI.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/games/{gameId}/rooms")]
     public class RoomController : Controller
     {
@@ -252,8 +252,18 @@ namespace WebAdventureAPI.Controllers
         {
             try
             {
-                repo.AddExitToRoom(roomId, dto);
-                return StatusCode(201, roomExitResponses.AddExitResponse());
+                var isDuplicateRoom = repo.IsDuplicateRoomExit(roomId, dto);
+
+                if (isDuplicateRoom)
+                {
+                    return StatusCode(400, roomExitResponses.DuplicateExitResponse);
+                }
+
+                List<ExitDto> exit = new List<ExitDto>()
+                {
+                    repo.AddExitToRoom(roomId, dto)
+                };
+                return StatusCode(201, roomExitResponses.AddExitResponse(exit));
             }
             catch (Exception)
             {
@@ -261,7 +271,7 @@ namespace WebAdventureAPI.Controllers
             }
         }
 
-        [HttpPost("{roomId}/exits")]
+        [HttpDelete("{roomId}/exits")]
         public IActionResult DeleteExitFromRoom([FromRoute] int roomId, [FromBody] ExitCreationDto dto)
         {
             try

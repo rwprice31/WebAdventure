@@ -17,6 +17,8 @@ import { IRoomUpdationViewModel } from '../../shared/interfaces/view-models/room
 import { IRoomUpdationResponse } from '../../shared/interfaces/responses/rooms/room-updation-response.interface';
 import { IRoomDeletionViewModel } from '../../shared/interfaces/view-models/rooms/room-deletion-view-model.interface';
 import { IRoomDeletionResponse } from '../../shared/interfaces/responses/rooms/room-deletion-response.interface';
+import { IRoomExitCreationViewModel } from '../../shared/interfaces/view-models/rooms/room-exit-creation-view-model.interface';
+import { IRoomExitCreationResponse } from '../../shared/interfaces/responses/rooms/room-exit-creation-response.interface';
 
 
 /**
@@ -79,6 +81,16 @@ export class RoomService extends BaseService {
             this.roomRoute = this.baseUrl + 'games/' + this.game.id + '/rooms';
             return this.roomRoute;
         }
+    }
+
+    /**
+     * @name getRoomExitRoute
+     * @param roomId 
+     */
+    getRoomExitRoute() {
+        this.getRoomsRoute();
+        let roomId = this.getCurrentEdittingRoomFromSessionStorage();
+        return this.roomRoute + '/' + roomId + '/exits';
     }
 
     /**
@@ -168,6 +180,20 @@ export class RoomService extends BaseService {
             console.log('IRoomDeletionResponse = ', res);
             return res;
         });
+    }
+
+    /**
+     * @name createExitForRoom
+     */
+    createExitForRoom(exit: IRoomExitCreationViewModel): Observable<IResponse> {
+        let route = this.getRoomExitRoute();
+        let body = JSON.stringify(exit);
+        console.log('Sending POST to ' + route + ' with body = ' + body);
+        return this.http.post<IRoomExitCreationResponse>(route, body, { headers: this.headers })
+            .map( (res: IRoomExitCreationResponse) => {
+                console.log('IRoomExitCreationResponse = ' + JSON.stringify(res));
+                return res;
+            });
     }
 
 }

@@ -1,6 +1,7 @@
-export interface IExits {
-    nextRoomId: number,
-    name: string,
-    descr: string,
-    commands: string
+export interface IExit {
+    id: number;
+    currentRoomId: number;
+    nextRoomId: number;
+    descr: string;
+    commands: string;
 }

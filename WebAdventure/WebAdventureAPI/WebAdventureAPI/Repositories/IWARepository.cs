@@ -84,7 +84,9 @@ namespace WebAdventureAPI.Repositories
 
         List<ExitDto> GetExitsForRoom(int roomId);
 
-        void AddExitToRoom(int roomId, ExitCreationDto dto);
+        ExitDto AddExitToRoom(int roomId, ExitCreationDto dto);
+
+        bool IsDuplicateRoomExit(int roomId, ExitCreationDto dto);
 
         void DeleteExitFromRoom(int roomId, ExitCreationDto dto);
 

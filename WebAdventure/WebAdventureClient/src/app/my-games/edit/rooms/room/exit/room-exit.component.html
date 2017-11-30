@@ -1,0 +1,44 @@
+<form [formGroup]="roomExitForm" (ngSubmit)="submit()" novalidate autocomplete="off">
+    <div class="form-group row">
+        <label for="command" class="col-sm-2 col-form-label">Command</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" formControlName="command"
+            [ngClass]="{'has-error': (roomExitForm.get('command').touched || 
+            roomExitForm.get('command').dirty) && !roomExitForm.get('command').valid }">
+            <div class="error-block" *ngIf="roomExitForm.get('command').errors">
+                <span class="error-block-text" *ngIf="(roomExitForm.get('command').touched || 
+                    roomExitForm.get('command').dirty) &&
+                    roomExitForm.get('command').errors.required"> 
+                    A command is required.
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="command" class="col-sm-2 col-form-label">Description</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" formControlName="descr">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="room" class="col-sm-2 col-form-label">Room</label>
+        <div class="col-sm-10">
+            <select class="form-control" formControlName="room"
+                [ngClass]="{'has-error': (roomExitForm.get('room').touched || 
+                roomExitForm.get('room').dirty) && !roomExitForm.get('room').valid }">
+                <option *ngFor="let room of rooms" value="{{room.id}}">{{room.name}}</option>
+            </select>
+            <span class="error-block" *ngIf="roomExitForm.get('room').errors">
+                <span class="error-block-text" *ngIf="(roomExitForm.get('room').touched || 
+                    roomExitForm.get('room').dirty) &&
+                    roomExitForm.get('room').errors.required"> 
+                    A room selection is required.
+                </span>
+            </span>
+        </div>
+    </div>
+    <button *ngIf="!isUpdating" type="submit" class="btn wa-button-dark" [disabled]="!roomExitForm.valid"
+    [ngClass]="{'invalid-button': !roomExitForm.valid }">Create</button>
+    <button *ngIf="isUpdating" type="submit" class="btn wa-button-dark" [disabled]="!roomExitForm.valid"
+    [ngClass]="{'invalid-button': !roomExitForm.valid }">Update</button>
+</form>
