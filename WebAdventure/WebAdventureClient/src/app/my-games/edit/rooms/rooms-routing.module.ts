@@ -8,6 +8,7 @@ import { RoomsHomeComponent } from './home/rooms-home.component';
 import { RoomComponent } from './room/room.component';
 import { CanDeactivateGuard } from '../../../core/services/guards/can-deactivate-guard.service';
 import { RoomExitsResolver } from '../../../core/services/resolvers/rooms/room-exits-resolver.service';
+import { RoomItemsResolver } from '../../../core/services/resolvers/rooms/room-items-resolver.service';
 
 // after /my-games/edit/:gameId/rooms/
 const routes: Routes = [
@@ -20,7 +21,8 @@ const routes: Routes = [
                 loadChildren: 'app/my-games/edit/rooms/room/room.module#RoomModule',
                 resolve: {
                     roomResponse: RoomResolver,
-                    roomExitsResponse: RoomExitsResolver
+                    roomExitsResponse: RoomExitsResolver,
+                    roomItemsResponse: RoomItemsResolver
                 }
                 //canDeactivate: [ CanDeactivateGuard ]
             },

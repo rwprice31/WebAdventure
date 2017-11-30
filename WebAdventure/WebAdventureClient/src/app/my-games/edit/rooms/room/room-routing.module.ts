@@ -6,6 +6,7 @@ import { RoomMonsterComponent } from './monster/room-monster.component';
 import { RoomItemComponent } from './item/room-item.component';
 import { RoomsResolver } from '../../../../core/services/resolvers/rooms/rooms-resolver.service';
 import { RoomExitResolver } from '../../../../core/services/resolvers/rooms/room-exit-resolver.service';
+import { ItemsResolver } from '../../../../core/services/resolvers/items/items-resolver.service';
 
 const routes: Routes = [
     {
@@ -23,13 +24,16 @@ const routes: Routes = [
                 outlet: 'exit',
                 resolve: {
                     roomsResponse: RoomsResolver,
-                    exitResponse: RoomExitResolver, 
+                    exitResponse: RoomExitResolver,
                 }
             },
             {
                 path: ':id',
                 component: RoomItemComponent,
-                outlet: 'item'
+                outlet: 'item',
+                resolve: {
+                    itemsResponse: ItemsResolver
+                }
             },
             {
                 path: ':id',

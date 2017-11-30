@@ -25,6 +25,9 @@ import { IItem } from '../../../../shared/interfaces/models/item.interface';
 import { SimpleTableColumn, SimpleTableRow } from '../../../../shared/components/simple-table/simple-table.component';
 import { IRoomExitDeletionViewModel } from '../../../../shared/interfaces/view-models/rooms/room-exit-deletion-view-model.interface';
 import { IRoomExitDeletionResponse } from '../../../../shared/interfaces/responses/rooms/room-exit-deletion-response.interface';
+import { IRoomItemsResponse } from '../../../../shared/interfaces/responses/rooms/room-items-response.interface';
+import { IRoomItemDeletionViewModel } from '../../../../shared/interfaces/view-models/rooms/room-item-deletion-view-model.interface';
+import { IRoomItemDeletionResponse } from '../../../../shared/interfaces/responses/rooms/room-item-deletion-response.interface';
 
 @Component({
   templateUrl: './room.component.html',
@@ -56,7 +59,7 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
     private exitRows: SimpleTableRow[] = [];
 
     private itemColumns: SimpleTableColumn[] = [];
-    private itemRows: SimpleTableColumn[] = [];
+    private itemRows: SimpleTableRow[] = [];
 
     private monsterColumns: SimpleTableColumn[] = [];
     private monsterRows: SimpleTableRow[] = [];
@@ -79,7 +82,7 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
 
           RoomComponent.itemCreation.subscribe( (res) => {
             this.createItemButtonVisible = true;
-            this.retrieveRoomItems();
+            this.retrieveRoomItemsFromService();
           });
 
           RoomComponent.monsterCreation.subscribe( (res) => {
@@ -100,7 +103,7 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
       }
       this.gameId = this.gameService.getGameIdUsersCurrentlyEdittingFromSessionStorage();
       this.retrieveRoomExitsFromRoute();
-      this.retrieveRoomItems();
+      this.retrieveRoomItemsFromRoute();
       this.retrieveRoomMonsters();
 
     }
@@ -224,9 +227,26 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
       });
     }
 
+    private retrieveRoomItemsFromService() {
+      this.roomService.getItemsForRoom().subscribe( (res: IRoomItemsResponse) => {
+        if (res.status) {
+          this.items = res.items;
+          this.buildItemTable();
+        } else {
+          this.toastr.error(res.statusText);
+        }
+      });
+    }
 
-    private retrieveRoomItems() {
-
+    private retrieveRoomItemsFromRoute() {
+      this.route.data.subscribe( (data: { roomItemsResponse: IRoomItemsResponse }) => {
+        if (data.roomItemsResponse.status) {
+          this.items = data.roomItemsResponse.items;
+          this.buildItemTable();
+        } else {
+          this.toastr.error(data.roomItemsResponse.statusText);
+        }
+      });  
     }
 
     private retrieveRoomMonsters() {
@@ -271,6 +291,27 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
     }
 
     private buildItemTable() {
+      this.itemRows = [
+
+      ];
+
+      this.itemColumns = [
+        {
+          name: 'Item'
+        }
+      ];
+
+      this.items.forEach(item => {
+        this.itemRows.push({
+          rowID: item.id,
+          rowData: [
+            {
+              columnName: 'Item',
+              data: item.name
+            }
+          ]
+        });
+      });
 
     }
 
@@ -287,6 +328,30 @@ export class RoomComponent implements OnInit, CanComponentDeactivate {
                             this.toastr.success(d_res.statusText);
                             this.exits = d_res.exits;
                             this.buildExitTable();
+                        } else {
+                            this.toastr.error(d_res.statusText);
+                        }   
+                    }
+                );
+            } else {
+
+            }
+    });
+    }
+
+    private deleteItem($event: SimpleTableRow) {
+      this.dialogService.confirm('Do you really want to delete this item?').subscribe( 
+        (res: boolean) => {
+            if (res) {
+                let item: IRoomItemDeletionViewModel = {
+                    itemId: $event.rowID
+                };
+                this.roomService.deleteRoomItem(item).subscribe( 
+                    (d_res: IRoomItemDeletionResponse) => {
+                        if (d_res.status) {
+                            this.toastr.success(d_res.statusText);
+                            this.items = d_res.items;
+                            this.buildItemTable();
                         } else {
                             this.toastr.error(d_res.statusText);
                         }   

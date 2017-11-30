@@ -502,11 +502,8 @@ namespace WebAdventureAPI.Repositories
 
         public void DeleteItemFromRoom(int roomId, int itemId)
         {
-            context.RoomItem.Remove(new RoomItem
-            {
-                RoomId = roomId,
-                ItemId = itemId
-            });
+            var roomItem = context.RoomItem.Where(r => r.ItemId == itemId && r.RoomId == roomId).First();
+            context.RoomItem.Remove(roomItem);
             context.SaveChanges();
         }
 

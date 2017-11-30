@@ -168,6 +168,7 @@ namespace WebAdventureAPI.Controllers
         {
             try
             {
+
                 repo.AddItemToRoom(roomId, itemId);
                 return StatusCode(201, roomItemResponses.AddRoomItemResponse());
             }
@@ -177,15 +178,16 @@ namespace WebAdventureAPI.Controllers
             }
         }
 
-        [HttpDelete("{roomId}/items")]
-        public IActionResult DeleteItemFromRoom([FromRoute] int roomId, [FromBody] int itemId)
+        [HttpDelete("{roomId}/items/{itemId}")]
+        public IActionResult DeleteItemFromRoom([FromRoute] int roomId, [FromRoute] int itemId)
         {
             try
             {
                 repo.DeleteItemFromRoom(roomId, itemId);
-                return StatusCode(201, roomItemResponses.DeleteRoomItem());
+                var items = repo.GetItemsForRoom(roomId);
+                return StatusCode(201, roomItemResponses.DeleteRoomItem(items));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return StatusCode(500, ErrorResponse.ServerError);
             }

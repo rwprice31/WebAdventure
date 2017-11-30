@@ -67,10 +67,11 @@
             <h1>Items</h1>
             <h2>Manage the items within your room below</h2>
                 
-            <simple-table (edit)="editClicked($event)" (delete)="deleteClicked($event)"
-                [editAbility]="true" [deleteAbility]="true"></simple-table>
+            <simple-table (edit)="editClicked($event)" (delete)="deleteItem($event)" [rows]="itemRows" [columns]="itemColumns"
+                [deleteAbility]="true"></simple-table>
 
-            <button *ngIf="createItemButtonVisible" type="button" class="btn wa-button-dark" (click)="createNewItem()">
+            <button *ngIf="createItemButtonVisible" type="button" class="btn wa-button-dark"
+            (click)="createNewItem()">
                 Create a new item
             </button>
 

@@ -26,11 +26,12 @@ namespace WebAdventureAPI.Models.Responses.Room
             StatusCode = 201
         };
 
-        public Response DeleteRoomItem() => new Response
+        public RoomItemResponse DeleteRoomItem(List<ItemDto> items) => new RoomItemResponse
         {
             Status = true,
             StatusCode = 201,
-            StatusText = "Item removed from room"
+            StatusText = "Item successfully deleted!",
+            Items = items
         };
     }
 }
