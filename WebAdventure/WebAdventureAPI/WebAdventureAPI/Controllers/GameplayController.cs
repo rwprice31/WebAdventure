@@ -79,5 +79,19 @@ namespace WebAdventureAPI.Controllers
                 return StatusCode(500, ErrorResponse.ServerError);
             }
         }
+
+        [HttpGet("backpack/{gamePlayId}")]
+        public IActionResult GetBackPackContents([FromRoute] int gamePlayId)
+        {
+            try
+            {
+                var backpack = repo.GetBackPackInfo(gamePlayId);
+                return StatusCode(201, responses.GetBackPackResponse(backpack));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
     }
 }

@@ -1,16 +1,33 @@
 <div>Current Room Info</div>
 <div>{{this.roomInfo.room.name}}</div>
 <div>{{this.roomInfo.room.descr}}</div>
-<div>{{this.roomInfo.room.id}}</div>
+
+<div>{{this.backpackInfo}}</div>
 <button class="btn wa-button-dark" (click)="goToNextRoom()">Go to Next Room</button>
 <div class='container'>
     <h3>User input</h3>
-    <form>
-        <div class='form-group'>
-            <label for="input">Input</label>
-            <input type='text' class='form-control' id='input' required>
+        
+    <form [formGroup]="inputForm" (ngSubmit)="getUsersInput()" novalidate autocomplete="off">
+
+        <div class="form-group row">
+            <label for="userInput" class="col-sm-2 col-form-label">Input</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name='userInput' formControlName="userInput"
+                    [ngClass]="{'has-error': (inputForm.get('userInput').touched ||
+                            inputForm.get('userInput').dirty) && !inputForm.get('userInput').valid }">
+                <div class="error-block" *ngIf="inputForm.get('userInput').errors">
+                <span class="error-block-text" *ngIf="(inputForm.get('userInput').touched ||
+                                inputForm.get('userInput').dirty) &&
+                                inputForm.get('userInput').errors.required">
+                    User Input is required to continue.
+                </span>
+                </div>
+            </div>
         </div>
 
-        <button type='submit' class='btn btn-success'>submit</button>
+        <button type='submit' class='btn wa-button-dark' (click)='getUsersInput()'>submit</button>
+    
     </form>
 </div>
+
+<simple-table [columns]="columns" [rows]="rows"></simple-table>

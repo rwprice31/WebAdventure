@@ -165,8 +165,8 @@ namespace WebAdventureAPI.Repositories
         public Game GetGame(int gameId)
         {
             var game = (from g in context.Game
-                       where g.Id == gameId
-                       select g).FirstOrDefault();
+                        where g.Id == gameId
+                        select g).FirstOrDefault();
             return game;
         }
 
@@ -174,7 +174,7 @@ namespace WebAdventureAPI.Repositories
         {
             return await userManager.FindByIdAsync(game.AuthorId);
         }
-        
+
         private string GetMonsterName(int id)
         {
             return (from m in context.Monster
@@ -216,7 +216,7 @@ namespace WebAdventureAPI.Repositories
                         Type = (from it in context.ItemType
                                 where it.Id == x.ItemTypeId
                                 select it.Type).FirstOrDefault()
-                    } 
+                    }
                 });
             }
 
@@ -274,8 +274,8 @@ namespace WebAdventureAPI.Repositories
             oldItem.Descr = dto.Descr;
             oldItem.Points = dto.Points;
             oldItem.ItemTypeId = (from it in context.ItemType
-                                where it.Type == dto.Type.Type
-                                select it.Id).FirstOrDefault();
+                                  where it.Type == dto.Type.Type
+                                  select it.Id).FirstOrDefault();
 
             SaveChanges();
 
@@ -728,6 +728,34 @@ namespace WebAdventureAPI.Repositories
 
             gamePlay.RoomId = roomId;
             SaveChanges();
+        }
+
+        public BackPackDto GetBackPackInfo(int gamePlayId)
+        {
+            return (from bp in context.Backpack
+                    where bp.PlayerGameId == gamePlayId && bp.Equipped != null
+                    select new BackPackDto
+                    {
+                        Items = (from i in context.Item
+                                 where i.Id == bp.ItemId
+                                 select new BackPackItemDto
+                                 {
+                                     Item = new ItemDto
+                                     {
+                                         Id = i.Id,
+                                         Name = i.Name,
+                                         Descr = i.Descr,
+                                         Points = i.Points,
+                                         Type = (from it in context.ItemType
+                                                 where it.Id == i.ItemTypeId
+                                                 select new ItemTypeDto
+                                                 {
+                                                     Type = it.Type
+                                                 }).FirstOrDefault()
+                                     },
+                                     IsEquppied = bp.Equipped
+                                 }).ToList()
+                    }).FirstOrDefault();
         }
     }
 }

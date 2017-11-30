@@ -41,5 +41,13 @@ namespace WebAdventureAPI.Models.Responses
             StatusCode = 201,
             StatusText = "Room updated successfully"
         };
+
+        public GameplayResponses GetBackPackResponse(BackPackDto dto) => new GameplayResponses
+        {
+            Status = true,
+            StatusText = "Backpack returned",
+            StatusCode = 201,
+            ResponseObject = dto
+        };
     }
 }

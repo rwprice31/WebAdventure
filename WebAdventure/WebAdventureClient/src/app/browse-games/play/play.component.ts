@@ -11,8 +11,7 @@ import { IGame } from './../../shared/interfaces/models/game.interface';
 import { IPlayerGame} from './../../shared/interfaces/models/player-game.interface';
 import { GamePlayService } from './../../core/services/gameplay.service';
 import { UsersCreatedGamesResolver } from '../../core/services/resolvers/games/users-created-games-resolver.service';
-
-
+import { IBackPack } from './../../shared/interfaces/models/backpack.interface';
 
 @Component({
   templateUrl: './play.component.html',
@@ -24,6 +23,7 @@ export class PlayGameComponent {
   public gameId: number;
   private playerGame: IPlayerGame;
   public clicked: boolean;
+
 
   constructor(private gamePlayService: GamePlayService,
     private router: Router,
