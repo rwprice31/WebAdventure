@@ -5,6 +5,7 @@ import { RoomExitComponent } from './exit/room-exit.component';
 import { RoomMonsterComponent } from './monster/room-monster.component';
 import { RoomItemComponent } from './item/room-item.component';
 import { RoomsResolver } from '../../../../core/services/resolvers/rooms/rooms-resolver.service';
+import { RoomExitResolver } from '../../../../core/services/resolvers/rooms/room-exit-resolver.service';
 
 const routes: Routes = [
     {
@@ -21,7 +22,8 @@ const routes: Routes = [
                 component: RoomExitComponent,
                 outlet: 'exit',
                 resolve: {
-                    roomsResponse: RoomsResolver
+                    roomsResponse: RoomsResolver,
+                    exitResponse: RoomExitResolver, 
                 }
             },
             {

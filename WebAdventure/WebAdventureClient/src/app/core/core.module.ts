@@ -34,6 +34,8 @@ import { ItemResolver } from './services/resolvers/items/item-resolver.service';
 import { ItemsResolver } from './services/resolvers/items/items-resolver.service';
 import { PlayerOptionsService } from './services/player-options.service';
 import { PlayerOptionsResolver } from './services/resolvers/player-options/player-options-resolver.service';
+import { RoomExitResolver } from './services/resolvers/rooms/room-exit-resolver.service';
+import { RoomExitsResolver } from './services/resolvers/rooms/room-exits-resolver.service';
 
 export declare let toastr: IToastr;
 export declare let jQuery: any;
@@ -74,6 +76,8 @@ export declare let jQuery: any;
         ItemTypesResolver,
         GameGenresResolver,
         PlayerOptionsResolver,
+        RoomExitResolver,
+        RoomExitsResolver,
         { provide: TOASTR_TOKEN, useValue: toastr },
         { provide: JQ_TOKEN, useValue: jQuery },
         {

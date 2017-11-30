@@ -31,49 +31,52 @@
              [ngClass]="{'invalid-button': !roomInfoForm.valid }">Update</button>
     </form>
 
-    <div class="page-section">
-        <h1>Exits</h1>
-        <h2>Manage the exits within your room below</h2>
-            
-        <simple-table (edit)="editClicked($event)" (delete)="deleteClicked($event)"
-            [editAbility]="true" [deleteAbility]="true"></simple-table>
-
-        <button *ngIf="createExitButtonVisible" type="button" class="btn wa-button-dark" (click)="createNewExit()">
-            Create a new exit
-        </button>   
-
-        <router-outlet name="exit"></router-outlet>
+    <div *ngIf="isUpdating">
+        <div class="page-section">
+            <h1>Exits</h1>
+            <h2>Manage the exits within your room below</h2>
                 
-    </div> 
+            <simple-table (edit)="editExit($event)" (delete)="deleteExit($event)" [rows]="exitRows" [columns]="exitColumns"
+                [editAbility]="true" [deleteAbility]="true"></simple-table>
+
+            <button *ngIf="createExitButtonVisible" type="button" class="btn wa-button-dark" (click)="createNewExit()">
+                Create a new exit
+            </button>   
+
+            <router-outlet name="exit"></router-outlet>
+                    
+        </div> 
 
 
-    <div class="page-section">
-        <h1>Monsters</h1>
-        <h2>Manage the monsters within your room below</h2>
-            
-        <simple-table (edit)="editClicked($event)" (delete)="deleteClicked($event)"
-            [editAbility]="true" [deleteAbility]="true"></simple-table>
-
-        <button type="button" class="btn wa-button-dark" (click)="createNewMonster()">
-            Create a new monster
-        </button>
-
-        <router-outlet name="monster"></router-outlet>
+        <div class="page-section">
+            <h1>Monsters</h1>
+            <h2>Manage the monsters within your room below</h2>
                 
-    </div> 
+            <simple-table (edit)="editClicked($event)" (delete)="deleteClicked($event)"
+                [editAbility]="true" [deleteAbility]="true"></simple-table>
 
-    <div class="page-section">
-        <h1>Items</h1>
-        <h2>Manage the items within your room below</h2>
-            
-        <simple-table (edit)="editClicked($event)" (delete)="deleteClicked($event)"
-            [editAbility]="true" [deleteAbility]="true"></simple-table>
+            <button type="button" class="btn wa-button-dark" (click)="createNewMonster()">
+                Create a new monster
+            </button>
 
-        <button *ngIf="createItemButtonVisible" type="button" class="btn wa-button-dark" (click)="createNewItem()">
-            Create a new item
-        </button>
+            <router-outlet name="monster"></router-outlet>
+                    
+        </div> 
 
-        <router-outlet name="item"></router-outlet>
+        <div class="page-section">
+            <h1>Items</h1>
+            <h2>Manage the items within your room below</h2>
                 
-    </div> 
+            <simple-table (edit)="editClicked($event)" (delete)="deleteClicked($event)"
+                [editAbility]="true" [deleteAbility]="true"></simple-table>
+
+            <button *ngIf="createItemButtonVisible" type="button" class="btn wa-button-dark" (click)="createNewItem()">
+                Create a new item
+            </button>
+
+            <router-outlet name="item"></router-outlet>
+                    
+        </div> 
+    </div>
+
 

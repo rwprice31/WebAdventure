@@ -555,7 +555,17 @@ namespace WebAdventureAPI.Repositories
                     where e.CurrentRoomId == roomId
                     select new ExitDto
                     {
-                        NextRoomId = e.NextRoomId,
+                        Id = e.Id,
+                        CurrentRoomId = e.CurrentRoomId,
+                        NextRoom = context.Room.Where(rr => rr.Id == r.Id).Select(rrr =>
+                          new RoomDto
+                          {
+                              Id = rrr.Id,
+                              Descr = rrr.Descr,
+                              GameId = rrr.GameId,
+                              IsStarting = rrr.IsStarting,
+                              Name = rrr.Name
+                          }).First(),
                         Descr = e.Descr,
                         Commands = e.Commands
                     }).ToList();
@@ -572,12 +582,22 @@ namespace WebAdventureAPI.Repositories
             });
             SaveChanges();
             var exit = context.Exits.Where(e => e.CurrentRoomId == roomId && e.NextRoomId == dto.NextRoomId).First();
+            RoomDto nextRoom = context.Room.Where(r => r.Id == exit.NextRoomId).Select( r =>
+                new RoomDto
+                {
+                    Id = r.Id,
+                    Descr = r.Descr,
+                    GameId = r.GameId,
+                    IsStarting = r.IsStarting,
+                    Name = r.Name
+                }
+            ).First();
             return new ExitDto
             {
                 Commands = exit.Commands,
                 Descr = exit.Descr,
                 CurrentRoomId = roomId,
-                NextRoomId = exit.NextRoomId,
+                NextRoom = nextRoom,
                 Id = exit.Id
             };
         }
@@ -644,7 +664,15 @@ namespace WebAdventureAPI.Repositories
                          where e.CurrentRoomId == room.Id
                          select new ExitDto
                          {
-                             NextRoomId = e.NextRoomId,
+                             NextRoom = context.Room.Where(rr => rr.Id == r.Id).Select( rrr =>
+                                new RoomDto
+                                {
+                                    Id = rrr.Id,
+                                    Descr = rrr.Descr,
+                                    GameId = rrr.GameId,
+                                    IsStarting = rrr.IsStarting,
+                                    Name = rrr.Name
+                                }).First(),
                              Descr = e.Descr,
                              Commands = e.Commands
                          }).ToList();
@@ -746,6 +774,68 @@ namespace WebAdventureAPI.Repositories
             {
                 return false;
             }
+        }
+
+        public bool DoesRoomContainExit(int roomId, int exitId)
+        {
+            var exit = context.Exits.Where(e => e.CurrentRoomId == roomId && e.Id == exitId).ToList();
+            return exit.Count() > 0 ? true : false; 
+        }
+
+        public ExitDto GetRoomExit(int exitId)
+        {
+            var exitDto = context.Exits.Where(e => e.Id == exitId).Select( e =>
+            new ExitDto
+            {
+                Id = e.Id,
+                Commands = e.Commands,
+                CurrentRoomId = e.CurrentRoomId,
+                NextRoom = context.Room.Where(r => e.NextRoomId == r.Id).Select(r =>
+                  new RoomDto
+                  {
+                      Id = r.Id,
+                      Descr = r.Descr,
+                      GameId = r.GameId,
+                      IsStarting = r.IsStarting,
+                      Name = r.Name
+                  }).First(),
+            }).First();
+            return exitDto;
+        }
+
+        public ExitDto UpdateRoomExit(int exitId, ExitUpdationDto dto)
+        {
+            var exit = context.Exits.Where(e => e.Id == exitId).First();
+            exit.NextRoomId = dto.NextRoomId;
+            if (dto.Descr != null)
+            {
+                exit.Descr = dto.Descr;
+            }
+            exit.Commands = dto.Commands;
+            SaveChanges();
+            return new ExitDto
+            {
+                 Id = exit.Id,
+                 Commands = exit.Commands,
+                 CurrentRoomId = exit.CurrentRoomId,
+                 Descr = exit.Descr,
+                 NextRoom = context.Room.Where(r => exit.NextRoomId == r.Id).Select(r =>
+                  new RoomDto
+                  {
+                      Id = r.Id,
+                      Descr = r.Descr,
+                      GameId = r.GameId,
+                      IsStarting = r.IsStarting,
+                      Name = r.Name
+                  }).First()
+            };
+        }
+
+        public void DeleteExitForRoom(int exitId)
+        {
+            var exit = context.Exits.Find(exitId);
+            context.Exits.Remove(exit);
+            SaveChanges();
         }
     }
 }

@@ -247,6 +247,75 @@ namespace WebAdventureAPI.Controllers
             }
         }
 
+        [HttpGet("{roomId}/exits/{exitId}")]
+        public IActionResult GetExitForRoom([FromRoute] int roomId, [FromRoute] int exitId)
+        {
+            try
+            {
+                if (!repo.DoesRoomContainExit(roomId, exitId))
+                {
+                    return StatusCode(400, roomExitResponses.RoomDoesNotContainExit());
+                }
+                else
+                {
+                    var exit = new List<ExitDto>() {
+                    repo.GetRoomExit(exitId)
+                };
+                    return StatusCode(200, roomExitResponses.GetRoomExitResponse(exit));
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [HttpPut("{roomId}/exits/{exitId}")]
+        public IActionResult UpdateExitForRoom([FromRoute] int roomId, [FromRoute] int exitId, [FromBody] ExitUpdationDto dto)
+        {
+            try
+            {
+                if (!repo.DoesRoomContainExit(roomId, exitId))
+                {
+                    return StatusCode(400, roomExitResponses.RoomDoesNotContainExit());
+                }
+                else
+                {
+                    var updatedRoom = new List<ExitDto>()
+                    {
+                        repo.UpdateRoomExit(exitId, dto)
+                    };
+                    return StatusCode(200, roomExitResponses.UpdateExitResponse(updatedRoom));
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
+        [HttpDelete("{roomId}/exits/{exitId}")]
+        public IActionResult DeleteExitForRoom([FromRoute] int roomId, [FromRoute] int exitId)
+        {
+            try
+            {
+                if (!repo.DoesRoomContainExit(roomId, exitId))
+                {
+                    return StatusCode(400, roomExitResponses.RoomDoesNotContainExit());
+                }
+                else
+                {
+                    repo.DeleteExitForRoom(exitId);
+                    var remainingExits = repo.GetExitsForRoom(roomId);
+                    return StatusCode(200, roomExitResponses.DeleteExitResponse(remainingExits));
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ErrorResponse.ServerError);
+            }
+        }
+
         [HttpPost("{roomId}/exits")]
         public IActionResult AddExitToRoom([FromRoute] int roomId, [FromBody] ExitCreationDto dto)
         {
@@ -256,7 +325,7 @@ namespace WebAdventureAPI.Controllers
 
                 if (isDuplicateRoom)
                 {
-                    return StatusCode(400, roomExitResponses.DuplicateExitResponse);
+                    return StatusCode(400, roomExitResponses.DuplicateExitResponse());
                 }
 
                 List<ExitDto> exit = new List<ExitDto>()

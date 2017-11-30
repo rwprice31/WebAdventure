@@ -19,6 +19,12 @@ import { IRoomDeletionViewModel } from '../../shared/interfaces/view-models/room
 import { IRoomDeletionResponse } from '../../shared/interfaces/responses/rooms/room-deletion-response.interface';
 import { IRoomExitCreationViewModel } from '../../shared/interfaces/view-models/rooms/room-exit-creation-view-model.interface';
 import { IRoomExitCreationResponse } from '../../shared/interfaces/responses/rooms/room-exit-creation-response.interface';
+import { IRoomExitsResponse } from '../../shared/interfaces/responses/rooms/room-exits-response.interface';
+import { IRoomExitViewModel } from '../../shared/interfaces/view-models/rooms/room-exit-view-model.interface';
+import { IRoomExitUpdationViewModel } from '../../shared/interfaces/view-models/rooms/room-exit-updation-view-model.interface';
+import { IRoomExitDeletionViewModel } from '../../shared/interfaces/view-models/rooms/room-exit-deletion-view-model.interface';
+import { IRoomExitUpdationResponse } from '../../shared/interfaces/responses/rooms/room-exit-updation-response.interface';
+import { IRoomExitDeletionResponse } from '../../shared/interfaces/responses/rooms/room-exit-deletion-response.interface';
 
 
 /**
@@ -36,6 +42,7 @@ export class RoomService extends BaseService {
     private game: IGame;
 
     private roomIdCurrentlyEdittingInSessionStorageKey = 'roomIdCurrentlyEditting';
+    private roomExitIdCurrentlyEdittingInSessionStorageKey = 'roomExitIdCurrentlyEditting';
 
     constructor(private http: HttpClient,
         private configService: ConfigService,
@@ -57,12 +64,26 @@ export class RoomService extends BaseService {
     }
 
     /**
-     * @name getCurrentEdittingRoomFromSessionStorage
+     * @name getCurrentlyEdittingRoomFromSessionStorage
      * @returns the room id from session storage
      * @description Retrieves the currently editting room id from session storage.
      */  
-    getCurrentEdittingRoomFromSessionStorage(): number {
+    getCurrentlyEdittingRoomFromSessionStorage(): number {
         return +sessionStorage.getItem(this.roomIdCurrentlyEdittingInSessionStorageKey);
+    }
+
+    /**
+     * @name setCurrentlyEdittingRoomExitToSessionStorage
+     */
+    setCurrentlyEdittingRoomExitToSessionStorage(exitId: number): void {
+        sessionStorage.setItem(this.roomExitIdCurrentlyEdittingInSessionStorageKey, exitId.toString());
+    }
+
+    /**
+     * @name getCurrentlyEdittingRoomExitFromSessionStorage
+     */
+    getCurrentlyEdittingRoomExitFromSessionStorage(): number {
+        return +sessionStorage.getItem(this.roomExitIdCurrentlyEdittingInSessionStorageKey);
     }
 
     /**
@@ -89,7 +110,7 @@ export class RoomService extends BaseService {
      */
     getRoomExitRoute() {
         this.getRoomsRoute();
-        let roomId = this.getCurrentEdittingRoomFromSessionStorage();
+        let roomId = this.getCurrentlyEdittingRoomFromSessionStorage();
         return this.roomRoute + '/' + roomId + '/exits';
     }
 
@@ -143,7 +164,9 @@ export class RoomService extends BaseService {
         .map( (res: IRoomCreationResponse) => {
             console.log('IRoomCreationResponse ' + res);
             return res;
-        });
+        })
+        .catch(this.handleError)
+        ;
     }
 
     /**
@@ -161,7 +184,8 @@ export class RoomService extends BaseService {
         .map( (res: IRoomUpdationResponse) => {
             console.log('IRoomUpdationResponse = ', res);
             return res;
-        });
+        })
+        .catch(this.handleError);
     }
 
     /**
@@ -174,12 +198,12 @@ export class RoomService extends BaseService {
     deleteRoom(room: IRoomDeletionViewModel): Observable<IResponse> {
         this.getRoomsRoute();
         let route: string = this.roomRoute + '/' + room.id;
-        let body = JSON.stringify(room);
         return this.http.delete<IRoomDeletionResponse>(route, { headers: this.headers })
         .map( (res: IRoomDeletionResponse) => {
             console.log('IRoomDeletionResponse = ', res);
             return res;
-        });
+        })
+        .catch(this.handleError);
     }
 
     /**
@@ -188,12 +212,65 @@ export class RoomService extends BaseService {
     createExitForRoom(exit: IRoomExitCreationViewModel): Observable<IResponse> {
         let route = this.getRoomExitRoute();
         let body = JSON.stringify(exit);
-        console.log('Sending POST to ' + route + ' with body = ' + body);
+        // console.log('Sending POST to ' + route + ' with body = ' + body);
         return this.http.post<IRoomExitCreationResponse>(route, body, { headers: this.headers })
             .map( (res: IRoomExitCreationResponse) => {
-                console.log('IRoomExitCreationResponse = ' + JSON.stringify(res));
+                // console.log('IRoomExitCreationResponse = ' + JSON.stringify(res));
+                return res;
+            })
+            .catch(this.handleError);
+    }
+
+    /**
+     * @name getExitsForRoom
+     */
+    getExitsForRoom(): Observable<IResponse> {
+        let route = this.getRoomExitRoute();
+        return this.http.get<IRoomExitsResponse>(route, { headers: this.headers })
+            .map( (res: IRoomExitsResponse) => {
+                console.log('IRoomExitsResponse = ' + JSON.stringify(res));
                 return res;
             });
+    }
+
+    /**
+     * @name getRoomExit
+     */
+    getRoomExit(exit: IRoomExitViewModel): Observable<IResponse> {
+        let route: string = this.getRoomExitRoute() + '/' + exit.exitId;
+        console.log('Sending GET to ' + route);
+        return this.http.get<IRoomExitsResponse>(route, { headers: this.headers})
+            .map( (res: IRoomExitsResponse) => {
+                return res;
+            })
+            .catch(this.handleError);
+    }
+
+    /**
+     * @name updateRoomExit
+     */
+    updateRoomExit(exit: IRoomExitUpdationViewModel): Observable<IResponse> {
+        let route: string = this.getRoomExitRoute() + '/' + exit.id; 
+        let body = JSON.stringify(exit);
+        return this.http.put<IRoomExitUpdationResponse>(route, body, { headers: this.headers})
+            .map( (res: IRoomExitUpdationResponse) => {
+                console.log('IRoomExitUpdationResponse = ' + res);
+                return res;
+            })
+            .catch(this.handleError);
+    }
+
+    /**
+     * @name deleteRoomExit
+     */
+    deleteRoomExit(exit: IRoomExitDeletionViewModel): Observable<IResponse> {
+        let route: string = this.getRoomExitRoute() + '/' + exit.exitId;
+        return this.http.delete<IRoomExitDeletionResponse>(route, { headers: this.headers })
+        .map( (res: IRoomExitDeletionResponse) => {
+            console.log('IRoomExitDeletionResponse = ', res);
+            return res;
+        })
+        .catch(this.handleError);
     }
 
 }
