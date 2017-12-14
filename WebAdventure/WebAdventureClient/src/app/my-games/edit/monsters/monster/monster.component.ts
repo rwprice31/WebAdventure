@@ -129,13 +129,13 @@ export class MonsterComponent implements OnInit {
     private updateMonster() {
       let monster: IMonsterUpdatingViewModel = {
         id: this.monsterId,
-        name: this.monsterInfoForm.controls['name'].value,
-        descr: this.monsterInfoForm.controls['description'].value,
-        health: this.monsterInfoForm.controls['health'].value,
+        name: this.monsterInfoForm.controls['Name'].value,
+        descr: this.monsterInfoForm.controls['Description'].value,
+        health: this.monsterInfoForm.controls['Health'].value,
         MinDamage: this.monsterInfoForm.controls['MinDamage'].value,
         MaxDamage: this.monsterInfoForm.controls['MaxDamage'].value,
         Speed: this.monsterInfoForm.controls['Speed'].value,
-        AttackDescr: this.monsterInfoForm.controls['AttackDescription'].value,
+        AttackDescr: this.monsterInfoForm.controls['AttackDescr'].value,
         gameId: this.gameId
       };
       this.monsterService.updateMonster(monster).subscribe(
