@@ -10,9 +10,9 @@ namespace WebAdventureAPI.Models.Dtos
     {
         public int Id { get; set; }
 
-        public string Descr { get; set; }
-
         public string Name { get; set; }
+
+        public string Descr { get; set; }
 
         public int Health { get; set; }
 

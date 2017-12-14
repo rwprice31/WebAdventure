@@ -1,0 +1,10 @@
+<div class="page-header">
+    <h1>Monsters</h1>
+    <h2>Manage your game's monsters below</h2>
+</div>
+
+<button type="button" class="btn wa-button-dark editCreateButton" [routerLink]="['0']">Create a new monster</button>
+
+      
+<simple-table (edit)="editClicked($event)" (delete)="deleteClicked($event)" [columns]="columns" [rows]="rows"
+    [editAbility]="true" [deleteAbility]="true"></simple-table>

@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using Microsoft.AspNetCore.Server.HttpSys;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using WebAdventureAPI.Models.Dtos;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using WebAdventureAPI.Models.DbModels;
-using WebAdventureAPI.Repositories;
-using Microsoft.AspNetCore.Identity;
-using WebAdventureAPI.Models;
+using WebAdventureAPI.Models.Dtos;
 using WebAdventureAPI.Models.Responses;
 using WebAdventureAPI.Models.Responses.Room;
+using WebAdventureAPI.Repositories;
 
 namespace WebAdventureAPI.Controllers
 {
