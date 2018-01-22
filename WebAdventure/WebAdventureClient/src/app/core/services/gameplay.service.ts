@@ -54,4 +54,15 @@ export class GamePlayService extends BaseService {
         console.log('Sending Get to ' + route);
         return this.http.get(route);
     }
+
+    getBackPack(gameId:number, gamePlayId:number): Observable<IGamePlayResponse> {
+        let route: string = this.gamePlayRoute + '/' + gameId + '/backpack/' + gamePlayId;
+        return this.http.get(route); 
+    }
+
+    updatePlayerRoom(gameId:number, gamePlayId:number, roomId:number):Observable<IGamePlayResponse> {
+        let route: string = this.gamePlayRoute + '/' + gameId + '/' + gamePlayId + '/' + roomId;
+        return this.http.put(route, body => {
+        });
+    }
 }

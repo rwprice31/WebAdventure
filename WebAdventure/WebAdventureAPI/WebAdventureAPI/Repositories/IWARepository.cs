@@ -95,5 +95,7 @@ namespace WebAdventureAPI.Repositories
         PlayerGameDto InitializePlayerGame(int gameId, UserDto user);
 
         void UpdatePlayerRoom(int roomId, int gamePlayId);
+
+        BackPackDto GetBackPackInfo(int gamePlayId);
     }
 }
